@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExadelBonusPlus.WebApi", "ExadelBonusPlus.WebApi\ExadelBonusPlus.WebApi.csproj", "{8B0E9C94-3B85-4F97-A076-14B241389155}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExadelBonusPlus.Services", "ExadelBonusPlus.Services\ExadelBonusPlus.Services.csproj", "{DC7E6096-830E-458A-B84B-C0824955D538}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExadelBonusPlus.Services.Tests", "ExadelBonusPlus.Services.Tests\ExadelBonusPlus.Services.Tests.csproj", "{26DA9463-830A-4A9A-B3D3-9C71327B66F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExadelBonusPlus.Services.Models", "ExadelBonusPlus.Services.Models\ExadelBonusPlus.Services.Models.csproj", "{EEE5A9E2-9004-4EB0-A364-5BF0475FB2EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExadelBonusPlus.DataAccess", "ExadelBonusPlus.DataAccess\ExadelBonusPlus.DataAccess.csproj", "{9F3663FB-7BB7-44E5-954C-F6F1EEDC5BC6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8B0E9C94-3B85-4F97-A076-14B241389155}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B0E9C94-3B85-4F97-A076-14B241389155}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B0E9C94-3B85-4F97-A076-14B241389155}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B0E9C94-3B85-4F97-A076-14B241389155}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC7E6096-830E-458A-B84B-C0824955D538}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC7E6096-830E-458A-B84B-C0824955D538}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC7E6096-830E-458A-B84B-C0824955D538}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC7E6096-830E-458A-B84B-C0824955D538}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26DA9463-830A-4A9A-B3D3-9C71327B66F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26DA9463-830A-4A9A-B3D3-9C71327B66F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26DA9463-830A-4A9A-B3D3-9C71327B66F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26DA9463-830A-4A9A-B3D3-9C71327B66F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEE5A9E2-9004-4EB0-A364-5BF0475FB2EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEE5A9E2-9004-4EB0-A364-5BF0475FB2EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEE5A9E2-9004-4EB0-A364-5BF0475FB2EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEE5A9E2-9004-4EB0-A364-5BF0475FB2EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F3663FB-7BB7-44E5-954C-F6F1EEDC5BC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F3663FB-7BB7-44E5-954C-F6F1EEDC5BC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F3663FB-7BB7-44E5-954C-F6F1EEDC5BC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F3663FB-7BB7-44E5-954C-F6F1EEDC5BC6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E2B78C5E-585E-4048-B8ED-EFD417BA581A}
+	EndGlobalSection
+EndGlobal
