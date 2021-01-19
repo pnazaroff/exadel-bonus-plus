@@ -6,11 +6,8 @@
 
         public string Country { get; set; }
 
-        public double[] Coordinates { get; set; }
+        public double  Lattitude { get; set; }
+        public double  Longtitude { get; set; }
 
-        public Location()
-        {
-            Coordinates = new double[2];
-        }
     }
 }
