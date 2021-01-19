@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ExadelBonusPlus.Services.Models\ExadelBonusPlus.Services.Models.csproj" />
+    <ProjectReference Include="..\ExadelBonusPlus.Services\ExadelBonusPlus.Services.csproj" />
   </ItemGroup>
 
 </Project>
