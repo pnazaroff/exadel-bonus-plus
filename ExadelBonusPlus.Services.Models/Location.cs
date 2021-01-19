@@ -2,10 +2,15 @@
 {
     public class Location
     {
-        public string city { get; set; }
+        public string City { get; set; }
 
-        public string address { get; set; }
+        public string Country { get; set; }
 
-        public string coordinates { get; set; }
+        public double[] Coordinates { get; set; }
+
+        public Location()
+        {
+            Coordinates = new double[2];
+        }
     }
 }
