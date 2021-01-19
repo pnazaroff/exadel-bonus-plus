@@ -16,10 +16,11 @@ namespace ExadelBonusPlus.WebApi.Controllers
     [ApiController]
     public class UserHistoryController : ControllerBase
     {
-        private readonly UserHistoryServices _userHistoryServices ;
-        public UserHistoryController()
+        private readonly UserHistoryServices _UserHistoryServices;
+        //private readonly IUserHistoryRepo _userHistoryServices;
+        public UserHistoryController(IUserHistoryRepository UserHistoryRepositoryRepository)
         {
-            _userHistoryServices = new UserHistoryServices();
+            _UserHistoryServices = new UserHistoryServices(UserHistoryRepositoryRepository);
         }
 
         [HttpGet]
@@ -27,7 +28,7 @@ namespace ExadelBonusPlus.WebApi.Controllers
         [SwaggerResponse((int)HttpStatusCode.NotFound)]
         public async Task<IEnumerable<UserHistory>> GetUsersHistory()
         {
-            return _userHistoryServices.GetAllUserHistory();
+            return await _UserHistoryServices.GetAll();
         }
 
         [HttpGet("{id}")]
@@ -35,7 +36,7 @@ namespace ExadelBonusPlus.WebApi.Controllers
         [SwaggerResponse((int)HttpStatusCode.NotFound)]
         public async Task<UserHistory> GetUserHistoryById(Guid id)
         {
-            return _userHistoryServices.GetUserHistoryById(id);
+            return await _UserHistoryServices.GetById(id);
         }
 
         [HttpGet]
@@ -44,40 +45,51 @@ namespace ExadelBonusPlus.WebApi.Controllers
         [SwaggerResponse((int)HttpStatusCode.NotFound)]
         public async Task<IEnumerable<UserHistory>> GetUserHistory(Guid Userid)
         {
-            return _userHistoryServices.GetUserHistory(Userid);
+            return await _UserHistoryServices.GetUserHistory(Userid);
         }
 
-        [HttpGet]
-        [Route("{id:Guid}/promo")]
-        [SwaggerResponse((int)HttpStatusCode.OK)]
-        [SwaggerResponse((int)HttpStatusCode.NotFound)]
-        public async Task<IEnumerable<UserHistory>> GetPromoHistory(Guid PromoId)
-        {
-            return _userHistoryServices.GetPromoHistory(PromoId);
-        }
+        //[HttpGet]
+        //[Route("{id:Guid}/promo")]
+        //[SwaggerResponse((int)HttpStatusCode.OK)]
+        //[SwaggerResponse((int)HttpStatusCode.NotFound)]
+        //public async Task<IEnumerable<UserHistory>> GetPromoHistory(Guid PromoId)
+        //{
+        //    return _userHistoryServices.GetPromoHistory(PromoId);
+        //}
 
         [HttpPost]
         [SwaggerResponse((int)HttpStatusCode.OK)]
         [SwaggerResponse((int)HttpStatusCode.NotFound)]
         public async Task<UserHistory> PostUserHistory(UserHistory userHistory)
         {
-            return _userHistoryServices.AddUserHistory(userHistory);
+            _UserHistoryServices.Add(userHistory);
+
+            return await _UserHistoryServices.GetById(userHistory.Id);
         }
 
         [HttpPut]
         [SwaggerResponse((int)HttpStatusCode.OK)]
         [SwaggerResponse((int)HttpStatusCode.NotFound)]
-        public async Task<UserHistory> PutUserHistory(UserHistory userHistory)
+        public Task<UserHistory> PutUserHistory(UserHistory userHistory)
         {
-            return _userHistoryServices.UpdateUserHistory(userHistory);
+            return null; //_userHistoryServices.UpdateUserHistory(userHistory);
         }
 
         [HttpDelete]
         [SwaggerResponse((int)HttpStatusCode.OK)]
         [SwaggerResponse((int)HttpStatusCode.NotFound)]
-        public async Task<UserHistory> DeleteUserHistory(Guid Id)
+        public async Task<IActionResult> DeleteUserHistory(Guid Id)
         {
-            return _userHistoryServices.DeleteUserHistory(Id);
+            _UserHistoryServices.Remove(Id); //_userHistoryServices.DeleteUserHistory(Id);
+            var UserHistory = await _UserHistoryServices.GetById(Id);
+            if (UserHistory != null)
+            {
+                return NotFound();
+            }
+
+            return Ok();
+
+
         }
     }
 }

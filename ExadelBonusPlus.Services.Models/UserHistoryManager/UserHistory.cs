@@ -1,6 +1,8 @@
-﻿using System;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using MongoDB.Bson;
 
 namespace ExadelBonusPlus.Services.Models.UserHistoryManager
 {
@@ -22,6 +24,8 @@ namespace ExadelBonusPlus.Services.Models.UserHistoryManager
         /// <summary>
         /// Gets or sets identifier of history.
         /// </summary>
+        [BsonId]
+        [BsonElement("_id")]
         public Guid Id { get; set; }
         /// <summary>
         /// Gets or sets date of using discount.
@@ -30,6 +34,7 @@ namespace ExadelBonusPlus.Services.Models.UserHistoryManager
         /// <summary>
         /// Gets or sets identifier of discount.
         /// </summary>
+        
         public Guid PromoId { get; set; }
         /// <summary>
         /// Gets or sets identifier of user.

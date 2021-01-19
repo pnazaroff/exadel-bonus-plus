@@ -3,51 +3,45 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using ExadelBonusPlus.DataAccess.UserHistory;
+using System.Threading.Tasks;
 
 namespace ExadelBonusPlus.Services.UserHistoryService
 {
-    public class UserHistoryServices
+    public class UserHistoryServices 
     {
-        private readonly IUserHistoryRepo _userHistoryRepo;
-
-        public UserHistoryServices()
+        private readonly IUserHistoryRepository _UserHistoryRepositoryRepository;
+        public UserHistoryServices(IUserHistoryRepository UserHistoryRepositoryRepository)
         {
-            _userHistoryRepo = new MockUserHistory();
-        }
-        public UserHistoryServices(IUserHistoryRepo UserHistoryRepo)
-        {
-            _userHistoryRepo = UserHistoryRepo;
+            _UserHistoryRepositoryRepository = UserHistoryRepositoryRepository;
         }
 
-        public IEnumerable<UserHistory> GetAllUserHistory()
+        public void Add(UserHistory obj)
         {
-           return _userHistoryRepo.GetAllUserHistory();
+            _UserHistoryRepositoryRepository.Add(obj);
+        }
+        
+        public async Task<IEnumerable<UserHistory>> GetAll()
+        {
+           return  await _UserHistoryRepositoryRepository.GetAll();
         }
 
-        public UserHistory GetUserHistoryById(Guid Id)
+        public async Task<UserHistory> GetById(Guid Id)
         {
-            return _userHistoryRepo.getUserHistoryById(Id);
-        }
-        public IEnumerable<UserHistory> GetUserHistory(Guid UserId)
-        {
-            return _userHistoryRepo.GetUserHistory(UserId);
-        }
-        public IEnumerable<UserHistory> GetPromoHistory(Guid PromoId)
-        {
-            return _userHistoryRepo.GetPromoHistory(PromoId);
+            return await _UserHistoryRepositoryRepository.GetById(Id);
         }
 
-        public UserHistory DeleteUserHistory(Guid Id)
+        public void Remove(Guid id)
         {
-            return _userHistoryRepo.DeleteUserHistory(Id);
+            _UserHistoryRepositoryRepository.Remove(id);
         }
-        public UserHistory UpdateUserHistory(UserHistory userHistory)
+
+        public async  Task<IEnumerable<UserHistory>> GetUserHistory(Guid UserId)
         {
-            return _userHistoryRepo.UpdateUserHistory(userHistory);
+            return await _UserHistoryRepositoryRepository.GetUserHistory(UserId);
         }
-        public UserHistory AddUserHistory(UserHistory userHistory)
+        public void Update(Guid id, UserHistory obj)
         {
-            return _userHistoryRepo.AddUserHistory(userHistory);
+            _UserHistoryRepositoryRepository.Update(id, obj);
         }
     }
 }

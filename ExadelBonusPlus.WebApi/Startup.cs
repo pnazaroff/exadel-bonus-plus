@@ -7,6 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ExadelBonusPlus.DataAccess;
+using ExadelBonusPlus.DataAccess.UserHistory;
+using ExadelBonusPlus.Services.Models.UserHistoryManager;
 
 namespace ExadelBonusPlus.WebApi
 {
@@ -25,6 +28,9 @@ namespace ExadelBonusPlus.WebApi
                     Title = "exadel-bonus-plus API V1",
                 });
             });
+            services.AddSingleton<IUserHistoryRepo, MockUserHistory>();
+            services.AddScoped<IMongoContext, MongoContext>();
+            services.AddScoped<IUserHistoryRepository, UserHistoryRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

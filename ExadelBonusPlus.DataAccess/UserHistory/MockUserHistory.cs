@@ -14,25 +14,21 @@ namespace ExadelBonusPlus.DataAccess.UserHistory
         {
             _userHistory = new List<Services.Models.UserHistoryManager.UserHistory>()
             {
-                new Services.Models.UserHistoryManager.UserHistory(){ UserId = new Guid(), Code = "ExadelBonusPlus", DateAdded = DateTime.Now, Id = new Guid(), PromoId = new Guid()},
-                new Services.Models.UserHistoryManager.UserHistory(){ UserId = new Guid(), Code = "ExadelBonusPlus1", DateAdded = DateTime.Now, Id = new Guid(), PromoId = new Guid()},
-                new Services.Models.UserHistoryManager.UserHistory(){ UserId = new Guid(), Code = "ExadelBonusPlus2", DateAdded = DateTime.Now, Id = new Guid(), PromoId = new Guid()},
-                new Services.Models.UserHistoryManager.UserHistory(){ UserId = new Guid(), Code = "ExadelBonusPlus3", DateAdded = DateTime.Now, Id = new Guid(), PromoId = new Guid()},
+                new Services.Models.UserHistoryManager.UserHistory(){ UserId = Guid.Parse("53dba9a9-f4be-419c-b2fd-135a60f1be02"), Code = "ExadelBonusPlus",
+                                                                    DateAdded = DateTime.Now, Id = new Guid(), PromoId = Guid.Parse("fd68e93d-ea7b-4b75-9b5a-60890c06e5b2")},
+                new Services.Models.UserHistoryManager.UserHistory(){ UserId =  Guid.Parse("53dba9a9-f4be-419c-b2fd-135a60f1be02"), Code = "ExadelBonusPlus1",
+                                                                    DateAdded = DateTime.Now, Id = new Guid(), PromoId = Guid.Parse("6f0031fe-11fa-4b14-b979-e7c30ff67f9d")},
+                new Services.Models.UserHistoryManager.UserHistory(){ UserId = Guid.Parse("dc631af3-55a9-4ff1-80b7-cce589a494ee"), Code = "ExadelBonusPlus2",
+                                                                    DateAdded = DateTime.Now, Id = new Guid(), PromoId = Guid.Parse("fd68e93d-ea7b-4b75-9b5a-60890c06e5b2")},
+                new Services.Models.UserHistoryManager.UserHistory(){ UserId = Guid.Parse("dc631af3-55a9-4ff1-80b7-cce589a494ee"), Code = "ExadelBonusPlus3",
+                                                                    DateAdded = DateTime.Now, Id = new Guid(), PromoId = Guid.Parse("6f0031fe-11fa-4b14-b979-e7c30ff67f9d")},
 
             };
         }
 
-        public MockUserHistory(List<Services.Models.UserHistoryManager.UserHistory> userHistory = null)
-        {
-            if (userHistory != null)
-            {
-                _userHistory = userHistory;
-            }
-        }
 
         public Services.Models.UserHistoryManager.UserHistory AddUserHistory(Services.Models.UserHistoryManager.UserHistory userHistory)
         {
-            
             _userHistory.Add(userHistory);
             return userHistory;
         }
