@@ -7,6 +7,7 @@
         public string Country { get; set; }
 
         public double  Lattitude { get; set; }
+
         public double  Longtitude { get; set; }
 
     }
