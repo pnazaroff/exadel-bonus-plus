@@ -26,6 +26,12 @@ namespace ExadelBonusPlus.WebApi
         
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<ExadelBonusDbSettings>(
+                _configuration.GetSection(nameof(ExadelBonusDbSettings)));
+
+            services.AddSingleton<IExadelBonusDbSettings>(sp =>
+                sp.GetRequiredService<IOptions<ExadelBonusDbSettings>>().Value);
+            services.AddSingleton<VendorService>();
             services.AddControllers();
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
