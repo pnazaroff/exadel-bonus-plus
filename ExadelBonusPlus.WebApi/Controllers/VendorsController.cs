@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using ExadelBonusPlus.Services;
 using ExadelBonusPlus.Services.Models;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
@@ -10,25 +11,23 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace ExadelBonusPlus.WebApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("/api/[controller]")]
     public class VendorsController : ControllerBase
     {
-        private IMongoDatabase database;
-        public VendorsController()
+        private readonly VendorService _service;
+
+        public VendorsController(VendorService service)
         {
-            var client = new MongoClient("mongodb+srv://m001-student:m001-mongodb-basics@sandbox.yzrs7.mongodb.net/ExadelBonusPlus?retryWrites=true&w=majority");
-            //db name is hard coded
-            database = client.GetDatabase("ExadelBonusPlus");
+            _service = service;
         }
-        [HttpGet("/api/Vendors")]
+
+        [HttpGet]
         [SwaggerResponse((int)HttpStatusCode.OK)]
         [SwaggerResponse((int)HttpStatusCode.NotFound)]
         public async Task<IEnumerable<Vendor>> GetVendors()
         {
-            var collection = database.GetCollection<Vendor>("Vendors");
-
-            return await collection.Find(new BsonDocument()).ToListAsync();
-            
+            return await _service.GetVendors();
         }
+
     }
 }
