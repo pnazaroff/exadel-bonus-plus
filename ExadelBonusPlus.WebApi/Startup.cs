@@ -43,6 +43,7 @@ namespace ExadelBonusPlus.WebApi
             services.AddSingleton<IUserHistoryRepo, MockUserHistory>();
             services.AddScoped<IMongoContext, MongoContext>();
             services.AddScoped<IUserHistoryRepository, UserHistoryRepository>();
+            services.AddScoped<IGenericCrud, GenericCrud>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
