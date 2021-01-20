@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ExadelBonusPlus.DataAccess
 {
@@ -8,9 +9,9 @@ namespace ExadelBonusPlus.DataAccess
         //Create 
         void InsertRecord<T>(string collectionName, T record);
         //Read All 
-        List<T> LoadRecords<T>(string collectionName);
+        Task<List<T>> LoadRecords<T>(string collectionName);
         //Read by Id
-        T LoadRecordById<T>(string collectionName, Guid id);
+        Task<T> LoadRecordById<T>(string collectionName, Guid id);
         //Upsert
         /// <summary>
         /// Inserts or updates where it is necessary 
