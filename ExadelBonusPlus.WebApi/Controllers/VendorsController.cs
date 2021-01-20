@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using ExadelBonusPlus.DataAccess;
 using ExadelBonusPlus.Services;
 using ExadelBonusPlus.Services.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -14,11 +15,11 @@ namespace ExadelBonusPlus.WebApi.Controllers
     [Route("/api/[controller]")]
     public class VendorsController : ControllerBase
     {
-        private readonly VendorService _service;
+        private IGenericCrud _crudManager;
 
-        public VendorsController(VendorService service)
+        public VendorsController(IGenericCrud crudManager)
         {
-            _service = service;
+            _crudManager = crudManager;
         }
 
         [HttpGet]
@@ -26,7 +27,7 @@ namespace ExadelBonusPlus.WebApi.Controllers
         [SwaggerResponse((int)HttpStatusCode.NotFound)]
         public async Task<IEnumerable<Vendor>> GetVendors()
         {
-            return await _service.GetVendors();
+            return await _crudManager.LoadRecords<Vendor>("Vendors");
         }
 
     }
