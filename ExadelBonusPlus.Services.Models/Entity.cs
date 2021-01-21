@@ -2,7 +2,7 @@
 // Copyright (c) MediaShop. All rights reserved.
 // </copyright>
 
-namespace MediaShop.Common.Models
+namespace ExadelBonusPlus.Services.Models
 {
     using System;
 

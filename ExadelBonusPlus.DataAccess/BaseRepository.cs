@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-using MediaShop.Common.Models;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -13,13 +12,13 @@ namespace ExadelBonusPlus.Services.Models
     public abstract class BaseRepository<TModel> : IRepository<TModel> 
         where TModel : Entity
     {
-        //protected readonly IMongoContext _context;
-        protected readonly IMongoCollection<TModel> _dbSet;
-        public MongoClient MongoClient { get; set; }
 
         private readonly IConfiguration _configuration;
-        private IMongoDatabase _database { get; set; }
+        private readonly MongoClient MongoClient;
+        private readonly IMongoDatabase _database;
+        private readonly IMongoCollection<TModel> _dbSet;
 
+        
         public BaseRepository(IConfiguration configuration)
         {
             MongoClient = new MongoClient(_configuration["MongoDbSettings:ConnectionString"]);
