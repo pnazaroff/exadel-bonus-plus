@@ -1,8 +1,4 @@
-﻿// <copyright file="Entity.cs" company="MediaShop">
-// Copyright (c) MediaShop. All rights reserved.
-// </copyright>
-
-namespace ExadelBonusPlus.Services.Models
+﻿namespace ExadelBonusPlus.Services.Models
 {
     using System;
 
