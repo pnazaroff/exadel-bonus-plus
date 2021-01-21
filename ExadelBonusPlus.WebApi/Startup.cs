@@ -1,5 +1,3 @@
-using ExadelBonusPlus.Services;
-using ExadelBonusPlus.Services.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
