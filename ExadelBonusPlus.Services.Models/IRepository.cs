@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace ExadelBonusPlus.Services.Models
 {
-    public interface IRepository<TModel>
-        where TModel : Entity
+    public interface IRepository<TModel, TId>
+        where TModel : IEntity<TId>
     {
         Task<TModel> Add(TModel obj);
-        Task<IEnumerable<TModel>> Find(Expression<Func<TModel, bool>> filter);
-        Task<TModel> Update(Guid id, TModel obj);
-        Task<TModel> Remove(Guid id);
+        Task<IEnumerable<TModel>> GetAll();
+        Task<TModel> GetById(TId id);
+        Task<TModel> Update(TId id, TModel obj);
+        Task Remove(TId id);
     }
 }

@@ -12,7 +12,7 @@ namespace ExadelBonusPlus.WebApi
 {
     public class Startup
     {
-        private IConfiguration _configuration;
+        private readonly IConfiguration _configuration;
         public Startup(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -20,8 +20,8 @@ namespace ExadelBonusPlus.WebApi
         
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<MongoDbSettingsOptions>(_configuration.GetSection(
-                MongoDbSettingsOptions.MongoDbSettings));
+            services.Configure<MongoDbSettings>(_configuration.GetSection(
+                nameof(MongoDbSettings)));
 
             services.AddControllers();
 
