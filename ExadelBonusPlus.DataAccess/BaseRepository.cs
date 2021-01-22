@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -13,17 +14,19 @@ namespace ExadelBonusPlus.Services.Models
         where TModel : Entity
     {
 
-        private readonly IConfiguration _configuration;
+        private readonly MongoDbSettingsOptions _options;
         private readonly MongoClient MongoClient;
         private readonly IMongoDatabase _database;
         private readonly IMongoCollection<TModel> _dbSet;
 
         
-        public BaseRepository(IConfiguration configuration)
+        public BaseRepository(IOptions<MongoDbSettingsOptions> options)
         {
-            MongoClient = new MongoClient(_configuration["MongoDbSettings:ConnectionString"]);
+            _options = options.Value;
 
-            _database = MongoClient.GetDatabase(_configuration["MongoDbSettings:DatabaseName"]);
+            MongoClient = new MongoClient(_options.ConnectionString);
+
+            _database = MongoClient.GetDatabase(_options.DatabaseName);
             _dbSet = _database.GetCollection<TModel>(nameof(TModel));
         }
 
