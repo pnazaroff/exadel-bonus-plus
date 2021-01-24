@@ -9,10 +9,10 @@ namespace ExadelBonusPlus.Services.Models
     public interface IRepository<TModel, TId>
         where TModel : IEntity<TId>
     {
-        Task<TModel> Add(TModel obj);
-        Task<IEnumerable<TModel>> GetAll();
-        Task<TModel> GetById(TId id);
-        Task<TModel> Update(TId id, TModel obj);
-        Task Remove(TId id);
+        Task<TModel> AddAsync(TModel obj);
+        Task<IEnumerable<TModel>> GetAllAsync();
+        Task<TModel> GetByIdAsync(TId id);
+        Task<TModel> UpdateAsync(TId id, TModel obj);
+        Task RemoveAsync(TId id);
     }
 }
