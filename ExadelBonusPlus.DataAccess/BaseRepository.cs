@@ -36,10 +36,9 @@ namespace ExadelBonusPlus.Services.Models
             return GetCollection().Find(Builders<TModel>.Filter.Eq("_id", id)).FirstAsync();
         }
 
-        public virtual Task<TModel> UpdateAsync(Guid id, TModel obj)
+        public virtual Task UpdateAsync(Guid id, TModel obj)
         {
-            GetCollection().ReplaceOne(Builders<TModel>.Filter.Eq("_id", id), obj);
-            return Task.FromResult(obj);
+            return GetCollection().ReplaceOneAsync(Builders<TModel>.Filter.Eq("_id", id), obj);
         }
 
         public virtual Task RemoveAsync(Guid id)

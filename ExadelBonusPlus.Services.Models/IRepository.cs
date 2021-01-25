@@ -12,7 +12,7 @@ namespace ExadelBonusPlus.Services.Models
         Task<TModel> AddAsync(TModel obj);
         Task<IEnumerable<TModel>> GetAllAsync();
         Task<TModel> GetByIdAsync(TId id);
-        Task<TModel> UpdateAsync(TId id, TModel obj);
+        Task UpdateAsync(TId id, TModel obj);
         Task RemoveAsync(TId id);
     }
 }
