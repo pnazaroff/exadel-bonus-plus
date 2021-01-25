@@ -23,7 +23,7 @@ namespace ExadelBonusPlus.Services.Models
 
         public virtual Task AddAsync(TModel obj, CancellationToken cancellationToken = default)
         {
-            return GetCollection().InsertOneAsync(obj);
+            return GetCollection().InsertOneAsync(obj, cancellationToken);
         }
         
         public virtual async Task<IEnumerable<TModel>> GetAllAsync(CancellationToken cancellationToken = default)
