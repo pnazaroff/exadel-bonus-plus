@@ -6,12 +6,13 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using System.Threading.Tasks;
+using ExadelBonusPlus.Services.Models;
 
 namespace ExadelBonusPlus.WebApi
 {
     public class Startup
     {
-        private IConfiguration _configuration;
+        private readonly IConfiguration _configuration;
         public Startup(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -19,6 +20,9 @@ namespace ExadelBonusPlus.WebApi
         
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<MongoDbSettings>(_configuration.GetSection(
+                nameof(MongoDbSettings)));
+
             services.AddControllers();
 
             services.AddSwaggerGen(c => {
