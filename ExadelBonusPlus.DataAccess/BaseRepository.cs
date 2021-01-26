@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using ExadelBonusPlus.Services.Models;
+using ExadelBonusPlus.Services.Models.Interfaces;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
-namespace ExadelBonusPlus.Services.Models
+namespace ExadelBonusPlus.DataAccess
 {
     public abstract class BaseRepository<TModel> : IRepository<TModel, Guid> 
         where TModel : IEntity<Guid>
@@ -38,7 +40,7 @@ namespace ExadelBonusPlus.Services.Models
 
         public virtual Task UpdateAsync(Guid id, TModel obj,  CancellationToken cancellationToken = default)
         {
-            return GetCollection().ReplaceOneAsync(Builders<TModel>.Filter.Eq("_id", id), obj, new ReplaceOptions() { IsUpsert = false }, cancellationToken);
+            return GetCollection().ReplaceOneAsync(Builders<TModel>.Filter.Eq("_id", id), obj, new ReplaceOptions(), cancellationToken);
         }
 
         public virtual Task RemoveAsync(Guid id, CancellationToken cancellationToken = default)

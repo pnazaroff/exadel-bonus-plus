@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ExadelBonusPlus.Services.Models
+namespace ExadelBonusPlus.Services.Models.Interfaces
 {
     public interface IRepository<TModel, TId>
         where TModel : IEntity<TId>
