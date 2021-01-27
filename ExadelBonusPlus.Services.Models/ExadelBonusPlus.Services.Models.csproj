@@ -10,4 +10,9 @@
     <PackageReference Include="MongoDB.Bson" Version="2.11.5" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DTO\" />
+    <Folder Include="Interfaces\" />
+  </ItemGroup>
+
 </Project>
