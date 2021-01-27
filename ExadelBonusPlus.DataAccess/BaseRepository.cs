@@ -21,27 +21,27 @@ namespace ExadelBonusPlus.Services.Models
             _database = _mongoClient.GetDatabase(_mongoDbSettings.DatabaseName);
         }
 
-        public virtual Task AddAsync(TModel obj, CancellationToken cancellationToken = default)
+        public virtual Task AddAsync(TModel obj, CancellationToken cancellationToken)
         {
             return GetCollection().InsertOneAsync(obj, cancellationToken);
         }
         
-        public virtual async Task<IEnumerable<TModel>> GetAllAsync(CancellationToken cancellationToken = default)
+        public virtual async Task<IEnumerable<TModel>> GetAllAsync(CancellationToken cancellationToken)
         {
             return await GetCollection().Find(Builders<TModel>.Filter.Empty).ToListAsync(cancellationToken);
         }
 
-        public virtual Task<TModel> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        public virtual Task<TModel> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
             return GetCollection().Find(Builders<TModel>.Filter.Eq("_id", id)).FirstAsync(cancellationToken);
         }
 
-        public virtual Task UpdateAsync(Guid id, TModel obj,  CancellationToken cancellationToken = default)
+        public virtual Task UpdateAsync(Guid id, TModel obj,  CancellationToken cancellationToken)
         {
             return GetCollection().ReplaceOneAsync(Builders<TModel>.Filter.Eq("_id", id), obj, new ReplaceOptions() { IsUpsert = false }, cancellationToken);
         }
 
-        public virtual Task RemoveAsync(Guid id, CancellationToken cancellationToken = default)
+        public virtual Task RemoveAsync(Guid id, CancellationToken cancellationToken)
         {
             return GetCollection().DeleteOneAsync(Builders<TModel>.Filter.Eq("_id", id), cancellationToken);
         }
