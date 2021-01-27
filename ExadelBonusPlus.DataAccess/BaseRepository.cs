@@ -14,7 +14,7 @@ namespace ExadelBonusPlus.Services.Models
         private readonly MongoClient _mongoClient;
         private readonly IMongoDatabase _database;
 
-        public BaseRepository(IOptions<MongoDbSettings> mongoDbSettings)
+        protected private BaseRepository(IOptions<MongoDbSettings> mongoDbSettings)
         {
             _mongoDbSettings = mongoDbSettings.Value;
             _mongoClient = new MongoClient(_mongoDbSettings.ConnectionString);
@@ -46,7 +46,7 @@ namespace ExadelBonusPlus.Services.Models
             return GetCollection().DeleteOneAsync(Builders<TModel>.Filter.Eq("_id", id), cancellationToken);
         }
         
-        private IMongoCollection<TModel> GetCollection()
+        protected private IMongoCollection<TModel> GetCollection()
         {
             return _database.GetCollection<TModel>(nameof(TModel));
         }
