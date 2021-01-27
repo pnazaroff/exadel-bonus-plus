@@ -1,10 +1,12 @@
 ﻿using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using ExadelBonusPlus.Services;
 using ExadelBonusPlus.WebApi.ViewModel;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -18,7 +20,7 @@ namespace ExadelBonusPlus.WebApi.Controllers
         private readonly IUserService _userService;
         public AccountController(IUserService userService)
         {
-            _userService = userService ?? throw new ArgumentNullException(nameof(userService)); ;
+            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
         }
         [HttpPost]
         [Route("Authorize")]
@@ -30,15 +32,8 @@ namespace ExadelBonusPlus.WebApi.Controllers
         {
             try
             {
-                var result = await _userService.LogIn(model.Email, model.Password);
-                if (result != null)
-                {
-                    return Ok(result);
-                }
-                else
-                {
-                    return BadRequest();
-                }
+                var result = await _userService.LogInAsync(model.Email, model.Password);
+                return Ok(result);
             }
             catch (Exception e)
             {
@@ -49,8 +44,8 @@ namespace ExadelBonusPlus.WebApi.Controllers
         [HttpPost]
         [Route("Register")]
         [AllowAnonymous]
-        [SwaggerResponse((int) HttpStatusCode.OK)]
-        [SwaggerResponse((int) HttpStatusCode.BadRequest)]
+        [SwaggerResponse((int)HttpStatusCode.OK)]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> Register(AuthRequest model)
         {
             try
@@ -81,25 +76,19 @@ namespace ExadelBonusPlus.WebApi.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles="User")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [Route("UserInfo")]
-        [SwaggerResponse((int) HttpStatusCode.OK)]
-        [SwaggerResponse((int) HttpStatusCode.BadRequest)]
-        [SwaggerResponse((int) HttpStatusCode.Forbidden)]
-        public IActionResult UserInfo()
+        [SwaggerResponse((int)HttpStatusCode.OK)]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest)]
+        [SwaggerResponse((int)HttpStatusCode.Forbidden)]
+        public async Task<IActionResult> UserInfo()
         {
             try
             {
-                var nameIdentifier = this.HttpContext.User.Claims
-                    .FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
-                if (nameIdentifier != null)
-                {
-                    var userInfo = _userService.GetUserInfo(nameIdentifier.Value);
-                    if (userInfo != null)
-                    {
-                        return Ok(userInfo);
-                    }
-                }
+                var id = User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
+                var userInfo = await _userService.GetUserInfoAsync(id);
+
+                return Ok(userInfo);
 
                 return BadRequest();
             }
@@ -115,40 +104,61 @@ namespace ExadelBonusPlus.WebApi.Controllers
             {
                 return StatusCode(500);
             }
-           
-
         }
-       
+
         [HttpPost]
         [Route("logout")]
         [SwaggerResponse((int)HttpStatusCode.OK)]
         [SwaggerResponse((int)HttpStatusCode.BadRequest)]
-        public IActionResult Logout()
+        public async Task<IActionResult> LogoutAsync()
         {
             try
-           {
-               var result = _userService.LogOutAsync();
-               if (result.IsCompletedSuccessfully)
-               {
-                   return Ok();
-               }
-               else
-               {
-                   return BadRequest();
-               }
+            {
+                await _userService.LogOutAsync();
+                return Ok();
             }
-           catch (InvalidOperationException)
-           {
-               return BadRequest();
-           }
-           catch (ArgumentException)
-           {
-               return BadRequest();
-           }
-           catch (Exception e)
-           {
-               return StatusCode(500);
-           }
+            catch (InvalidOperationException)
+            {
+                return BadRequest();
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500);
+            }
+        }
+
+
+        [HttpPost]
+        [Route("refresh")]
+        [SwaggerResponse((int)HttpStatusCode.OK)]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> RefreshTokenAsync(string email, string refreshToken)
+        {
+            try
+            {
+                var result = await _userService.RefreshAccessToken(email, refreshToken);
+                return Ok(result);
+
+            }
+            catch (InvalidOperationException exception)
+            {
+                var message = exception.Message;
+                return BadRequest(message);
+            }
+            catch (ArgumentException exception)
+            {
+                var message = exception.Message;
+                return BadRequest();
+            }
+            catch (Exception e)
+            {
+                var message = e.Message;
+                return StatusCode(500);
+            }
         }
     }
 }

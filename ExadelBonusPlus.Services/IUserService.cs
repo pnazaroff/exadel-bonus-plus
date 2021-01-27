@@ -4,15 +4,17 @@ using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 using ExadelBonusPlus.Services.Models;
+using ExadelBonusPlus.WebApi.ViewModel;
 
 namespace ExadelBonusPlus.Services
 {
     public interface IUserService
     {
-        Task<string> LogIn(string email, string password);
+        Task<AuthResponce> LogInAsync(string email, string password);
         Task LogOutAsync();
-        Task<string> Register(string email, string password);
+        Task<string> RegisterAsync(string email, string password);
 
-        Task<ApplicationUser> GetUserInfo(string userId);
+        Task<AuthResponce> RefreshAccessTokenAsync(string email, string refreshToken);
+        Task<ApplicationUser> GetUserInfoAsync(string userId);
     }
 }

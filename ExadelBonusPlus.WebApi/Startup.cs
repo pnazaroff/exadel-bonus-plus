@@ -13,6 +13,7 @@ using ExadelBonusPlus.Services.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using ExadelBonusPlus.DataAccess;
 
 namespace ExadelBonusPlus.WebApi
 {
@@ -29,6 +30,7 @@ namespace ExadelBonusPlus.WebApi
             services.Configure<MongoDbSettings>(_configuration.GetSection(
                 nameof(MongoDbSettings)));
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IRefreshTokenRepositry, RefreshTokenRepository>();
             services.AddControllers();
             services.Configure<AppSettings>(_configuration.GetSection("Token"));
             services.AddSwaggerGen(c => {
@@ -69,6 +71,7 @@ namespace ExadelBonusPlus.WebApi
                     cfg.SaveToken = true;
                     cfg.TokenValidationParameters = new TokenValidationParameters()
                     {
+                        ClockSkew = TimeSpan.Zero,
                         ValidateIssuer = false,
                         ValidIssuer = _configuration["Token:Issuer"],
                         ValidateAudience = false,

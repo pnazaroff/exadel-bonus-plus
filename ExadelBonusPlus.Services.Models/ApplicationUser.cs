@@ -13,10 +13,13 @@ namespace ExadelBonusPlus.Services.Models
 
         public ApplicationUser(string userName, string email) : base(userName, email)
         {
+            IsActiv = true;
         }
         /// <summary>
         /// Gets or sets in activ worker now.
         /// </summary>
         public bool IsActiv { get; set; }
+
+        
     }
 }

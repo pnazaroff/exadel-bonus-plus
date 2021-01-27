@@ -17,7 +17,7 @@ namespace ExadelBonusPlus.WebApi.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class AdminController : ControllerBase
     {
-       
+
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
 
@@ -32,7 +32,7 @@ namespace ExadelBonusPlus.WebApi.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateRole(string roleName)
         {
-            User.HasClaim(ClaimTypes.Role, "Admin ");
+            
             ApplicationRole newRole = new ApplicationRole
             {
                 Name = roleName
@@ -53,9 +53,6 @@ namespace ExadelBonusPlus.WebApi.Controllers
                 return BadRequest(errorList);
             }
 
-
-            //}
-            //return StatusCode(403);
         }
 
         [HttpPut]
@@ -66,50 +63,35 @@ namespace ExadelBonusPlus.WebApi.Controllers
         [SwaggerResponse((int)HttpStatusCode.NotFound)]
         [SwaggerResponse((int)HttpStatusCode.Forbidden)]
 
-        public async Task<IActionResult> EditUserInRole(List<string> usersName, string roleName)
+        public async Task<IActionResult> EditUserInRole(string usersName, string roleId)
         {
-            if (User.HasClaim(ClaimTypes.Role, "Admin"))
+            var role = await _roleManager.FindByIdAsync(roleId);
+            if (role == null)
             {
-                var role = await _roleManager.FindByIdAsync(roleName);
-                List<string> errorList = new List<string>();
-                if (role == null)
-                {
-                    return NotFound("NotFound role with id = " + roleName);
-                }
-                else
-                {
-                    foreach (var user in usersName)
-                    {
-                        var userNew = await _userManager.FindByNameAsync(user);
-                        IdentityResult result = null;
-                        if (await _userManager.IsInRoleAsync(userNew, roleName))
-                        {
-                            return BadRequest("User in the choose role");
-                        }
-                        else
-                        {
-                            result = await _userManager.AddToRoleAsync(userNew, role.Name);
-                            if (!result.Succeeded)
-                            {
-                                return BadRequest(userNew.UserName + "didn't add role" + role.Name);
-                            }
-                            else
-                            {
-
-                                foreach (var error in result.Errors)
-                                {
-                                    errorList.Add(error.Description);
-                                }
-                                return BadRequest(errorList);
-                            }
-                        }
-                    }
-
-                    return Ok();
-                }
+                return NotFound("NotFound role with id = " + roleId);
             }
-            return StatusCode(403);
+            else
+            {
+                var userNew = await _userManager.FindByEmailAsync(usersName);
+                IdentityResult result = null;
+                if (await _userManager.IsInRoleAsync(userNew, role.Name))
+                {
+                    return BadRequest("User in the choose role");
+                }
 
+                result = await _userManager.AddToRoleAsync(userNew, role.Name);
+                if (!result.Succeeded)
+                {
+                    List<string> errorList = new List<string>();
+                    foreach (var error in result.Errors)
+                    {
+                        errorList.Add(error.Description);
+                    }
+                    return BadRequest(errorList);
+                }
+
+                return BadRequest(userNew.UserName + "in Role:" + role.Name);
+            }
         }
 
         [HttpDelete]
@@ -129,24 +111,20 @@ namespace ExadelBonusPlus.WebApi.Controllers
                 {
                     return NotFound("NotFound role with id = " + roleId.ToString());
                 }
-                else
-                {
-                    var result = await _roleManager.DeleteAsync(role);
-                    if (result.Succeeded)
-                    {
-                        return Ok("Role is deleted");
-                    }
-                    else
-                    {
-                        List<string> errorList = new List<string>();
-                        foreach (var error in result.Errors)
-                        {
-                            errorList.Add(error.Description);
-                        }
 
-                        return BadRequest(errorList);
-                    }
+                var result = await _roleManager.DeleteAsync(role);
+                if (result.Succeeded)
+                {
+                    return Ok("Role is deleted");
                 }
+
+                List<string> errorList = new List<string>();
+                foreach (var error in result.Errors)
+                {
+                    errorList.Add(error.Description);
+                }
+
+                return BadRequest(errorList);
             }
             return StatusCode(403);
         }
