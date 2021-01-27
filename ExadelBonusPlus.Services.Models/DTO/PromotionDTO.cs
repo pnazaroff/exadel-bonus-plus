@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ExadelBonusPlus.Services.Models.DTO
 {
-    public class PromotionDTO
+    public class PromotionDto
     {
         public Guid Id { get; set; }
 

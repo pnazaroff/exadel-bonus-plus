@@ -9,14 +9,14 @@ namespace ExadelBonusPlus.Services.Models.Interfaces
 {
     public interface IPromotionService
     {
-        Task<PromotionDTO> AddPromotionAsync(PromotionDTO model);
+        Task<PromotionDto> AddPromotionAsync(PromotionDto model);
 
-        Task<List<PromotionDTO>> FindAllPromotionsAsync();
+        Task<List<PromotionDto>> FindAllPromotionsAsync();
 
-        Task<PromotionDTO> FindPromotionByIdAsync(Guid id);
+        Task<PromotionDto> FindPromotionByIdAsync(Guid id);
 
-        Task<PromotionDTO> UpdatePromotionAsync(PromotionDTO model);
+        Task<PromotionDto> UpdatePromotionAsync(Guid id, PromotionDto model);
 
-        Task<PromotionDTO> DeletePromotionAsync(Guid id);
+        Task<PromotionDto> DeletePromotionAsync(Guid id);
     }
 }

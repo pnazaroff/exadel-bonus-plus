@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 using ExadelBonusPlus.Services.Models.DTO;
+using AutoMapper;
 
 namespace ExadelBonusPlus.Services.Models
 {
-    class MapperProfile: AutoMapper.Profile
+    public class MapperProfile: Profile
     {
         public MapperProfile()
         {
-            CreateMap<Promotion, PromotionDTO>();
-            CreateMap<PromotionDTO, Promotion>().ReverseMap();
+            CreateMap<PromotionDto, Promotion>().ReverseMap();
         }
     }
 }

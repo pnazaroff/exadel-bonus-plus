@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace ExadelBonusPlus.Services.Models
 {
     public class Promotion: IEntity<Guid>
     {
+        [BsonId]
+        [BsonElement("_id")]
         public Guid Id { get; set; }
 
         public DateTime CreatedDate { get; set; }

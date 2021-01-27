@@ -14,40 +14,58 @@ namespace ExadelBonusPlus.Services
     public class PromotionService : IPromotionService
     {
         private readonly IPromotionRepository _promotionRepository;
-        public PromotionService(IPromotionRepository promotinRepository)
+        private readonly IMapper _mapper;
+        public PromotionService(IPromotionRepository promotinRepository, IMapper mapper)
         {
+           _promotionRepository = promotinRepository;
+           _mapper = mapper;
         }
 
-        public async Task<PromotionDTO> AddPromotionAsync(PromotionDTO model)
+        public async Task<PromotionDto> AddPromotionAsync(PromotionDto model)
         {
-            model.Id = new Guid();
-            var promotion = Mapper.Map<Promotion>(model);
-            await _promotionRepository.AddAsync(promotion, CancellationToken.None);
+            model.Id = Guid.NewGuid();
+            var promotion = _mapper.Map<Promotion>(model);
+            await _promotionRepository.AddAsync(promotion);
             return model;
         }
 
-        public async Task<List<PromotionDTO>> FindAllPromotionsAsync()
+        public async Task<List<PromotionDto>> FindAllPromotionsAsync()
         {
-            var result = new List<PromotionDTO>();
-            return result is null ? throw new InvalidOperationException("Find promotions error") : result;
+            var result = await _promotionRepository.GetAllAsync();
+            return result is null ? throw new ArgumentException() : _mapper.Map<List<PromotionDto>>(result);
         }
 
-        public async Task<PromotionDTO> FindPromotionByIdAsync(Guid id)
+        public async Task<PromotionDto> FindPromotionByIdAsync(Guid id)
         {
-            var result = new PromotionDTO();
-            return result is null ? throw new InvalidOperationException("Find promotion by Id error") : result;
+            if (id == Guid.Empty)
+            {
+                throw new InvalidOperationException("Bad id");
+            }
+            var result = await _promotionRepository.GetByIdAsync(id);
+            return result is null ? throw new ArgumentException("Promotion does not find by id") : _mapper.Map<PromotionDto>(result);
         }
 
-        public async Task<PromotionDTO> UpdatePromotionAsync(PromotionDTO model)
+        public async Task<PromotionDto> UpdatePromotionAsync(Guid id, PromotionDto model)
         {
-            var result = new PromotionDTO();
-            return result is null ? throw new InvalidOperationException("Update promotion error") : result;
+            var promotion = _mapper.Map<Promotion>(model);
+            await _promotionRepository.UpdateAsync(id, promotion);
+            return model;
         }
 
-        public async Task<PromotionDTO> DeletePromotionAsync(Guid id)
+        public async Task<PromotionDto> DeletePromotionAsync(Guid id)
         {
-            var result = new PromotionDTO();
-            return result is null ? throw new InvalidOperationException("Delete promotion error") : result;
+            if (id == Guid.Empty)
+            {
+                throw new InvalidOperationException("Bad id");
+            }
+
+            var result = await _promotionRepository.GetByIdAsync(id);
+            if (result != null)
+            {
+                await _promotionRepository.RemoveAsync(id);
+            }
+
+            return result is null ? throw new ArgumentException("Does not find promotion for delete") : _mapper.Map<PromotionDto>(result);
         }
     }
 }

@@ -7,57 +7,58 @@ using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 using System.Threading.Tasks;
 using ExadelBonusPlus.Services;
+using ExadelBonusPlus.Services.Models.DTO;
+using ExadelBonusPlus.Services.Models.Interfaces;
 
 namespace ExadelBonusPlus.WebApi
 {
     [ApiController]
     [Route("api/[controller]/")]
-    public class PromotionsController : ControllerBase
+    public class PromotionController : ControllerBase
     {
 
-        private readonly ILogger<PromotionsController> _logger;
-        private readonly PromotionService _promotionService;
+        private readonly ILogger<PromotionController> _logger;
+        private readonly IPromotionService _promotionService;
         
-        public PromotionsController(ILogger<PromotionsController> logger)
+        public PromotionController(ILogger<PromotionController> logger, IPromotionService promotionService)
         {
             _logger = logger;
-            _promotionService = new PromotionService();
+            _promotionService = promotionService;
 
-        }
-
-        [HttpGet]
-        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Promotions", Type = typeof(List<Promotion>))]
-        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
-        public  async Task<ActionResult<IEnumerable<Promotion>>> FindPromotions()
-        {
-            try
-            {
-                return Ok(await _promotionService.FindPromotionsAsync());
-            }
-            catch (InvalidOperationException)
-            {
-                return BadRequest();
-            }
-            catch (ArgumentException)
-            {
-                return BadRequest();
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
-            
         }
 
         [HttpPost]
-        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Promotion added ", Type = typeof(PromotionDTO))]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Promotion added ", Type = typeof(PromotionDto))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<PromotionDTO>> AddPromotion([FromBody]PromotionDTO promotion)
+        public async Task<ActionResult<PromotionDto>> AddPromotionAsync([FromBody] PromotionDto promotion)
         {
             try
             {
                 return Ok(await _promotionService.AddPromotionAsync(promotion));
             }
+            catch (InvalidOperationException e)
+            {
+                return BadRequest(e);
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(e);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e);
+            }
+        }
+
+        [HttpGet]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Promotions", Type = typeof(List<PromotionDto>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<IEnumerable<PromotionDto>>> FindAllPromotionsAsync()
+        {
+            try
+            {
+                return Ok(await _promotionService.FindAllPromotionsAsync());
+            }
             catch (InvalidOperationException)
             {
                 return BadRequest();
@@ -66,20 +67,47 @@ namespace ExadelBonusPlus.WebApi
             {
                 return BadRequest();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return StatusCode(500);
+                return StatusCode(500,e);
             }
+
         }
 
-        [HttpPatch]
-        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Promotion updated ", Type = typeof(PromotionDTO))]
+        [HttpGet]
+        [Route("{id}")]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Promotions", Type = typeof(List<PromotionDto>))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<PromotionDTO>> UpdatePromotion([FromBody] PromotionDTO promotion)
+        public async Task<ActionResult<IEnumerable<PromotionDto>>> FindPromotionByIdAsync([FromRoute] Guid id)
         {
             try
             {
-                return Ok(await _promotionService.UpdatePromotionAsync(promotion));
+                return Ok(await _promotionService.FindPromotionByIdAsync(id));
+            }
+            catch (InvalidOperationException)
+            {
+                return BadRequest();
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e);
+            }
+
+        }
+
+        [HttpPatch]
+        [Route("{id}")]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Promotion updated ", Type = typeof(PromotionDto))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<PromotionDto>> UpdatePromotionAsync([FromRoute] Guid id, [FromBody] PromotionDto promotion)
+        {
+            try
+            {
+                return Ok(await _promotionService.UpdatePromotionAsync(id, promotion));
             }
             catch (InvalidOperationException)
             {
@@ -97,9 +125,9 @@ namespace ExadelBonusPlus.WebApi
 
         [HttpDelete]
         [Route("{id}")]
-        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Promotion deleted ", Type = typeof(PromotionDTO))]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Promotion deleted ", Type = typeof(PromotionDto))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<PromotionDTO>> DeletePromotion([FromRoute] Guid id)
+        public async Task<ActionResult<PromotionDto>> DeletePromotionAsync([FromRoute] Guid id)
         {
             try
             {
