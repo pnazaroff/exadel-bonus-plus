@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using ExadelBonusPlus.Services.Models;
+using ExadelBonusPlus.Services.Models.DTO;
 using ExadelBonusPlus.Services.Models.Interfaces;
+using Microsoft.Extensions.Primitives;
 
 namespace ExadelBonusPlus.Services
 {
@@ -14,33 +18,35 @@ namespace ExadelBonusPlus.Services
         {
         }
 
-        public async Task<Promotion> AddPromotionAsync(Promotion model)
+        public async Task<PromotionDTO> AddPromotionAsync(PromotionDTO model)
         {
-            var result = new Promotion();
-            return result is null ? throw new InvalidOperationException("Add promotion error") : result;
+            model.Id = new Guid();
+            var promotion = Mapper.Map<Promotion>(model);
+            await _promotionRepository.AddAsync(promotion, CancellationToken.None);
+            return model;
         }
 
-        public async Task<List<Promotion>> FindAllPromotionsAsync()
+        public async Task<List<PromotionDTO>> FindAllPromotionsAsync()
         {
-            var result = new List<Promotion>();
+            var result = new List<PromotionDTO>();
             return result is null ? throw new InvalidOperationException("Find promotions error") : result;
         }
 
-        public async Task<Promotion> FindPromotionByIdAsync(Guid id)
+        public async Task<PromotionDTO> FindPromotionByIdAsync(Guid id)
         {
-            var result = new Promotion();
+            var result = new PromotionDTO();
             return result is null ? throw new InvalidOperationException("Find promotion by Id error") : result;
         }
 
-        public async Task<Promotion> UpdatePromotionAsync(Promotion model)
+        public async Task<PromotionDTO> UpdatePromotionAsync(PromotionDTO model)
         {
-            var result = new Promotion();
+            var result = new PromotionDTO();
             return result is null ? throw new InvalidOperationException("Update promotion error") : result;
         }
 
-        public async Task<Promotion> DeletePromotionAsync(Guid id)
+        public async Task<PromotionDTO> DeletePromotionAsync(Guid id)
         {
-            var result = new Promotion();
+            var result = new PromotionDTO();
             return result is null ? throw new InvalidOperationException("Delete promotion error") : result;
         }
     }

@@ -3,19 +3,20 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using ExadelBonusPlus.Services.Models;
+using ExadelBonusPlus.Services.Models.DTO;
 
 namespace ExadelBonusPlus.Services.Models.Interfaces
 {
     public interface IPromotionService
     {
-        Task<Promotion> AddPromotionAsync(Promotion model);
+        Task<PromotionDTO> AddPromotionAsync(PromotionDTO model);
 
-        Task<List<Promotion>> FindAllPromotionsAsync();
+        Task<List<PromotionDTO>> FindAllPromotionsAsync();
 
-        Task<Promotion> FindPromotionByIdAsync(Guid id);
+        Task<PromotionDTO> FindPromotionByIdAsync(Guid id);
 
-        Task<Promotion> UpdatePromotionAsync(Promotion model);
+        Task<PromotionDTO> UpdatePromotionAsync(PromotionDTO model);
 
-        Task<Promotion> DeletePromotionAsync(Guid id);
+        Task<PromotionDTO> DeletePromotionAsync(Guid id);
     }
 }
