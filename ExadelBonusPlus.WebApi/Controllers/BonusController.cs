@@ -38,45 +38,45 @@ namespace ExadelBonusPlus.WebApi
             }
             catch (InvalidOperationException e)
             {
-                return BadRequest(e);
+                return BadRequest(e.Message);
             }
             catch (ArgumentException e)
             {
-                return BadRequest(e);
+                return BadRequest(e.Message);
             }
             catch (Exception e)
             {
-                return StatusCode(500, e);
+                return StatusCode(500, e.Message);
             }
         }
 
         [HttpGet]
-        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Bonuss", Type = typeof(List<BonusDto>))]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "All bonus", Type = typeof(List<BonusDto>))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<IEnumerable<BonusDto>>> FindAllBonussAsync()
+        public async Task<ActionResult<IEnumerable<BonusDto>>> FindAllBonusAsync()
         {
             try
             {
-                return Ok(await _BonusService.FindAllBonussAsync());
+                return Ok(await _BonusService.FindAllBonusAsync());
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
-            catch (ArgumentException)
+            catch (ArgumentException e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
             catch (Exception e)
             {
-                return StatusCode(500,e);
+                return StatusCode(500, e.Message);
             }
 
         }
 
         [HttpGet]
         [Route("{id}")]
-        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Bonuss", Type = typeof(List<BonusDto>))]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Bonus by ID", Type = typeof(List<BonusDto>))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<IEnumerable<BonusDto>>> FindBonusByIdAsync([FromRoute] Guid id)
         {
@@ -84,17 +84,17 @@ namespace ExadelBonusPlus.WebApi
             {
                 return Ok(await _BonusService.FindBonusByIdAsync(id));
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
-            catch (ArgumentException)
+            catch (ArgumentException e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
             catch (Exception e)
             {
-                return StatusCode(500, e);
+                return StatusCode(500, e.Message);
             }
 
         }
@@ -109,17 +109,17 @@ namespace ExadelBonusPlus.WebApi
             {
                 return Ok(await _BonusService.UpdateBonusAsync(id, Bonus));
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
-            catch (ArgumentException)
+            catch (ArgumentException e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return StatusCode(500);
+                return StatusCode(500, e.Message);
             }
         }
 
@@ -133,17 +133,17 @@ namespace ExadelBonusPlus.WebApi
             {
                 return Ok(await _BonusService.DeleteBonusAsync(id));
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
-            catch (ArgumentException)
+            catch (ArgumentException e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return StatusCode(500);
+                return StatusCode(500, e.Message);
             }
         }
 

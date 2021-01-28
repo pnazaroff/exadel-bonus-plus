@@ -11,7 +11,7 @@ namespace ExadelBonusPlus.Services.Models.Interfaces
     {
         Task<BonusDto> AddBonusAsync(BonusDto model);
 
-        Task<List<BonusDto>> FindAllBonussAsync();
+        Task<List<BonusDto>> FindAllBonusAsync();
 
         Task<BonusDto> FindBonusByIdAsync(Guid id);
 

@@ -6,6 +6,11 @@ namespace ExadelBonusPlus.Services.Models
 {
     public class Bonus: IEntity<Guid>
     {
+        public Bonus()
+        {
+            CreatedDate = DateTime.Now;
+        }
+
         [BsonId]
         [BsonElement("_id")]
         public Guid Id { get; set; }

@@ -36,5 +36,6 @@
         /// </summary>
         /// <value>The modifier identifier.</value>
         public TId ModifierId { get; set; }
+
     }
 }
