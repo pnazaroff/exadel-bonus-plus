@@ -65,21 +65,30 @@ namespace ExadelBonusPlus.Services
             return model;
         }
 
-        public async Task<BonusDto> DeleteBonusAsync(Guid id)
+        public async Task<BonusDto> DeleteBonusAsync(Guid id, bool softDelete = true)
         {
             if (id == Guid.Empty)
             {
                 throw new ArgumentNullException(Resources.IdentifierIsNull);
             }
 
-            var result = await _BonusRepository.GetByIdAsync(id);
-            if (result is null)
+            var bonus = await _BonusRepository.GetByIdAsync(id);
+            if (bonus is null)
             {
                 throw new InvalidOperationException(Resources.FindbyIdError);
             }
-            await _BonusRepository.RemoveAsync(id);
 
-            return _mapper.Map<BonusDto>(result);
+            if (softDelete)
+            {
+                bonus.IsDeleted = true;
+                await _BonusRepository.UpdateAsync(id, bonus);
+            }
+            else
+            {
+                await _BonusRepository.RemoveAsync(id);
+            }
+
+            return _mapper.Map<BonusDto>(bonus);
         }
     }
 }

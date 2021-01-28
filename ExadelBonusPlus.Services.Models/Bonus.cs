@@ -37,5 +37,7 @@ namespace ExadelBonusPlus.Services.Models
 
         public Location Location { get; set; }
 
+        public bool IsDeleted { get; set; }
+
     }
 }

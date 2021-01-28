@@ -127,11 +127,11 @@ namespace ExadelBonusPlus.WebApi
         [Route("{id}")]
         [SwaggerResponse((int)HttpStatusCode.OK, Description = "Bonus deleted ", Type = typeof(BonusDto))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<BonusDto>> DeleteBonusAsync([FromRoute] Guid id)
+        public async Task<ActionResult<BonusDto>> DeleteBonusAsync([FromRoute] Guid id, [FromQuery] bool softDelete = true)
         {
             try
             {
-                return Ok(await _BonusService.DeleteBonusAsync(id));
+                return Ok(await _BonusService.DeleteBonusAsync(id, softDelete));
             }
             catch (InvalidOperationException e)
             {

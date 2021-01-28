@@ -17,6 +17,6 @@ namespace ExadelBonusPlus.Services.Models.Interfaces
 
         Task<BonusDto> UpdateBonusAsync(Guid id, BonusDto model);
 
-        Task<BonusDto> DeleteBonusAsync(Guid id);
+        Task<BonusDto> DeleteBonusAsync(Guid id, bool softDelete);
     }
 }
