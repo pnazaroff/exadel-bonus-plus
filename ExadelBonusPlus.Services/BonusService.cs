@@ -15,11 +15,13 @@ namespace ExadelBonusPlus.Services
     public class BonusService : IBonusService
     {
         private readonly IBonusRepository _BonusRepository;
+        private readonly IBonusTagRepository _BonusTagRepository;
         private readonly IMapper _mapper;
-        public BonusService(IBonusRepository promotinRepository, IMapper mapper)
+        public BonusService(IBonusRepository bonusRepository, IBonusTagRepository bonusTagRepository, IMapper mapper)
         {
-           _BonusRepository = promotinRepository;
-           _mapper = mapper;
+           _BonusRepository = bonusRepository;
+           _BonusTagRepository = bonusTagRepository;
+            _mapper = mapper;
         }
 
         public async Task<BonusDto> AddBonusAsync(BonusDto model)
@@ -31,6 +33,7 @@ namespace ExadelBonusPlus.Services
             model.Id = Guid.NewGuid();
             var bonus = _mapper.Map<Bonus>(model);
             await _BonusRepository.AddAsync(bonus);
+            await AddTagInCollection(bonus);
             return model;
         }
 
@@ -89,6 +92,38 @@ namespace ExadelBonusPlus.Services
             }
 
             return _mapper.Map<BonusDto>(bonus);
+        }
+
+        private async Task AddTagInCollection(Bonus bonus)
+        {
+            BonusTag bonusTag;
+            bool isFind = false;
+
+            foreach (string stringBonusTag in bonus.Tags)
+            {
+                try
+                {
+                    bonusTag = await _BonusTagRepository.FindTagByNameAsync(stringBonusTag);
+                    isFind = true;
+                }
+                catch
+                {
+                    bonusTag = new BonusTag() {Name = stringBonusTag};
+                }
+
+                if (isFind)
+                {
+                    bonusTag.BonusList.Add(bonus);
+                    await _BonusTagRepository.UpdateAsync(bonusTag.Id, bonusTag);
+                }
+                else
+                {
+                    bonusTag.BonusList = new List<Bonus>() { bonus };
+                    await _BonusTagRepository.AddAsync(bonusTag);
+                }
+            }
+
+            //to be continued
         }
     }
 }

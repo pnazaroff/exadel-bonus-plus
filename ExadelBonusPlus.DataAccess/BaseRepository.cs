@@ -48,7 +48,7 @@ namespace ExadelBonusPlus.DataAccess
             return GetCollection().DeleteOneAsync(Builders<TModel>.Filter.Eq("_id", id), cancellationToken);
         }
         
-        protected private IMongoCollection<TModel> GetCollection()
+        protected IMongoCollection<TModel> GetCollection()
         {
             return _database.GetCollection<TModel>(typeof(TModel).Name);
         }

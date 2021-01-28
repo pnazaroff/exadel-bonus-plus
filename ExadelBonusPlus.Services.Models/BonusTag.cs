@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace ExadelBonusPlus.Services.Models
 {
-    public class Bonus: IEntity<Guid>
+    public class BonusTag: IEntity<Guid>
     {
-        public Bonus()
+
+        public BonusTag()
         {
             CreatedDate = DateTime.Now;
         }
@@ -22,24 +24,9 @@ namespace ExadelBonusPlus.Services.Models
         public DateTime? ModifiedDate { get; set; }
 
         public Guid ModifierId { get; set; }
-        
+
         public string Name { get; set; }
 
-        public string Description { get; set; }
-
-        public Guid Vendor { get; set; }
-
-        public DateTime DateStart { get; set; }
-
-        public DateTime DateEnd { get; set; }
-
-        public int Estimate { get; set; }
-
-        public Location Location { get; set; }
-
-        public List<string> Tags { get; set; }
-
-        public bool IsDeleted { get; set; }
-
+        public List<Bonus> BonusList { get; set; }
     }
 }

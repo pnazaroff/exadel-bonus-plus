@@ -21,5 +21,7 @@ namespace ExadelBonusPlus.Services.Models.DTO
 
         public Location Location { get; set; }
 
+        public string[] Tags { get; set; }
+
     }
 }
