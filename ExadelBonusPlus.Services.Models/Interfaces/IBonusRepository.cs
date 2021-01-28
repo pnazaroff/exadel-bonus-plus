@@ -7,9 +7,9 @@ using ExadelBonusPlus.Services.Models;
 
 namespace ExadelBonusPlus.Services.Models.Interfaces
 {
-    public interface IPromotionRepository: IRepository<Promotion,Guid>
+    public interface IBonusRepository: IRepository<Bonus,Guid>
     {
-        Task<IEnumerable<Promotion>> FindPromotionByTagAsync(string tag, CancellationToken cancellationToken);
+        Task<IEnumerable<Bonus>> FindBonusByTagAsync(string tag, CancellationToken cancellationToken);
 
         //to be continued ...
     }

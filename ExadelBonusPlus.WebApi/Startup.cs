@@ -40,8 +40,8 @@ namespace ExadelBonusPlus.WebApi
                 });
             });
 
-            services.AddTransient<IPromotionRepository, PromotionRepository>();
-            services.AddTransient<IPromotionService, PromotionService>();
+            services.AddTransient<IBonusRepository, BonusRepository>();
+            services.AddTransient<IBonusService, BonusService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

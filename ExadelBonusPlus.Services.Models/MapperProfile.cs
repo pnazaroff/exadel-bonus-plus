@@ -10,7 +10,7 @@ namespace ExadelBonusPlus.Services.Models
     {
         public MapperProfile()
         {
-            CreateMap<PromotionDto, Promotion>().ReverseMap();
+            CreateMap<BonusDto, Bonus>().ReverseMap();
         }
     }
 }
