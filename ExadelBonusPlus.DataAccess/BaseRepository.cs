@@ -25,30 +25,30 @@ namespace ExadelBonusPlus.DataAccess
 
         public virtual Task AddAsync(TModel obj, CancellationToken cancellationToken)
         {
-            return GetCollection<TModel>().InsertOneAsync(obj, cancellationToken);
+            return GetCollection().InsertOneAsync(obj, cancellationToken);
         }
         
         public virtual async Task<IEnumerable<TModel>> GetAllAsync(CancellationToken cancellationToken)
         {
-            return await GetCollection<TModel>().Find(Builders<TModel>.Filter.Empty).ToListAsync(cancellationToken);
+            return await GetCollection().Find(Builders<TModel>.Filter.Empty).ToListAsync(cancellationToken);
         }
 
         public virtual Task<TModel> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            return GetCollection<TModel>().Find(Builders<TModel>.Filter.Eq("_id", id)).FirstAsync(cancellationToken);
+            return GetCollection().Find(Builders<TModel>.Filter.Eq("_id", id)).FirstAsync(cancellationToken);
         }
 
         public virtual Task UpdateAsync(Guid id, TModel obj,  CancellationToken cancellationToken)
         {
-            return GetCollection<TModel>().ReplaceOneAsync(Builders<TModel>.Filter.Eq("_id", id), obj, new ReplaceOptions(), cancellationToken);
+            return GetCollection().ReplaceOneAsync(Builders<TModel>.Filter.Eq("_id", id), obj, new ReplaceOptions(), cancellationToken);
         }
 
         public virtual Task RemoveAsync(Guid id, CancellationToken cancellationToken)
         {
-            return GetCollection<TModel>().DeleteOneAsync(Builders<TModel>.Filter.Eq("_id", id), cancellationToken);
+            return GetCollection().DeleteOneAsync(Builders<TModel>.Filter.Eq("_id", id), cancellationToken);
         }
         
-        private IMongoCollection<TModel> GetCollection<TModel>()
+        private IMongoCollection<TModel> GetCollection()
         {
             return _database.GetCollection<TModel>(typeof(TModel).Name);
         }
