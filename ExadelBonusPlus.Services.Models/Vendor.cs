@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ExadelBonusPlus.Services.Models
 {
-    public class Vendor
+    public class Vendor : IEntity<Guid>
     {
         [BsonId]
         public Guid Id { get; set; }
