@@ -16,21 +16,70 @@ namespace ExadelBonusPlus.Services.Tests
 {
     public class BonusServiceTest
     {
-        private readonly Mock<IBonusRepository> _bonusRep;
+        private Mock<IBonusRepository> _bonusRep;
 
-        private readonly IBonusRepository _mockBonusRep;
+        private IBonusRepository _mockBonusRep;
 
-        private readonly Mock<IBonusTagRepository> _bonusTagRep;
+        private Mock<IBonusTagRepository> _bonusTagRep;
 
-        private readonly IBonusTagRepository _mockBonusTagRep;
+        private IBonusTagRepository _mockBonusTagRep;
 
-        private readonly BonusService _bonusService;
+        private BonusService _bonusService;
 
-        private readonly IMapper _mapper;
+        private IMapper _mapper;
 
-        private readonly List<BonusDto> _fakeBonuseDtos;
+        private List<BonusDto> _fakeBonuseDtos;
 
         public BonusServiceTest()
+        {
+        }
+
+        [Fact]
+        public async Task<BonusDto> Bonus_AddBonusAsync_Return_BonusDto()
+        {
+            CreateDefaultBonusServiceInstance();
+            var bonus = await _bonusService.AddBonusAsync(_fakeBonuseDtos[0]);
+            Assert.NotNull(bonus);
+            return bonus;
+        }
+
+        [Fact]
+        public async Task<List<BonusDto>> Bonus_FindAllBonusAsync_Return_ListBonusDTO()
+        {
+            CreateDefaultBonusServiceInstance();
+            var bonusList = await _bonusService.FindAllBonusAsync();
+            Assert.NotNull(bonusList);
+            return bonusList;
+        }
+
+        [Fact]
+        public async Task<BonusDto> Bonus_FindBonusByIdAsync_Return_BonusDTO()
+        {
+            CreateDefaultBonusServiceInstance();
+            var bonus = await _bonusService.FindBonusByIdAsync(_fakeBonuseDtos[0].Id);
+            Assert.NotNull(bonus);
+            return bonus;
+        }
+
+        [Fact]
+        public async Task<BonusDto> Bonus_UpdateBonusAsync_Return_BonusDTO()
+        {
+            CreateDefaultBonusServiceInstance();
+            var bonus = await _bonusService.UpdateBonusAsync(_fakeBonuseDtos[0].Id, _fakeBonuseDtos[0]);
+            Assert.NotNull(bonus);
+            return bonus;
+        }
+
+        [Fact]
+        public async Task<BonusDto> Bonus_DeleteBonusAsync_Return_BonusDTO()
+        {
+            CreateDefaultBonusServiceInstance();
+            var bonus = await _bonusService.DeleteBonusAsync(_fakeBonuseDtos[0].Id);
+            Assert.NotNull(bonus);
+            return bonus;
+        }
+
+        private void CreateDefaultBonusServiceInstance()
         {
             var myProfile = new MapperProfile();
             var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
@@ -68,49 +117,5 @@ namespace ExadelBonusPlus.Services.Tests
 
             _bonusService = new BonusService(_mockBonusRep, _mockBonusTagRep, _mapper);
         }
-
-        [Fact]
-        public async Task<BonusDto> Bonus_AddBonusAsync_Return_BonusDto()
-        {
-            var bonus =  await _bonusService.AddBonusAsync(_fakeBonuseDtos[0]);
-            Assert.NotNull(bonus);
-            return bonus;
-        }
-
-        [Fact]
-        public async Task<List<BonusDto>> Bonus_FindAllBonusAsync_Return_ListBonusDTO()
-        {
-            var bonusList = await _bonusService.FindAllBonusAsync();
-            Assert.IsType<List<BonusDto>>(bonusList);
-            Assert.NotNull(bonusList);
-            return bonusList;
-        }
-
-        [Fact]
-        public async Task<BonusDto> Bonus_FindBonusByIdAsync_Return_BonusDTO()
-        {
-            var bonus = await _bonusService.FindBonusByIdAsync(_fakeBonuseDtos[0].Id);
-            Assert.NotNull(bonus);
-            Assert.Equal(_fakeBonuseDtos[0].Name, bonus.Name);
-            return bonus;
-        }
-
-        [Fact]
-        public async Task<BonusDto> Bonus_UpdateBonusAsync_Return_BonusDTO()
-        {
-            var bonus = await _bonusService.UpdateBonusAsync(_fakeBonuseDtos[0].Id, _fakeBonuseDtos[0]);
-            Assert.NotNull(bonus);
-            Assert.Equal(_fakeBonuseDtos[0].Name, bonus.Name);
-            return bonus;
-        }
-
-        [Fact]
-        public async Task<BonusDto> Bonus_DeleteBonusAsync_Return_BonusDTO()
-        {
-            var bonus = await _bonusService.DeleteBonusAsync(_fakeBonuseDtos[0].Id);
-            Assert.NotNull(bonus);
-            Assert.Equal(_fakeBonuseDtos[0].Name, bonus.Name);
-            return bonus;
-        }
-    }
+}
 }
