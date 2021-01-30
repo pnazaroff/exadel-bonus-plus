@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using MongoDB.Bson.Serialization.Attributes;
 
 namespace ExadelBonusPlus.Services.Models
 {
@@ -11,8 +10,6 @@ namespace ExadelBonusPlus.Services.Models
             CreatedDate = DateTime.Now;
         }
 
-        [BsonId]
-        [BsonElement("_id")]
         public Guid Id { get; set; }
 
         public DateTime CreatedDate { get; set; }

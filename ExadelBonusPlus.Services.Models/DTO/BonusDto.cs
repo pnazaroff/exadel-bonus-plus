@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 
-namespace ExadelBonusPlus.Services.Models.DTO
+namespace ExadelBonusPlus.Services.Models
 {
     public class BonusDto
     {

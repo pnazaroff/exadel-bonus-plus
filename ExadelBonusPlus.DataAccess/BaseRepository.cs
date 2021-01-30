@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using ExadelBonusPlus.Services.Models;
-using ExadelBonusPlus.Services.Models.Interfaces;
+using ExadelBonusPlus.Services;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
@@ -30,12 +30,12 @@ namespace ExadelBonusPlus.DataAccess
         
         public virtual async Task<IEnumerable<TModel>> GetAllAsync(CancellationToken cancellationToken)
         {
-            return await GetCollection().Find(Builders<TModel>.Filter.Empty).ToListAsync(cancellationToken);
+            return await GetCollection().Find(Builders<TModel>.Filter.Eq("IsDeleted", false)).ToListAsync(cancellationToken);
         }
 
         public virtual Task<TModel> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            return GetCollection().Find(Builders<TModel>.Filter.Eq("_id", id)).FirstAsync(cancellationToken);
+            return GetCollection().Find(Builders<TModel>.Filter.Eq("_id", id) & Builders<TModel>.Filter.Eq("IsDeleted", false)).FirstAsync(cancellationToken);
         }
 
         public virtual Task UpdateAsync(Guid id, TModel obj,  CancellationToken cancellationToken)
@@ -43,9 +43,10 @@ namespace ExadelBonusPlus.DataAccess
             return GetCollection().ReplaceOneAsync(Builders<TModel>.Filter.Eq("_id", id), obj, new ReplaceOptions(), cancellationToken);
         }
 
-        public virtual Task RemoveAsync(Guid id, CancellationToken cancellationToken)
+        public virtual Task<TModel> RemoveAsync(Guid id, CancellationToken cancellationToken)
         {
-            return GetCollection().DeleteOneAsync(Builders<TModel>.Filter.Eq("_id", id), cancellationToken);
+            return GetCollection().FindOneAndUpdateAsync(Builders<TModel>.Filter.Eq("_id", id), Builders<TModel>.Update.Set("IsDeleted", true),
+                                                                        new FindOneAndUpdateOptions<TModel, TModel>(),cancellationToken);
         }
         
         protected IMongoCollection<TModel> GetCollection()

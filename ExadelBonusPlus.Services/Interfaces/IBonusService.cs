@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using ExadelBonusPlus.Services.Models;
-using ExadelBonusPlus.Services.Models.DTO;
 
-namespace ExadelBonusPlus.Services.Models.Interfaces
+namespace ExadelBonusPlus.Services
 {
     public interface IBonusService
     {
@@ -17,6 +16,6 @@ namespace ExadelBonusPlus.Services.Models.Interfaces
 
         Task<BonusDto> UpdateBonusAsync(Guid id, BonusDto model);
 
-        Task<BonusDto> DeleteBonusAsync(Guid id, bool softDelete);
+        Task<BonusDto> DeleteBonusAsync(Guid id);
     }
 }

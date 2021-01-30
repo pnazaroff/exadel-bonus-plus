@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ExadelBonusPlus.Services.Models.DTO;
-using AutoMapper;
+﻿using AutoMapper;
 
 namespace ExadelBonusPlus.Services.Models
 {

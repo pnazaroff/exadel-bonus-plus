@@ -5,8 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using ExadelBonusPlus.Services.Models;
-using ExadelBonusPlus.Services.Models.DTO;
-using ExadelBonusPlus.Services.Models.Interfaces;
 using ExadelBonusPlus.Services.Properties;
 using Microsoft.Extensions.Primitives;
 
@@ -14,13 +12,13 @@ namespace ExadelBonusPlus.Services
 {
     public class BonusService : IBonusService
     {
-        private readonly IBonusRepository _BonusRepository;
-        private readonly IBonusTagRepository _BonusTagRepository;
+        private readonly IBonusRepository _bonusRepository;
+        private readonly IBonusTagRepository _bonusTagRepository;
         private readonly IMapper _mapper;
         public BonusService(IBonusRepository bonusRepository, IBonusTagRepository bonusTagRepository, IMapper mapper)
         {
-           _BonusRepository = bonusRepository;
-           _BonusTagRepository = bonusTagRepository;
+            _bonusRepository = bonusRepository;
+           _bonusTagRepository = bonusTagRepository;
             _mapper = mapper;
         }
 
@@ -32,14 +30,14 @@ namespace ExadelBonusPlus.Services
             }
             model.Id = Guid.NewGuid();
             var bonus = _mapper.Map<Bonus>(model);
-            await _BonusRepository.AddAsync(bonus);
+            await _bonusRepository.AddAsync(bonus);
             await AddTagInCollection(bonus);
             return model;
         }
 
         public async Task<List<BonusDto>> FindAllBonusAsync()
         {
-            var result = await _BonusRepository.GetAllAsync();
+            var result = await _bonusRepository.GetAllAsync();
             return result is null ? throw new InvalidOperationException(Resources.FindError) : _mapper.Map<List<BonusDto>>(result);
         }
 
@@ -49,7 +47,7 @@ namespace ExadelBonusPlus.Services
             {
                 throw new ArgumentNullException(Resources.IdentifierIsNull);
             }
-            var result = await _BonusRepository.GetByIdAsync(id);
+            var result = await _bonusRepository.GetByIdAsync(id);
             return result is null ? throw new ArgumentException(Resources.FindbyIdError) : _mapper.Map<BonusDto>(result);
         }
 
@@ -64,46 +62,35 @@ namespace ExadelBonusPlus.Services
                 throw new ArgumentNullException(Resources.ModelIsNull);
             }
             var bonus = _mapper.Map<Bonus>(model);
-            await _BonusRepository.UpdateAsync(id, bonus);
+
+            await _bonusRepository.UpdateAsync(id, bonus);
+            await AddTagInCollection(bonus);
+
             return model;
         }
 
-        public async Task<BonusDto> DeleteBonusAsync(Guid id, bool softDelete = true)
+        public async Task<BonusDto> DeleteBonusAsync(Guid id)
         {
             if (id == Guid.Empty)
             {
                 throw new ArgumentNullException(Resources.IdentifierIsNull);
             }
 
-            var bonus = await _BonusRepository.GetByIdAsync(id);
-            if (bonus is null)
-            {
-                throw new InvalidOperationException(Resources.FindbyIdError);
-            }
+            var result =await _bonusRepository.RemoveAsync(id);
 
-            if (softDelete)
-            {
-                bonus.IsDeleted = true;
-                await _BonusRepository.UpdateAsync(id, bonus);
-            }
-            else
-            {
-                await _BonusRepository.RemoveAsync(id);
-            }
-
-            return _mapper.Map<BonusDto>(bonus);
+            return _mapper.Map<BonusDto>(result);
         }
 
         private async Task AddTagInCollection(Bonus bonus)
         {
-            BonusTag bonusTag;
-            bool isFind = false;
-
             foreach (string stringBonusTag in bonus.Tags)
             {
+                BonusTag bonusTag;
+                bool isFind = false;
+
                 try
                 {
-                    bonusTag = await _BonusTagRepository.FindTagByNameAsync(stringBonusTag);
+                    bonusTag = await _bonusTagRepository.FindTagByNameAsync(stringBonusTag);
                     isFind = true;
                 }
                 catch
@@ -113,17 +100,15 @@ namespace ExadelBonusPlus.Services
 
                 if (isFind)
                 {
-                    bonusTag.BonusList.Add(bonus);
-                    await _BonusTagRepository.UpdateAsync(bonusTag.Id, bonusTag);
+                    bonusTag.BonusIdList.Add(bonus.Id);
+                    await _bonusTagRepository.UpdateAsync(bonusTag.Id, bonusTag);
                 }
                 else
                 {
-                    bonusTag.BonusList = new List<Bonus>() { bonus };
-                    await _BonusTagRepository.AddAsync(bonusTag);
+                    bonusTag.BonusIdList = new List<Guid>() { bonus.Id };
+                    await _bonusTagRepository.AddAsync(bonusTag);
                 }
             }
-
-            //to be continued
         }
     }
 }

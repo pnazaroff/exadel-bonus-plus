@@ -37,5 +37,10 @@
         /// <value>The modifier identifier.</value>
         public TId ModifierId { get; set; }
 
+        /// <summary>
+        /// Gets or sets the modifier identifier.
+        /// </summary>
+        /// <value>The modifier identifier.</value>
+        public bool IsDeleted { get; set; }
     }
 }

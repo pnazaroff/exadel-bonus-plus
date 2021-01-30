@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using ExadelBonusPlus.Services;
 using MongoDB.Driver;
-using ExadelBonusPlus.Services.Models.Interfaces;
 using ExadelBonusPlus.Services.Models;
 using Microsoft.Extensions.Options;
 

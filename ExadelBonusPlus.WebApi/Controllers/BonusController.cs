@@ -7,8 +7,6 @@ using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 using System.Threading.Tasks;
 using ExadelBonusPlus.Services;
-using ExadelBonusPlus.Services.Models.DTO;
-using ExadelBonusPlus.Services.Models.Interfaces;
 
 namespace ExadelBonusPlus.WebApi
 {
@@ -127,11 +125,11 @@ namespace ExadelBonusPlus.WebApi
         [Route("{id}")]
         [SwaggerResponse((int)HttpStatusCode.OK, Description = "Bonus deleted ", Type = typeof(BonusDto))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<BonusDto>> DeleteBonusAsync([FromRoute] Guid id, [FromQuery] bool softDelete = true)
+        public async Task<ActionResult<BonusDto>> DeleteBonusAsync([FromRoute] Guid id)
         {
             try
             {
-                return Ok(await _BonusService.DeleteBonusAsync(id, softDelete));
+                return Ok(await _BonusService.DeleteBonusAsync(id));
             }
             catch (InvalidOperationException e)
             {

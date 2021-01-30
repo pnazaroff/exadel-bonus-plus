@@ -11,7 +11,6 @@ using ExadelBonusPlus.Services.Models;
 using AutoMapper;
 using ExadelBonusPlus.DataAccess;
 using ExadelBonusPlus.Services;
-using ExadelBonusPlus.Services.Models.Interfaces;
 
 namespace ExadelBonusPlus.WebApi
 {
