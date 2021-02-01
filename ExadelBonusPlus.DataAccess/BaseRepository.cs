@@ -38,7 +38,7 @@ namespace ExadelBonusPlus.Services.Models
 
         public virtual Task UpdateAsync(Guid id, TModel obj,  CancellationToken cancellationToken)
         {
-            return GetCollection().ReplaceOneAsync(Builders<TModel>.Filter.Eq("_id", id), obj, new UpdateOptions { IsUpsert = true }, cancellationToken);
+            return GetCollection().ReplaceOneAsync(Builders<TModel>.Filter.Eq("_id", id), obj, new ReplaceOptions() { IsUpsert = false }, cancellationToken);
         }
 
         public virtual Task RemoveAsync(Guid id, CancellationToken cancellationToken)

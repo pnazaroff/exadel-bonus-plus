@@ -110,8 +110,6 @@ namespace ExadelBonusPlus.WebApi
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "Exadel Bonus Plus API v1")
             );
 
-           
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGet("/", context => {

@@ -8,6 +8,6 @@ namespace ExadelBonusPlus.Services.Models
 {
     public interface IRefreshTokenRepositry : IRepository<RefreshToken, Guid>
     {
-        public Task<IEnumerable<RefreshToken>> GetByCreatorIdAsync(Guid CreatorId, CancellationToken cancellationToken = default);
+        public Task<IEnumerable<RefreshToken>> GetByCreatorIdAsync(Guid creatorId, CancellationToken cancellationToken = default);
     }
 }

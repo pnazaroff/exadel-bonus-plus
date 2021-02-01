@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
 using System.Security.Claims;
@@ -37,7 +36,7 @@ namespace ExadelBonusPlus.WebApi.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500);
+                return StatusCode(500, e.Message);
             }
         }
 
@@ -50,19 +49,12 @@ namespace ExadelBonusPlus.WebApi.Controllers
         {
             try
             {
-                var result = _userService.Register(model.Email, model.Password);
-                if (result.Result == "Created")
-                {
-                    return Ok();
-                }
-                else
-                {
-                    return BadRequest();
-                }
+                await _userService.RegisterAsync(model.Email, model.Password);
+                return Ok();
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
             catch (ArgumentException)
             {
@@ -70,7 +62,7 @@ namespace ExadelBonusPlus.WebApi.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500);
+                return StatusCode(500, e.Message);
             }
 
         }
@@ -90,7 +82,6 @@ namespace ExadelBonusPlus.WebApi.Controllers
 
                 return Ok(userInfo);
 
-                return BadRequest();
             }
             catch (InvalidOperationException)
             {
@@ -117,17 +108,17 @@ namespace ExadelBonusPlus.WebApi.Controllers
                 await _userService.LogOutAsync();
                 return Ok();
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
-            catch (ArgumentException)
+            catch (ArgumentException ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
             catch (Exception e)
             {
-                return StatusCode(500);
+                return StatusCode(500, e.Message);
             }
         }
 
@@ -140,24 +131,20 @@ namespace ExadelBonusPlus.WebApi.Controllers
         {
             try
             {
-                var result = await _userService.RefreshAccessToken(email, refreshToken);
+                var result = await _userService.RefreshAccessTokenAsync(email, refreshToken);
                 return Ok(result);
-
             }
             catch (InvalidOperationException exception)
             {
-                var message = exception.Message;
-                return BadRequest(message);
+                return BadRequest(exception.Message);
             }
             catch (ArgumentException exception)
             {
-                var message = exception.Message;
-                return BadRequest();
+                return BadRequest(exception.Message);
             }
             catch (Exception e)
             {
-                var message = e.Message;
-                return StatusCode(500);
+                return StatusCode(500, e.Message);
             }
         }
     }

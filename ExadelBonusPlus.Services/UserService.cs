@@ -52,16 +52,14 @@ namespace ExadelBonusPlus.Services
                 {
                     return "Created"; //Need callback for redirect login page
                 }
-                else
-                {
-                    List<string> errorList = new List<string>();
-                    foreach (var error in result.Errors)
-                    {
-                        errorList.Add(error.Description);
-                    }
 
-                    return errorList.ToString();
+                List<string> errorList = new List<string>();
+                foreach (var error in result.Errors)
+                {
+                    errorList.Add(error.Description);
                 }
+
+                return errorList.ToString();
             }
             catch (Exception e)
             {
@@ -84,11 +82,12 @@ namespace ExadelBonusPlus.Services
                         var token =  CreateToken(user, role);
 
                         var refreshToken = await _refreshTokenRepositry.GetByCreatorIdAsync(user.Id);
+                        RefreshToken refresh;
                         if (refreshToken != null)
                         {
                             if (refreshToken.Any(x=>x.IsActive == true))
                             {
-                                var refresh = refreshToken.Where(x => x.IsActive == true).FirstOrDefault();
+                                refresh = refreshToken.Where(x => x.IsActive == true).FirstOrDefault();
                                 return new AuthResponce
                                 {
                                     AccessToken = token,
@@ -100,7 +99,7 @@ namespace ExadelBonusPlus.Services
                             }
                             else
                             {
-                                var refresh = CreateRefreshToken(user);
+                                refresh = CreateRefreshToken(user);
                                 await _refreshTokenRepositry.AddAsync(refresh);
                                 return new AuthResponce
                                 {
@@ -112,19 +111,18 @@ namespace ExadelBonusPlus.Services
                                 };
                             }
                         }
-                        else
+
+                        
+                        refresh = CreateRefreshToken(user);
+                        await _refreshTokenRepositry.AddAsync(refresh);
+                        return new AuthResponce
                         {
-                            var refresh = CreateRefreshToken(user);
-                            await _refreshTokenRepositry.AddAsync(refresh);
-                            return new AuthResponce
-                            {
-                                AccessToken = token,
-                                Email = user.Email,
-                                RefreshToken = refresh.Value,
-                                Role = (List<string>)role,
-                                IsAuth = true,
-                            };
-                        }
+                            AccessToken = token,
+                            Email = user.Email,
+                            RefreshToken = refresh.Value,
+                            Role = (List<string>)role,
+                            IsAuth = true,
+                        };
                     }
                     catch (Exception e)
                     {
@@ -138,10 +136,10 @@ namespace ExadelBonusPlus.Services
 
         public async Task<AuthResponce> RefreshAccessTokenAsync(string email, string refreshToken)
         {
-            var user = await _userManager.FindByEmailAsync(email);
-            var role = await _signInManager.UserManager.GetRolesAsync(user);
-            if (user != null)
+            try
             {
+                var user = await _userManager.FindByEmailAsync(email);
+                var role = await _signInManager.UserManager.GetRolesAsync(user);
                 var oldRefreshToken = await _refreshTokenRepositry.GetByCreatorIdAsync(user.Id);
                 var curruntRefreshToken = oldRefreshToken.First(x => x.Value == refreshToken);
 
@@ -160,6 +158,11 @@ namespace ExadelBonusPlus.Services
                     };
                 }
             }
+            catch (Exception e)
+            {
+                throw;
+            }
+          
             throw new ArgumentNullException(nameof(RefreshToken));
         }
 
