@@ -1,5 +1,6 @@
 ﻿using ExadelBonusPlus.Services.Interfaces;
 using ExadelBonusPlus.Services.Models;
+using ExadelBonusPlus.Services.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -8,29 +9,34 @@ namespace ExadelBonusPlus.Services
 {
     public class VendorService : IVendorService
     {
-        public Task<Vendor> AddVendorAsync(Vendor model)
+        private IVendorRepository _vendorRepository;
+        public VendorService(IVendorRepository vendorRepository)
         {
-            throw new NotImplementedException();
+            _vendorRepository = vendorRepository;
+        }
+        public Task AddVendorAsync(Vendor model)
+        {
+            return _vendorRepository.AddAsync(model);
         }
 
-        public Task<Vendor> DeleteVendorAsync(Guid id)
+        public Task DeleteVendorAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return _vendorRepository.DeleteAsync(id);
         }
 
-        public Task<List<Vendor>> FindAllVendorsAsync()
+        public Task<IEnumerable<Vendor>> GetAllVendorsAsync()
         {
-            throw new NotImplementedException();
+            return _vendorRepository.GetAllAsync();
         }
 
-        public Task<Vendor> FindVendorByIdAsync(Guid id)
+        public Task<Vendor> GetVendorByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return _vendorRepository.GetByIdAsync(id);
         }
 
-        public Task<Vendor> UpdateVendorAsync(Vendor model)
+        public Task UpdateVendorAsync(Vendor model)
         {
-            throw new NotImplementedException();
+            return _vendorRepository.UpdateAsync(model.Id, model);
         }
     }
 }

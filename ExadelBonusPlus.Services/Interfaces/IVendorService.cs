@@ -7,14 +7,14 @@ namespace ExadelBonusPlus.Services.Interfaces
 {
     public interface IVendorService
     {
-        Task<Vendor> AddVendorAsync(Vendor model);
+        Task AddVendorAsync(Vendor model);
 
-        Task<List<Vendor>> FindAllVendorsAsync();
+        Task<IEnumerable<Vendor>> GetAllVendorsAsync();
 
-        Task<Vendor> FindVendorByIdAsync(Guid id);
+        Task<Vendor> GetVendorByIdAsync(Guid id);
 
-        Task<Vendor> UpdateVendorAsync(Vendor model);
+        Task UpdateVendorAsync(Vendor model);
 
-        Task<Vendor> DeleteVendorAsync(Guid id);
+        Task DeleteVendorAsync(Guid id);
     }
 }

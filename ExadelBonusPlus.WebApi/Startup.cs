@@ -7,6 +7,10 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using System.Threading.Tasks;
 using ExadelBonusPlus.Services.Models;
+using ExadelBonusPlus.Services.Interfaces;
+using ExadelBonusPlus.Services;
+using ExadelBonusPlus.Services.Models.Interfaces;
+using ExadelBonusPlus.DataAccess;
 
 namespace ExadelBonusPlus.WebApi
 {
@@ -23,6 +27,9 @@ namespace ExadelBonusPlus.WebApi
             services.Configure<MongoDbSettings>(_configuration.GetSection(
                 nameof(MongoDbSettings)));
 
+            services.AddScoped<IVendorService, VendorService>();
+            services.AddScoped<IVendorRepository, VendorRepository>();
+
             services.AddControllers();
 
             services.AddSwaggerGen(c => {
@@ -32,6 +39,7 @@ namespace ExadelBonusPlus.WebApi
                     Title = "exadel-bonus-plus API V1",
                 });
             });
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

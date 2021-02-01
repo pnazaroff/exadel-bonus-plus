@@ -1,7 +1,7 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using ExadelBonusPlus.Services.Models.Interfaces;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace ExadelBonusPlus.Services.Models
 {
@@ -14,5 +14,9 @@ namespace ExadelBonusPlus.Services.Models
         public string Description { get; set; }
         [BsonElement("Location")]
         public List<Location> Locations { get; set; }
+        public DateTime CreatedDate {get;set;}
+        public Guid CreatorId {get;set;}
+        public DateTime? ModifiedDate {get;set;}
+        public Guid ModifierId {get;set;}
     }
 }

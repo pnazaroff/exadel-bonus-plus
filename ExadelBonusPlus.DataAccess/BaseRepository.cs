@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using ExadelBonusPlus.Services.Models.Interfaces;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
@@ -41,7 +42,7 @@ namespace ExadelBonusPlus.Services.Models
             return GetCollection().ReplaceOneAsync(Builders<TModel>.Filter.Eq("_id", id), obj, new ReplaceOptions() { IsUpsert = false }, cancellationToken);
         }
 
-        public virtual Task RemoveAsync(Guid id, CancellationToken cancellationToken)
+        public virtual Task DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
             return GetCollection().DeleteOneAsync(Builders<TModel>.Filter.Eq("_id", id), cancellationToken);
         }
