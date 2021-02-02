@@ -13,7 +13,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using ExadelBonusPlus.DataAccess;
-
+using ExadelBonusPlus.Services.Interfaces;
+using AutoMapper;
 namespace ExadelBonusPlus.WebApi
 {
     public class Startup
@@ -28,9 +29,9 @@ namespace ExadelBonusPlus.WebApi
         {
             services.Configure<MongoDbSettings>(_configuration.GetSection(
                 nameof(MongoDbSettings)));
-            
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IRefreshTokenRepositry, RefreshTokenRepository>();
+
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddControllers();
             services.Configure<AppSettings>(_configuration.GetSection("Token"));
             services.AddSwaggerGen(c => {
@@ -88,6 +89,13 @@ namespace ExadelBonusPlus.WebApi
                     _configuration["MongoDbSettings:DatabaseName"])
                 .AddSignInManager()
                 .AddDefaultTokenProviders();
+
+
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IRefreshTokenRepositry, RefreshTokenRepository>();
+
+            services.AddScoped<IHistoryRepositry, HistoryRepositry>();
+            services.AddScoped<IHistoryService, HistoryService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

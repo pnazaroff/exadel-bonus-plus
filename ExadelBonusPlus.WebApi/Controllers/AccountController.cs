@@ -3,7 +3,9 @@ using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper;
 using ExadelBonusPlus.Services;
+using ExadelBonusPlus.Services.Models;
 using ExadelBonusPlus.WebApi.ViewModel;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -17,9 +19,11 @@ namespace ExadelBonusPlus.WebApi.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IUserService _userService;
-        public AccountController(IUserService userService)
+        private readonly IMapper _mapper;
+        public AccountController(IUserService userService, IMapper mapper)
         {
             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
         [HttpPost]
         [Route("Authorize")]
@@ -78,8 +82,8 @@ namespace ExadelBonusPlus.WebApi.Controllers
             try
             {
                 var id = User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
-                var userInfo = await _userService.GetUserInfoAsync(id);
-
+                var user = await _userService.GetUserInfoAsync(id);
+                var userInfo = _mapper.Map<UserInfo>(user);
                 return Ok(userInfo);
 
             }

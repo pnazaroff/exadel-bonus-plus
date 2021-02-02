@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Mime;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using ExadelBonusPlus.Services.Models;
 using ExadelBonusPlus.WebApi.ViewModel;
 
@@ -13,7 +9,6 @@ namespace ExadelBonusPlus.Services
         Task<AuthResponce> LogInAsync(string email, string password);
         Task LogOutAsync();
         Task<string> RegisterAsync(string email, string password);
-
         Task<AuthResponce> RefreshAccessTokenAsync(string email, string refreshToken);
         Task<ApplicationUser> GetUserInfoAsync(string userId);
     }

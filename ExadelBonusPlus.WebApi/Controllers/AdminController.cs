@@ -90,7 +90,7 @@ namespace ExadelBonusPlus.WebApi.Controllers
                     return BadRequest(errorList);
                 }
 
-                return BadRequest(userNew.UserName + "in Role:" + role.Name);
+                return BadRequest(userNew.UserName + " in Role:" + role.Name);
             }
         }
 

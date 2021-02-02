@@ -9,7 +9,7 @@ using MongoDB.Driver;
 
 namespace ExadelBonusPlus.DataAccess
 {
-    class HistoryRepositry:BaseRepository<History>, IHistoryRepositry
+    public class HistoryRepositry:BaseRepository<History>, IHistoryRepositry
     {
         public HistoryRepositry(IOptions<MongoDbSettings> mongoDbSettings) : base(mongoDbSettings)
         {

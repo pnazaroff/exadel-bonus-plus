@@ -6,12 +6,13 @@ using ExadelBonusPlus.Services.Models;
 
 namespace ExadelBonusPlus.Services
 {
-    class HistoryService : IHistoryService
+    public class HistoryService : IHistoryService
     {
         private readonly IHistoryRepositry _historyRepositry;
         public HistoryService(IHistoryRepositry historyRepositry)
         {
             _historyRepositry = historyRepositry;
+
         }
         public Task<History> AddHistory(History model)
         {

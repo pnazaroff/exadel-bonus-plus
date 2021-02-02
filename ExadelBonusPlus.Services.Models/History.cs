@@ -8,7 +8,7 @@ namespace ExadelBonusPlus.Services.Models
     {
         public History()
         {
-            CreatedDate = DateTime.UtcNow;
+           
         }
         public Guid Id { get; set; }
         public DateTime CreatedDate { get; set; }

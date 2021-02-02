@@ -66,8 +66,7 @@ namespace ExadelBonusPlus.Services
                 return e.Message;
             }
         }
-
-
+        
         async Task<AuthResponce> IUserService.LogInAsync(string email, string password)
         {
             var user = await _userManager.FindByEmailAsync(email);
