@@ -11,6 +11,8 @@ using ExadelBonusPlus.Services.Models;
 using AutoMapper;
 using ExadelBonusPlus.DataAccess;
 using ExadelBonusPlus.Services;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 
 namespace ExadelBonusPlus.WebApi
 {
@@ -28,8 +30,8 @@ namespace ExadelBonusPlus.WebApi
                 nameof(MongoDbSettings)));
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
-            services.AddControllers();
+            
+            services.AddControllers().AddFluentValidation();
 
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new OpenApiInfo
@@ -42,6 +44,8 @@ namespace ExadelBonusPlus.WebApi
             services.AddTransient<IBonusRepository, BonusRepository>();
             services.AddTransient<IBonusTagRepository, BonusTagRepository>();
             services.AddTransient<IBonusService, BonusService>();
+
+            services.AddTransient<IValidator<AddBonusDto>, BonusDtoValidator>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

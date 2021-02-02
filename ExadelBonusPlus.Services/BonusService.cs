@@ -22,36 +22,36 @@ namespace ExadelBonusPlus.Services
             _mapper = mapper;
         }
 
-        public async Task<BonusDto> AddBonusAsync(BonusDto model)
+        public async Task<BonusDto> AddBonusAsync(AddBonusDto model, CancellationToken cancellationToken = default)
         {
             if (model is null)
             {
                 throw new ArgumentNullException(Resources.ModelIsNull);
             }
-            model.Id = Guid.NewGuid();
             var bonus = _mapper.Map<Bonus>(model);
-            await _bonusRepository.AddAsync(bonus);
-            await AddTagInCollection(bonus);
-            return model;
+            bonus.SetInitialValues(bonus);
+            await _bonusRepository.AddAsync(bonus, cancellationToken);
+            await AddTagInCollection(bonus, cancellationToken);
+            return _mapper.Map<BonusDto>(bonus);
         }
 
-        public async Task<List<BonusDto>> FindAllBonusAsync()
+        public async Task<List<BonusDto>> FindAllBonusAsync(CancellationToken cancellationToken)
         {
-            var result = await _bonusRepository.GetAllAsync();
-            return result is null ? throw new InvalidOperationException(Resources.FindError) : _mapper.Map<List<BonusDto>>(result);
+            var result = await _bonusRepository.GetAllAsync(cancellationToken);
+            return _mapper.Map<List<BonusDto>>(result);
         }
 
-        public async Task<BonusDto> FindBonusByIdAsync(Guid id)
+        public async Task<BonusDto> FindBonusByIdAsync(Guid id, CancellationToken cancellationToken)
         {
             if (id == Guid.Empty)
             {
                 throw new ArgumentNullException(Resources.IdentifierIsNull);
             }
-            var result = await _bonusRepository.GetByIdAsync(id);
+            var result = await _bonusRepository.GetByIdAsync(id, cancellationToken);
             return result is null ? throw new ArgumentException(Resources.FindbyIdError) : _mapper.Map<BonusDto>(result);
         }
 
-        public async Task<BonusDto> UpdateBonusAsync(Guid id, BonusDto model)
+        public async Task<BonusDto> UpdateBonusAsync(Guid id, BonusDto model, CancellationToken cancellationToken)
         {
             if (id == Guid.Empty)
             {
@@ -63,50 +63,40 @@ namespace ExadelBonusPlus.Services
             }
             var bonus = _mapper.Map<Bonus>(model);
 
-            await _bonusRepository.UpdateAsync(id, bonus);
-            await AddTagInCollection(bonus);
+            await _bonusRepository.UpdateAsync(id, bonus, cancellationToken);
+            await AddTagInCollection(bonus, cancellationToken);
 
             return model;
         }
 
-        public async Task<BonusDto> DeleteBonusAsync(Guid id)
+        public async Task<BonusDto> DeleteBonusAsync(Guid id, CancellationToken cancellationToken)
         {
             if (id == Guid.Empty)
             {
                 throw new ArgumentNullException(Resources.IdentifierIsNull);
             }
 
-            var result =await _bonusRepository.RemoveAsync(id);
+            var result =await _bonusRepository.RemoveAsync(id, cancellationToken);
 
             return _mapper.Map<BonusDto>(result);
         }
 
-        private async Task AddTagInCollection(Bonus bonus)
+        private async Task AddTagInCollection(Bonus bonus, CancellationToken cancellationToken)
         {
             foreach (string stringBonusTag in bonus.Tags)
             {
                 BonusTag bonusTag;
-                bool isFind = false;
-
                 try
                 {
-                    bonusTag = await _bonusTagRepository.FindTagByNameAsync(stringBonusTag);
-                    isFind = true;
+                    bonusTag = await _bonusTagRepository.FindTagByNameAsync(stringBonusTag, cancellationToken);
+                    bonusTag.BonusIdList.Add(bonus.Id);
+                    await _bonusTagRepository.UpdateAsync(bonusTag.Id, bonusTag, cancellationToken);
                 }
-                catch
+                catch(InvalidOperationException e) //if bonusTag didn't find
                 {
                     bonusTag = new BonusTag() {Name = stringBonusTag};
-                }
-
-                if (isFind)
-                {
-                    bonusTag.BonusIdList.Add(bonus.Id);
-                    await _bonusTagRepository.UpdateAsync(bonusTag.Id, bonusTag);
-                }
-                else
-                {
                     bonusTag.BonusIdList = new List<Guid>() { bonus.Id };
-                    await _bonusTagRepository.AddAsync(bonusTag);
+                    await _bonusTagRepository.AddAsync(bonusTag, cancellationToken);
                 }
             }
         }

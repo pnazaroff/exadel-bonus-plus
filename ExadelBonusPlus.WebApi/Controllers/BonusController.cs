@@ -28,8 +28,12 @@ namespace ExadelBonusPlus.WebApi
         [HttpPost]
         [SwaggerResponse((int)HttpStatusCode.OK, Description = "Bonus added ", Type = typeof(BonusDto))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<BonusDto>> AddBonusAsync([FromBody] BonusDto Bonus)
+        public async Task<ActionResult<BonusDto>> AddBonusAsync([FromBody] AddBonusDto Bonus)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Validation error");
+            }
             try
             {
                 return Ok(await _BonusService.AddBonusAsync(Bonus));
