@@ -90,10 +90,7 @@ namespace ExadelBonusPlus.Services
                                 return new AuthResponce
                                 {
                                     AccessToken = token,
-                                    Email = user.Email,
-                                    RefreshToken = refresh.Value,
-                                    Role = (List<string>)role,
-                                    IsAuth = true,
+                                    RefreshToken = refresh.Value
                                 };
                             }
                             else
@@ -103,10 +100,7 @@ namespace ExadelBonusPlus.Services
                                 return new AuthResponce
                                 {
                                     AccessToken = token,
-                                    Email = user.Email,
-                                    RefreshToken = refresh.Value,
-                                    Role = (List<string>)role,
-                                    IsAuth = true,
+                                    RefreshToken = refresh.Value
                                 };
                             }
                         }
@@ -117,10 +111,7 @@ namespace ExadelBonusPlus.Services
                         return new AuthResponce
                         {
                             AccessToken = token,
-                            Email = user.Email,
-                            RefreshToken = refresh.Value,
-                            Role = (List<string>)role,
-                            IsAuth = true,
+                            RefreshToken = refresh.Value
                         };
                     }
                     catch (Exception e)
@@ -150,10 +141,7 @@ namespace ExadelBonusPlus.Services
                     return new AuthResponce
                     {
                         AccessToken = token,
-                        Email = user.Email,
-                        RefreshToken = curruntRefreshToken.Value,
-                        Role = (List<string>)role,
-                        IsAuth = true,
+                        RefreshToken = curruntRefreshToken.Value
                     };
                 }
             }

@@ -9,12 +9,13 @@ using Microsoft.OpenApi.Models;
 using System.Threading.Tasks;
 using ExadelBonusPlus.Services;
 using ExadelBonusPlus.Services.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
 using ExadelBonusPlus.DataAccess;
 using ExadelBonusPlus.Services.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+
 namespace ExadelBonusPlus.WebApi
 {
     public class Startup
@@ -24,17 +25,22 @@ namespace ExadelBonusPlus.WebApi
         {
             _configuration = configuration;
         }
-        
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<MongoDbSettings>(_configuration.GetSection(
                 nameof(MongoDbSettings)));
 
 
+
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            services.AddScoped<IRefreshTokenRepositry, RefreshTokenRepository>();
+
             services.AddControllers();
             services.Configure<AppSettings>(_configuration.GetSection("Token"));
-            services.AddSwaggerGen(c => {
+            services.AddSwaggerGen(c =>
+            {
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
                 {
                     Version = "v1",
@@ -91,11 +97,13 @@ namespace ExadelBonusPlus.WebApi
                 .AddDefaultTokenProviders();
 
 
+
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRefreshTokenRepositry, RefreshTokenRepository>();
 
             services.AddScoped<IHistoryRepositry, HistoryRepositry>();
             services.AddScoped<IHistoryService, HistoryService>();
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -120,7 +128,8 @@ namespace ExadelBonusPlus.WebApi
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", context => {
+                endpoints.MapGet("/", context =>
+                {
                     context.Response.Redirect("/swagger/");
                     return Task.CompletedTask;
                 });
