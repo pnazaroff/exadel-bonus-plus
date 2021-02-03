@@ -3,6 +3,7 @@ using ExadelBonusPlus.Services.Models;
 using ExadelBonusPlus.Services.Models.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ExadelBonusPlus.Services
@@ -14,29 +15,34 @@ namespace ExadelBonusPlus.Services
         {
             _vendorRepository = vendorRepository;
         }
-        public Task AddVendorAsync(Vendor model)
+        public Task AddVendorAsync(Vendor model, CancellationToken cancellationToken)
         {
-            return _vendorRepository.AddAsync(model);
+            return _vendorRepository.AddAsync(model, cancellationToken);
         }
 
-        public Task DeleteVendorAsync(Guid id)
+        public Task DeleteVendorAsync(Guid id, CancellationToken cancellationToken)
         {
-            return _vendorRepository.DeleteAsync(id);
+            return _vendorRepository.DeleteAsync(id, cancellationToken);
         }
 
-        public Task<IEnumerable<Vendor>> GetAllVendorsAsync()
+        public Task<IEnumerable<Vendor>> GetAllVendorsAsync(CancellationToken cancellationToken)
         {
-            return _vendorRepository.GetAllAsync();
+            return _vendorRepository.GetAllAsync(cancellationToken);
         }
 
-        public Task<Vendor> GetVendorByIdAsync(Guid id)
+        public Task<Vendor> GetVendorByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            return _vendorRepository.GetByIdAsync(id);
+            return _vendorRepository.GetByIdAsync(id, cancellationToken);
         }
 
-        public Task UpdateVendorAsync(Vendor model)
+        public Task<Vendor> SearchVendorByLocation(Location location, CancellationToken cancellationToken)
         {
-            return _vendorRepository.UpdateAsync(model.Id, model);
+            return _vendorRepository.SearchVendorByLocation(location, cancellationToken);
+        }
+
+        public Task UpdateVendorAsync(Vendor model, CancellationToken cancellationToken)
+        {
+            return _vendorRepository.UpdateAsync(model.Id, model, cancellationToken);
         }
     }
 }
