@@ -10,6 +10,7 @@ namespace ExadelBonusPlus.Services
         public static void SetInitialValues(this Bonus bonusClass, Bonus bonus)
         {
             bonus.CreatedDate = DateTime.Now;
+            bonus.IsActive = true;
         }
     }
 }
