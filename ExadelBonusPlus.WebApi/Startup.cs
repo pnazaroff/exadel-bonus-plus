@@ -13,7 +13,7 @@ using ExadelBonusPlus.Services.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using ExadelBonusPlus.DataAccess;
+using IdentityServer4;
 
 namespace ExadelBonusPlus.WebApi
 {
@@ -29,10 +29,8 @@ namespace ExadelBonusPlus.WebApi
         {
             services.Configure<MongoDbSettings>(_configuration.GetSection(
                 nameof(MongoDbSettings)));
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IRefreshTokenRepositry, RefreshTokenRepository>();
+            
             services.AddControllers();
-            services.Configure<AppSettings>(_configuration.GetSection("Token"));
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
                 {
@@ -63,31 +61,20 @@ namespace ExadelBonusPlus.WebApi
                 });
             });
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddCookie(cfg => cfg.SlidingExpiration = true)
-                .AddJwtBearer(cfg =>
+           
+            services.AddCors(setup =>
+            {
+                setup.AddDefaultPolicy(policy =>
                 {
-                    cfg.RequireHttpsMetadata = false;
-                    cfg.SaveToken = true;
-                    cfg.TokenValidationParameters = new TokenValidationParameters()
-                    {
-                        ClockSkew = TimeSpan.Zero,
-                        ValidateIssuer = false,
-                        ValidIssuer = _configuration["Token:Issuer"],
-                        ValidateAudience = false,
-                        ValidAudience = _configuration["Token:Audience"],
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Token:Secret"]))
-                    };
+                    policy.AllowAnyHeader();
+                    policy.AllowAnyMethod();
+                    policy.WithOrigins("http://localhost:3000");
                 });
+            });
 
-            services.AddIdentity<ApplicationUser, ApplicationRole>()
-                .AddMongoDbStores<ApplicationUser, ApplicationRole, Guid>
-                (
-                    _configuration["MongoDbSettings:ConnectionString"],
-                    _configuration["MongoDbSettings:DatabaseName"])
-                .AddSignInManager()
-                .AddDefaultTokenProviders();
+            
+            services.AddApiIdentityConfiguration(_configuration);
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -100,10 +87,13 @@ namespace ExadelBonusPlus.WebApi
                 };
                 app.UseDeveloperExceptionPage(developerExceptionPageOptions);
             }
+
+            app.UseCors();
             app.UseStaticFiles();
             app.UseRouting();
-            app.UseAuthorization();
             app.UseAuthentication();
+            app.UseIdentityServer();
+            
             app.UseSwagger();
 
             app.UseSwaggerUI(options =>
