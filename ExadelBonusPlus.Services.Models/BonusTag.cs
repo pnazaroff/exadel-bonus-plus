@@ -5,11 +5,6 @@ namespace ExadelBonusPlus.Services.Models
 {
     public class BonusTag: IEntity<Guid>
     {
-        public BonusTag()
-        {
-            CreatedDate = DateTime.Now;
-        }
-
         public Guid Id { get; set; }
 
         public DateTime CreatedDate { get; set; }

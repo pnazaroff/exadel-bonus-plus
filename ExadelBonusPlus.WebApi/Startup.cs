@@ -45,7 +45,8 @@ namespace ExadelBonusPlus.WebApi
             services.AddTransient<IBonusTagRepository, BonusTagRepository>();
             services.AddTransient<IBonusService, BonusService>();
 
-            services.AddTransient<IValidator<AddBonusDto>, BonusDtoValidator>();
+            services.AddTransient<IValidator<AddBonusDto>, AddBonusDtoValidator>();
+            services.AddTransient<IValidator<BonusDto>, BonusDtoValidator>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -12,6 +12,8 @@ namespace ExadelBonusPlus.WebApi
 {
     [ApiController]
     [Route("api/[controller]/")]
+    [BonusValidationFilter]
+    [BonusExceptionFilter]
     public class BonusController : ControllerBase
     {
 
@@ -30,26 +32,7 @@ namespace ExadelBonusPlus.WebApi
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<BonusDto>> AddBonusAsync([FromBody] AddBonusDto Bonus)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Validation error");
-            }
-            try
-            {
-                return Ok(await _BonusService.AddBonusAsync(Bonus));
-            }
-            catch (InvalidOperationException e)
-            {
-                return BadRequest(e.Message);
-            }
-            catch (ArgumentException e)
-            {
-                return BadRequest(e.Message);
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
+            return Ok(await _BonusService.AddBonusAsync(Bonus));
         }
 
         [HttpGet]
@@ -57,23 +40,7 @@ namespace ExadelBonusPlus.WebApi
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<IEnumerable<BonusDto>>> FindAllBonusAsync()
         {
-            try
-            {
-                return Ok(await _BonusService.FindAllBonusAsync());
-            }
-            catch (InvalidOperationException e)
-            {
-                return BadRequest(e.Message);
-            }
-            catch (ArgumentException e)
-            {
-                return BadRequest(e.Message);
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
-
+            return Ok(await _BonusService.FindAllBonusAsync());
         }
 
         [HttpGet]
@@ -82,23 +49,7 @@ namespace ExadelBonusPlus.WebApi
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<IEnumerable<BonusDto>>> FindBonusByIdAsync([FromRoute] Guid id)
         {
-            try
-            {
-                return Ok(await _BonusService.FindBonusByIdAsync(id));
-            }
-            catch (InvalidOperationException e)
-            {
-                return BadRequest(e.Message);
-            }
-            catch (ArgumentException e)
-            {
-                return BadRequest(e.Message);
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
-
+            return Ok(await _BonusService.FindBonusByIdAsync(id));
         }
 
         [HttpPatch]
@@ -107,22 +58,7 @@ namespace ExadelBonusPlus.WebApi
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<BonusDto>> UpdateBonusAsync([FromRoute] Guid id, [FromBody] BonusDto Bonus)
         {
-            try
-            {
-                return Ok(await _BonusService.UpdateBonusAsync(id, Bonus));
-            }
-            catch (InvalidOperationException e)
-            {
-                return BadRequest(e.Message);
-            }
-            catch (ArgumentException e)
-            {
-                return BadRequest(e.Message);
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
+            return Ok(await _BonusService.UpdateBonusAsync(id, Bonus));
         }
 
         [HttpDelete]
@@ -131,22 +67,7 @@ namespace ExadelBonusPlus.WebApi
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<BonusDto>> DeleteBonusAsync([FromRoute] Guid id)
         {
-            try
-            {
-                return Ok(await _BonusService.DeleteBonusAsync(id));
-            }
-            catch (InvalidOperationException e)
-            {
-                return BadRequest(e.Message);
-            }
-            catch (ArgumentException e)
-            {
-                return BadRequest(e.Message);
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
+           return Ok(await _BonusService.DeleteBonusAsync(id));
         }
 
     }
