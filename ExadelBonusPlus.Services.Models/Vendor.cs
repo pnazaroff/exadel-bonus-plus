@@ -13,7 +13,7 @@ namespace ExadelBonusPlus.Services.Models
         public string Email { get; set; }
         public string Description { get; set; }
         [BsonElement("Location")]
-        public List<Location> Locations { get; set; }
+        public Location Location { get; set; }
         public DateTime CreatedDate {get;set;}
         public Guid CreatorId {get;set;}
         public DateTime? ModifiedDate {get;set;}

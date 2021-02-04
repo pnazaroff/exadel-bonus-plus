@@ -11,6 +11,7 @@ using ExadelBonusPlus.Services.Interfaces;
 using ExadelBonusPlus.Services;
 using ExadelBonusPlus.Services.Models.Interfaces;
 using ExadelBonusPlus.DataAccess;
+using AutoMapper;
 
 namespace ExadelBonusPlus.WebApi
 {
@@ -26,6 +27,7 @@ namespace ExadelBonusPlus.WebApi
         {
             services.Configure<MongoDbSettings>(_configuration.GetSection(
                 nameof(MongoDbSettings)));
+            services.AddAutoMapper(typeof(Startup).Assembly);
 
             services.AddScoped<IVendorService, VendorService>();
             services.AddScoped<IVendorRepository, VendorRepository>();

@@ -1,5 +1,7 @@
-﻿using ExadelBonusPlus.Services.Interfaces;
+﻿using AutoMapper;
+using ExadelBonusPlus.Services.Interfaces;
 using ExadelBonusPlus.Services.Models;
+using ExadelBonusPlus.WebApi.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -13,16 +15,19 @@ namespace ExadelBonusPlus.WebApi.Controllers
     public class VendorController : ControllerBase
     {
         private IVendorService _vendorService;
+        private readonly IMapper _mapper;
 
-        public VendorController(IVendorService vendorService)
+        public VendorController(IVendorService vendorService, IMapper mapper)
         {
             _vendorService = vendorService;
+            _mapper = mapper;
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Vendor>>> GetVendors(CancellationToken cancellationToken)
+        public async Task<ActionResult<IEnumerable<VendorDto>>> GetVendors(CancellationToken cancellationToken)
         {
             var vendors = await _vendorService.GetAllVendorsAsync(cancellationToken);
-            return Ok(vendors);
+            var vendorsDto = _mapper.Map<IEnumerable<Vendor>, IEnumerable<VendorDto>>(vendors);
+            return Ok(vendorsDto);
         }
         [HttpGet("{id:Guid}")]
         public async Task<ActionResult<Vendor>> GetVendor(Guid id, CancellationToken cancellationToken)
