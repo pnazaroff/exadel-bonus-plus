@@ -34,12 +34,6 @@ namespace ExadelBonusPlus.WebApi.Controllers
             }
             return Ok(vendor);
         }
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Vendor>>> SearchVendorByLocation(Location location, CancellationToken cancellationToken)
-        {
-            var vendor = await _vendorService.SearchVendorByLocation(location, cancellationToken);
-            return Ok(vendor);
-        }
         [HttpPost]
         public async Task AddVendor(Vendor model, CancellationToken cancellationToken)
         {
