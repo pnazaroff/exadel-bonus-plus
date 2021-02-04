@@ -18,7 +18,7 @@ namespace ExadelBonusPlus.Services
         public BonusService(IBonusRepository bonusRepository, IBonusTagRepository bonusTagRepository, IMapper mapper)
         {
             _bonusRepository = bonusRepository;
-           _bonusTagRepository = bonusTagRepository;
+            _bonusTagRepository = bonusTagRepository;
             _mapper = mapper;
         }
 
@@ -26,7 +26,7 @@ namespace ExadelBonusPlus.Services
         {
             if (model is null)
             {
-                throw new ArgumentNullException(Resources.ModelIsNull);
+                throw new ArgumentNullException("", Resources.ModelIsNull);
             }
             var bonus = _mapper.Map<Bonus>(model);
             bonus.SetInitialValues(bonus);
@@ -45,21 +45,21 @@ namespace ExadelBonusPlus.Services
         {
             if (id == Guid.Empty)
             {
-                throw new ArgumentNullException(Resources.IdentifierIsNull);
+                throw new ArgumentNullException("", Resources.IdentifierIsNull);
             }
             var result = await _bonusRepository.GetByIdAsync(id, cancellationToken);
-            return result is null ? throw new ArgumentException(Resources.FindbyIdError) : _mapper.Map<BonusDto>(result);
+            return result is null ? throw new ArgumentException("", Resources.FindbyIdError) : _mapper.Map<BonusDto>(result);
         }
 
         public async Task<BonusDto> UpdateBonusAsync(Guid id, BonusDto model, CancellationToken cancellationToken)
         {
             if (id == Guid.Empty)
             {
-                throw new ArgumentNullException(Resources.IdentifierIsNull);
+                throw new ArgumentNullException("", Resources.IdentifierIsNull);
             }
             if (model is null)
             {
-                throw new ArgumentNullException(Resources.ModelIsNull);
+                throw new ArgumentNullException("", Resources.ModelIsNull);
             }
             var bonus = _mapper.Map<Bonus>(model);
 
@@ -73,7 +73,7 @@ namespace ExadelBonusPlus.Services
         {
             if (id == Guid.Empty)
             {
-                throw new ArgumentNullException(Resources.IdentifierIsNull);
+                throw new ArgumentNullException("", Resources.IdentifierIsNull);
             }
 
             var result =await _bonusRepository.RemoveAsync(id, cancellationToken);

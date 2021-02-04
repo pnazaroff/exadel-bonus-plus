@@ -31,7 +31,12 @@ namespace ExadelBonusPlus.WebApi
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             
-            services.AddControllers().AddFluentValidation();
+            services.AddControllers()
+                .ConfigureApiBehaviorOptions(options =>
+                {
+                    options.SuppressModelStateInvalidFilter = true; //This string need for fluent validation in action filter
+                })
+                .AddFluentValidation();
 
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new OpenApiInfo

@@ -10,6 +10,7 @@ namespace ExadelBonusPlus.Services.Models
 		public AddBonusDtoValidator()
         {
             RuleFor(x => x.Title).Length(1, 9999);
+            RuleFor(x => x.Description).NotEmpty();
             RuleFor(x => x.DateStart).NotNull();
             RuleFor(x => x.DateEnd).NotNull();
         }
@@ -20,6 +21,7 @@ namespace ExadelBonusPlus.Services.Models
         public BonusDtoValidator()
         {
             RuleFor(x => x.Title).Length(1, 9999);
+            RuleFor(x => x.Description).NotEmpty();
             RuleFor(x => x.DateStart).NotNull();
             RuleFor(x => x.DateEnd).NotNull();
         }
