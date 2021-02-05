@@ -11,6 +11,8 @@ namespace ExadelBonusPlus.Services.Models
 
         public string Description { get; set; }
 
+        public string Phone { get; set; }
+
         public Guid Company { get; set; }
 
         public DateTime DateStart { get; set; }

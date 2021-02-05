@@ -40,6 +40,12 @@ namespace ExadelBonusPlus.Services
             var result = await _bonusRepository.GetAllAsync(cancellationToken);
             return _mapper.Map<List<BonusDto>>(result);
         }
+        
+        public async Task<List<BonusDto>> FindAllActiveBonusAsync(CancellationToken cancellationToken)
+        {
+            var result = await _bonusRepository.GetAllActiveBonusAsync(cancellationToken);
+            return _mapper.Map<List<BonusDto>>(result);
+        }
 
         public async Task<BonusDto> FindBonusByIdAsync(Guid id, CancellationToken cancellationToken)
         {
@@ -81,12 +87,36 @@ namespace ExadelBonusPlus.Services
             return _mapper.Map<BonusDto>(result);
         }
 
+        public async Task<BonusDto> ActivateBonusAsync(Guid id, CancellationToken cancellationToken)
+        {
+            if (id == Guid.Empty)
+            {
+                throw new ArgumentNullException("", Resources.IdentifierIsNull);
+            }
+
+            var result =  await _bonusRepository.ActivateBonusAsync(id, cancellationToken);
+
+            return _mapper.Map<BonusDto>(result);
+        }
+
+        public async Task<BonusDto> DeactivateBonusAsync(Guid id, CancellationToken cancellationToken)
+        {
+            if (id == Guid.Empty)
+            {
+                throw new ArgumentNullException("", Resources.IdentifierIsNull);
+            }
+
+            var result = await _bonusRepository.DeactivateBonusAsync(id, cancellationToken);
+
+            return _mapper.Map<BonusDto>(result);
+        }
+
         private async Task AddTagInCollection(Bonus bonus, CancellationToken cancellationToken)
         {
             foreach (string stringBonusTag in bonus.Tags)
             {
                 BonusTag bonusTag;
-                try
+                try // try, becouse mongo throw exception if 
                 {
                     bonusTag = await _bonusTagRepository.FindTagByNameAsync(stringBonusTag, cancellationToken);
                     bonusTag.BonusIdList.Add(bonus.Id);

@@ -45,6 +45,15 @@ namespace ExadelBonusPlus.WebApi
         }
 
         [HttpGet]
+        [Route("active")]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "All active bonus", Type = typeof(HttpModel<List<BonusDto>>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<HttpModel<IEnumerable<BonusDto>>>> FindAllActiveBonusAsync()
+        {
+            return Ok(await _BonusService.FindAllActiveBonusAsync());
+        }
+
+        [HttpGet]
         [Route("{id}")]
         [SwaggerResponse((int)HttpStatusCode.OK, Description = "Bonus by ID", Type = typeof(HttpModel<List<BonusDto>>))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
@@ -69,6 +78,24 @@ namespace ExadelBonusPlus.WebApi
         public async Task<ActionResult<HttpModel<BonusDto>>> DeleteBonusAsync([FromRoute] Guid id)
         {
            return Ok(await _BonusService.DeleteBonusAsync(id));
+        }
+
+        [HttpPatch]
+        [Route("{id}/activate")]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Bonus activated", Type = typeof(HttpModel<BonusDto>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<HttpModel<BonusDto>>> ActivateBonusAsync([FromRoute] Guid id)
+        {
+            return Ok(await _BonusService.ActivateBonusAsync(id));
+        }
+
+        [HttpPatch]
+        [Route("{id}/deactivate")]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Bonus deactivated", Type = typeof(HttpModel<BonusDto>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<HttpModel<BonusDto>>> DeactivateBonusAsync([FromRoute] Guid id)
+        {
+            return Ok(await _BonusService.DeactivateBonusAsync(id));
         }
 
     }
