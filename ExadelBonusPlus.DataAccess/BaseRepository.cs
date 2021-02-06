@@ -49,7 +49,7 @@ namespace ExadelBonusPlus.Services.Models
         
         protected private IMongoCollection<TModel> GetCollection()
         {
-            return _database.GetCollection<TModel>(nameof(TModel));
+            return _database.GetCollection<TModel>(typeof(TModel).Name);
         }
     }
 }

@@ -9,12 +9,10 @@ namespace ExadelBonusPlus.WebApi.Dtos
         public MappingProfile()
         {
             //From model to dto
-            CreateMap<Vendor, VendorDto>();
+            CreateMap<Vendor, VendorDto>()
+                .ForMember(vd=>vd.LocationDto, opts => opts.MapFrom(v=>v.Location));
             CreateMap<Location, LocationDto>();
 
-            //from dto to model
-            CreateMap<VendorDto, Vendor>();
-            CreateMap<LocationDto, Location>();
         }
     }
 }

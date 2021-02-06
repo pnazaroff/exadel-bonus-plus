@@ -33,14 +33,16 @@ namespace ExadelBonusPlus.WebApi.Controllers
         public async Task<ActionResult<Vendor>> GetVendor(Guid id, CancellationToken cancellationToken)
         {
             var vendor = await _vendorService.GetVendorByIdAsync(id, cancellationToken);
+
             if (vendor == null)
             {
                 return NotFound();
             }
-            return Ok(vendor);
+            var vendorDto = _mapper.Map<VendorDto>(vendor);
+            return Ok(vendorDto);
         }
         [HttpPost]
-        public async Task AddVendor(Vendor model, CancellationToken cancellationToken)
+        public async Task AddVendor([FromBody]Vendor model, CancellationToken cancellationToken)
         {
             await _vendorService.AddVendorAsync(model, cancellationToken);
         }
