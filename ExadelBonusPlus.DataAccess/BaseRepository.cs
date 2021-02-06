@@ -26,7 +26,7 @@ namespace ExadelBonusPlus.Services.Models
             return GetCollection().InsertOneAsync(obj, cancellationToken);
         }
         
-        public virtual async Task<IEnumerable<TModel>> GetAllAsync(CancellationToken cancellationToken)
+        public virtual async Task<IEnumerable<TModel>> GetAllAsync(CancellationToken cancellationToken )
         {
             return await GetCollection().Find(Builders<TModel>.Filter.Empty).ToListAsync(cancellationToken);
         }
@@ -43,12 +43,13 @@ namespace ExadelBonusPlus.Services.Models
 
         public virtual Task RemoveAsync(Guid id, CancellationToken cancellationToken)
         {
-            return GetCollection().DeleteOneAsync(Builders<TModel>.Filter.Eq("_id", id), cancellationToken);
+            return GetCollection().FindOneAndUpdateAsync(Builders<TModel>.Filter.Eq("_id", id), Builders<TModel>.Update.Set("IsDeleted", true),
+                new FindOneAndUpdateOptions<TModel, TModel>(), cancellationToken);
         }
-        
-        private IMongoCollection<TModel> GetCollection()
+
+        protected IMongoCollection<TModel> GetCollection()
         {
-            return _database.GetCollection<TModel>(nameof(TModel));
+            return _database.GetCollection<TModel>(typeof(TModel).Name);
         }
     }
 }
