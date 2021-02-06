@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ExadelBonusPlus.Services.Models.Interfaces;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace ExadelBonusPlus.Services.Models
@@ -22,29 +23,42 @@ namespace ExadelBonusPlus.Services.Models
             _database = _mongoClient.GetDatabase(_mongoDbSettings.DatabaseName);
         }
 
-        public virtual Task AddAsync(TModel obj, CancellationToken cancellationToken)
+        public virtual Task AddAsync(TModel model, CancellationToken cancellationToken)
         {
-            return GetCollection().InsertOneAsync(obj, cancellationToken);
+            return GetCollection().InsertOneAsync(model, cancellationToken);
         }
         
         public virtual async Task<IEnumerable<TModel>> GetAllAsync(CancellationToken cancellationToken)
         {
-            return await GetCollection().Find(Builders<TModel>.Filter.Empty).ToListAsync(cancellationToken);
+            return await GetCollection().Find(Builders<TModel>.Filter.Eq("IsDeleted", false)).ToListAsync(cancellationToken);
         }
 
         public virtual Task<TModel> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            return GetCollection().Find(Builders<TModel>.Filter.Eq("_id", id)).FirstAsync(cancellationToken);
+            var idFilter = Builders<TModel>.Filter.Eq("id", id);
+            var deletionFilter = Builders<TModel>.Filter.Eq("IsDeleted", false);
+
+            return GetCollection().Find(Builders<TModel>.Filter.And(idFilter, deletionFilter)).FirstAsync(cancellationToken);
         }
 
         public virtual Task UpdateAsync(Guid id, TModel obj,  CancellationToken cancellationToken)
         {
-            return GetCollection().ReplaceOneAsync(Builders<TModel>.Filter.Eq("_id", id), obj, new ReplaceOptions() { IsUpsert = false }, cancellationToken);
+            return GetCollection().ReplaceOneAsync(
+                Builders<TModel>.Filter.Eq("_id", id),
+                obj, 
+                new ReplaceOptions() { IsUpsert = false },
+                cancellationToken
+                );
         }
 
-        public virtual Task DeleteAsync(Guid id, CancellationToken cancellationToken)
+        public virtual Task<TModel> DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
-            return GetCollection().DeleteOneAsync(Builders<TModel>.Filter.Eq("_id", id), cancellationToken);
+            //write filters 
+            var idFilter = Builders<TModel>.Filter.Eq("id", id);
+            var softDeletionDefinition = Builders<TModel>.Update.Set("IsDeleted", true);
+            var options = new FindOneAndUpdateOptions<TModel, TModel>();
+
+            return GetCollection().FindOneAndUpdateAsync(idFilter, softDeletionDefinition, options, cancellationToken);
         }
         
         protected private IMongoCollection<TModel> GetCollection()

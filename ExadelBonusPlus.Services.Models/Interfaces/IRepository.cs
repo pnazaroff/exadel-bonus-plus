@@ -14,6 +14,6 @@ namespace ExadelBonusPlus.Services.Models.Interfaces
         Task<IEnumerable<TModel>> GetAllAsync(CancellationToken cancellationToken = default);
         Task<TModel> GetByIdAsync(TId id, CancellationToken cancellationToken = default);
         Task UpdateAsync(TId id, TModel obj, CancellationToken cancellationToken = default);
-        Task DeleteAsync(TId id, CancellationToken cancellationToken = default);
+        Task<TModel> DeleteAsync(TId id, CancellationToken cancellationToken = default);
     }
 }
