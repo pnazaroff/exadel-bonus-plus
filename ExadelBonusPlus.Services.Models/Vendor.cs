@@ -14,6 +14,7 @@ namespace ExadelBonusPlus.Services.Models
         public string Description { get; set; }
         [BsonElement("Location")]
         public Location Location { get; set; }
+        public bool IsDeleted { get; set; }
         public DateTime CreatedDate {get;set;}
         public Guid CreatorId {get;set;}
         public DateTime? ModifiedDate {get;set;}
