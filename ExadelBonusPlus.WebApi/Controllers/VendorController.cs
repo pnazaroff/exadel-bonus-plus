@@ -30,7 +30,7 @@ namespace ExadelBonusPlus.WebApi.Controllers
             return Ok(vendorsDto);
         }
         [HttpGet("{id:Guid}")]
-        public async Task<ActionResult<Vendor>> GetVendor(Guid id, CancellationToken cancellationToken)
+        public async Task<ActionResult<VendorDto>> GetVendor(Guid id, CancellationToken cancellationToken)
         {
             var vendor = await _vendorService.GetVendorByIdAsync(id, cancellationToken);
 
@@ -38,23 +38,32 @@ namespace ExadelBonusPlus.WebApi.Controllers
             {
                 return NotFound();
             }
-            var vendorDto = _mapper.Map<VendorDto>(vendor);
+            var vendorDto = _mapper.Map<Vendor, VendorDto>(vendor);
+            
             return Ok(vendorDto);
         }
         [HttpPost]
-        public async Task AddVendor([FromBody]Vendor model, CancellationToken cancellationToken)
+        public async Task AddVendor([FromBody]VendorDto model, CancellationToken cancellationToken)
         {
-            await _vendorService.AddVendorAsync(model, cancellationToken);
+            var vendor = _mapper.Map<VendorDto, Vendor>(model);
+            vendor.CreatedDate = DateTime.Now;
+            vendor.IsDeleted = false;
+
+            await _vendorService.AddVendorAsync(vendor, cancellationToken);
         }
 
         [HttpPut]
-        public async Task UpdateVendor(Vendor model, CancellationToken cancellationToken)
+        public async Task UpdateVendor(VendorDto model, CancellationToken cancellationToken)
         {
-            await _vendorService.UpdateVendorAsync(model, cancellationToken);
+            var vendor = _mapper.Map<VendorDto, Vendor>(model);
+            vendor.ModifiedDate = DateTime.Now;
+
+            await _vendorService.UpdateVendorAsync(vendor, cancellationToken);
         }
         [HttpDelete]
-        public async Task Delete(Guid id, CancellationToken cancellationToken)
+        public async Task DeleteVendor(Guid id, CancellationToken cancellationToken)
         {
+            //should be working on deletion 
             await _vendorService.DeleteVendorAsync(id, cancellationToken);
         }
     }
