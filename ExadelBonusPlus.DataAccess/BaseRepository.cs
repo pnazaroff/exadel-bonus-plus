@@ -43,12 +43,13 @@ namespace ExadelBonusPlus.Services.Models
 
         public virtual Task RemoveAsync(Guid id, CancellationToken cancellationToken)
         {
-            return GetCollection().DeleteOneAsync(Builders<TModel>.Filter.Eq("_id", id), cancellationToken);
+            return GetCollection().FindOneAndUpdateAsync(Builders<TModel>.Filter.Eq("_id", id), Builders<TModel>.Update.Set("IsDeleted", true),
+                new FindOneAndUpdateOptions<TModel, TModel>(), cancellationToken);
         }
-        
+
         protected IMongoCollection<TModel> GetCollection()
         {
-            return _database.GetCollection<TModel>(nameof(TModel));
+            return _database.GetCollection<TModel>(typeof(TModel).Name);
         }
     }
 }
