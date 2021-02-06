@@ -6,13 +6,9 @@
 
   <ItemGroup>
     <PackageReference Include="AspNetCore.Identity.MongoDbCore" Version="2.1.1" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
-    <PackageReference Include="IdentityServer4" Version="4.1.1" />
-    <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
-    <PackageReference Include="IdentityServer4.Contrib.MongoDB" Version="2.3.4" />
-    <PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="3.1.11" />
+    <PackageReference Include="JWT" Version="8.0.0" />
+    <PackageReference Include="JWT.Extensions.AspNetCore" Version="7.1.0-beta2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.11" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="5.6.3" />
   </ItemGroup>
@@ -21,11 +17,6 @@
     <ProjectReference Include="..\ExadelBonusPlus.DataAccess\ExadelBonusPlus.DataAccess.csproj" />
     <ProjectReference Include="..\ExadelBonusPlus.Services.Models\ExadelBonusPlus.Services.Models.csproj" />
     <ProjectReference Include="..\ExadelBonusPlus.Services\ExadelBonusPlus.Services.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-    <Folder Include="ViewModel\" />
   </ItemGroup>
 
 </Project>

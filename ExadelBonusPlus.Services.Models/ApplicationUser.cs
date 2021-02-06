@@ -20,6 +20,10 @@ namespace ExadelBonusPlus.Services.Models
         /// </summary>
         public bool IsActiv { get; set; }
 
+        public string City { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+
         
     }
 }
