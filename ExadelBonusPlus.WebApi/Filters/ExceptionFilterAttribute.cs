@@ -19,7 +19,7 @@ namespace ExadelBonusPlus.WebApi
                 switch (context.Exception)
                 {
                     case InvalidOperationException error:
-                        context.Result = new BadRequestObjectResult(new HttpModel<object>()
+                        context.Result = new BadRequestObjectResult(new ResultDto<object>()
                         {
                             Errors = new List<string>()
                             {
@@ -28,7 +28,7 @@ namespace ExadelBonusPlus.WebApi
                         });
                         break;
                     case ArgumentException error:
-                        context.Result = new BadRequestObjectResult(new HttpModel<object>()
+                        context.Result = new BadRequestObjectResult(new ResultDto<object>()
                         {
                             Errors = new List<string>()
                             {
@@ -37,13 +37,13 @@ namespace ExadelBonusPlus.WebApi
                         });
                         break;
                     case ValidationException error:
-                        context.Result = new BadRequestObjectResult(new HttpModel<object>()
+                        context.Result = new BadRequestObjectResult(new ResultDto<object>()
                         {
                             Errors = error.ValidationErrors
                         });
                         break;
                     default:
-                        context.Result = new ObjectResult(new HttpModel<object>()
+                        context.Result = new ObjectResult(new ResultDto<object>()
                         {
                             Errors = new List<string>()
                             {

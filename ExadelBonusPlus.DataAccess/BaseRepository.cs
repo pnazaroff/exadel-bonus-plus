@@ -30,23 +30,25 @@ namespace ExadelBonusPlus.DataAccess
         
         public virtual async Task<IEnumerable<TModel>> GetAllAsync(CancellationToken cancellationToken)
         {
-            return await GetCollection().Find(Builders<TModel>.Filter.Eq("IsDeleted", false)).ToListAsync(cancellationToken);
+            return await GetCollection().Find(Builders<TModel>.Filter.Eq(new ExpressionFieldDefinition<TModel, bool>(x => x.IsDeleted), false)).ToListAsync(cancellationToken);
         }
 
         public virtual Task<TModel> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            return GetCollection().Find(Builders<TModel>.Filter.Eq("_id", id) & Builders<TModel>.Filter.Eq("IsDeleted", false)).FirstAsync(cancellationToken);
+            return GetCollection().Find(Builders<TModel>.Filter.Eq(new ExpressionFieldDefinition<TModel, Guid>(x => x.Id), id) 
+                                        & Builders<TModel>.Filter.Eq(new ExpressionFieldDefinition<TModel, bool>(x => x.IsDeleted), false)).FirstAsync(cancellationToken);
         }
 
         public virtual Task UpdateAsync(Guid id, TModel obj,  CancellationToken cancellationToken)
         {
-            return GetCollection().ReplaceOneAsync(Builders<TModel>.Filter.Eq("_id", id), obj, new ReplaceOptions(), cancellationToken);
+            return GetCollection().ReplaceOneAsync(Builders<TModel>.Filter.Eq(new ExpressionFieldDefinition<TModel, Guid>(x => x.Id), id), obj, new ReplaceOptions(), cancellationToken);
         }
 
         public virtual Task<TModel> RemoveAsync(Guid id, CancellationToken cancellationToken)
         {
-            return GetCollection().FindOneAndUpdateAsync(Builders<TModel>.Filter.Eq("_id", id), Builders<TModel>.Update.Set("IsDeleted", true),
-                                                                        new FindOneAndUpdateOptions<TModel, TModel>(),cancellationToken);
+            return GetCollection().FindOneAndUpdateAsync(Builders<TModel>.Filter.Eq(new ExpressionFieldDefinition<TModel, Guid>(x => x.Id), id),
+                Builders<TModel>.Update.Set(new ExpressionFieldDefinition<TModel, bool>(x => x.IsDeleted), true), 
+                new FindOneAndUpdateOptions<TModel, TModel>(),cancellationToken);
         }
         
         protected IMongoCollection<TModel> GetCollection()

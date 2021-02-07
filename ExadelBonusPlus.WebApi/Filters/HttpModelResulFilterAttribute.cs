@@ -15,7 +15,7 @@ namespace ExadelBonusPlus.WebApi
         {
             var result = context.Result as ObjectResult;
             if(result !=  null)
-                result.Value = new HttpModel<object>()
+                result.Value = new ResultDto<object>()
                 {
                     Value = result.Value, 
                     Errors = new List<string>()

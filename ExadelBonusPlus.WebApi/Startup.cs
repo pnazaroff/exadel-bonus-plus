@@ -34,7 +34,7 @@ namespace ExadelBonusPlus.WebApi
             services.AddControllers()
                 .ConfigureApiBehaviorOptions(options =>
                 {
-                    options.SuppressModelStateInvalidFilter = true; //This string need for fluent validation in action filter
+                    options.SuppressModelStateInvalidFilter = true; //This string is needed for fluent validation in action filter
                 })
                 .AddFluentValidation();
 
@@ -46,12 +46,7 @@ namespace ExadelBonusPlus.WebApi
                 });
             });
 
-            services.AddTransient<IBonusRepository, BonusRepository>();
-            services.AddTransient<IBonusTagRepository, BonusTagRepository>();
-            services.AddTransient<IBonusService, BonusService>();
-
-            services.AddTransient<IValidator<AddBonusDto>, AddBonusDtoValidator>();
-            services.AddTransient<IValidator<BonusDto>, BonusDtoValidator>();
+            services.AddBonusTransient(services);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

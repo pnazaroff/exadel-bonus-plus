@@ -17,17 +17,11 @@ namespace ExadelBonusPlus.Services.Tests
     public class BonusServiceTest
     {
         private Mock<IBonusRepository> _bonusRep;
-
         private IBonusRepository _mockBonusRep;
-
         private Mock<IBonusTagRepository> _bonusTagRep;
-
         private IBonusTagRepository _mockBonusTagRep;
-
         private BonusService _bonusService;
-
         private IMapper _mapper;
-
         private List<BonusDto> _fakeBonuseDtos;
 
         public BonusServiceTest()
@@ -38,7 +32,10 @@ namespace ExadelBonusPlus.Services.Tests
         public async Task<BonusDto> Bonus_AddBonusAsync_Return_BonusDto()
         {
             CreateDefaultBonusServiceInstance();
-            var bonus = await _bonusService.AddBonusAsync(_mapper.Map<AddBonusDto>(_fakeBonuseDtos[0]), default(CancellationToken));
+            var bonusDto = _mapper.Map<AddBonusDto>(_fakeBonuseDtos[0]);
+
+            var bonus = await _bonusService.AddBonusAsync(bonusDto, default(CancellationToken));
+
             Assert.NotNull(bonus);
             return bonus;
         }
@@ -47,7 +44,9 @@ namespace ExadelBonusPlus.Services.Tests
         public async Task<List<BonusDto>> Bonus_FindAllBonusAsync_Return_ListBonusDTO()
         {
             CreateDefaultBonusServiceInstance();
+
             var bonusList = await _bonusService.FindAllBonusAsync(default(CancellationToken));
+
             Assert.NotNull(bonusList);
             return bonusList;
         }
@@ -56,7 +55,9 @@ namespace ExadelBonusPlus.Services.Tests
         public async Task<List<BonusDto>> Bonus_FindAllActiveBonusAsync_Return_ListBonusDTO()
         {
             CreateDefaultBonusServiceInstance();
+
             var bonusList = await _bonusService.FindAllActiveBonusAsync(default(CancellationToken));
+
             Assert.NotNull(bonusList);
             return bonusList;
         }
@@ -65,7 +66,10 @@ namespace ExadelBonusPlus.Services.Tests
         public async Task<BonusDto> Bonus_FindBonusByIdAsync_Return_BonusDTO()
         {
             CreateDefaultBonusServiceInstance();
-            var bonus = await _bonusService.FindBonusByIdAsync(_fakeBonuseDtos[0].Id, default(CancellationToken));
+            var idBonus = _fakeBonuseDtos[0].Id;
+
+            var bonus = await _bonusService.FindBonusByIdAsync(idBonus, default(CancellationToken));
+
             Assert.NotNull(bonus);
             return bonus;
         }
@@ -74,7 +78,11 @@ namespace ExadelBonusPlus.Services.Tests
         public async Task<BonusDto> Bonus_UpdateBonusAsync_Return_BonusDTO()
         {
             CreateDefaultBonusServiceInstance();
-            var bonus = await _bonusService.UpdateBonusAsync(_fakeBonuseDtos[0].Id, _fakeBonuseDtos[0], default(CancellationToken));
+            var idBonus = _fakeBonuseDtos[0].Id;
+            var bonusDto = _fakeBonuseDtos[0];
+
+            var bonus = await _bonusService.UpdateBonusAsync(idBonus, bonusDto, default(CancellationToken));
+
             Assert.NotNull(bonus);
             return bonus;
         }
@@ -83,7 +91,10 @@ namespace ExadelBonusPlus.Services.Tests
         public async Task<BonusDto> Bonus_DeleteBonusAsync_Return_BonusDTO()
         {
             CreateDefaultBonusServiceInstance();
-            var bonus = await _bonusService.DeleteBonusAsync(_fakeBonuseDtos[0].Id, default(CancellationToken));
+            var idBonus = _fakeBonuseDtos[0].Id;
+
+            var bonus = await _bonusService.DeleteBonusAsync(idBonus, default(CancellationToken));
+
             Assert.NotNull(bonus);
             return bonus;
         }
@@ -92,8 +103,11 @@ namespace ExadelBonusPlus.Services.Tests
         public async Task<BonusDto> Bonus_ActivateBonusAsync_Return_BonusDTO()
         {
             CreateDefaultBonusServiceInstance();
-            var bonus = await _bonusService.ActivateBonusAsync(_fakeBonuseDtos[0].Id, default(CancellationToken));
-            Assert.Equal(true, bonus.IsActive);
+            var idBonus = _fakeBonuseDtos[0].Id;
+
+            var bonus = await _bonusService.ActivateBonusAsync(idBonus, default(CancellationToken));
+
+            Assert.True(bonus.IsActive);
             return bonus;
         }
 
@@ -101,8 +115,11 @@ namespace ExadelBonusPlus.Services.Tests
         public async Task<BonusDto> Bonus_DeactivateBonusAsync_Return_BonusDTO()
         {
             CreateDefaultBonusServiceInstance();
-            var bonus = await _bonusService.DeactivateBonusAsync(_fakeBonuseDtos[0].Id, default(CancellationToken));
-            Assert.Equal(false, bonus.IsActive);
+            var idBonus = _fakeBonuseDtos[0].Id;
+
+            var bonus = await _bonusService.DeactivateBonusAsync(idBonus, default(CancellationToken));
+
+            Assert.False(bonus.IsActive);
             return bonus;
         }
 
