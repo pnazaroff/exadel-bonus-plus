@@ -20,7 +20,6 @@ namespace ExadelBonusPlus.Services.Models
         /// Gets or sets in activ worker now.
         /// </summary>
         public bool IsActiv { get; set; }
-
         public string City { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }

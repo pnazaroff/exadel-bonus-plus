@@ -13,6 +13,7 @@ using ExadelBonusPlus.DataAccess;
 using ExadelBonusPlus.Services;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using FluentValidation.AspNetCore;
 
 namespace ExadelBonusPlus.WebApi
 {
@@ -30,7 +31,14 @@ namespace ExadelBonusPlus.WebApi
                 nameof(MongoDbSettings)));
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            
+
+            services.AddControllers()
+                .ConfigureApiBehaviorOptions(options => 
+                {
+                    options.SuppressModelStateInvalidFilter = true;
+                })
+                .AddFluentValidation();
+
             services.AddControllers()
                 .ConfigureApiBehaviorOptions(options =>
                 {
@@ -45,10 +53,9 @@ namespace ExadelBonusPlus.WebApi
                     Title = "exadel-bonus-plus API V1",
                 });
             });
-
+            services.AddApiIdentityConfiguration(_configuration);
             services.AddBonusTransient(services);
         }
-
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
