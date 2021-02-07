@@ -66,5 +66,22 @@ namespace ExadelBonusPlus.WebApi.Controllers
             //should be working on deletion 
             await _vendorService.DeleteVendorAsync(id, cancellationToken);
         }
+
+        [HttpGet("{city}")]
+        public async Task<ActionResult<VendorDto>> GetVendorByCity(string city, CancellationToken cancellationToken)
+        {
+            var vendor = await _vendorService.SearchVendorByLocation(city, cancellationToken);
+
+            if (vendor == null)
+            {
+                return NotFound();
+            }
+            var vendorDto = _mapper.Map<Vendor, VendorDto>(vendor);
+
+            return Ok(vendorDto);
+        }
+
+
+
     }
 }
