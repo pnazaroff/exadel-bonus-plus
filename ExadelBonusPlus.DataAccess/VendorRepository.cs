@@ -17,9 +17,12 @@ namespace ExadelBonusPlus.DataAccess
 
         }
 
-        public Task<Vendor> SearchVendorByLocation(Location location, CancellationToken cancellationToken)
+        public async Task<Vendor> SearchVendorByLocation(string city, CancellationToken cancellationToken)
         {
-            var vendor = GetCollection().Find(Builders<Vendor>.Filter.Eq("location", location)).FirstAsync(cancellationToken);
+            var cityFilter = Builders<Vendor>.Filter.Eq(vendor => vendor.Location.City, city);
+            var deletionFilter = Builders<Vendor>.Filter.Eq(vendor => vendor.IsDeleted, false);
+            var vendor = await GetCollection().Find(cityFilter&deletionFilter).FirstAsync(cancellationToken);
+
             return vendor;
         }
         

@@ -35,9 +35,9 @@ namespace ExadelBonusPlus.Services
             return _vendorRepository.GetByIdAsync(id, cancellationToken);
         }
 
-        public Task<Vendor> SearchVendorByLocation(Location location, CancellationToken cancellationToken)
+        public Task<Vendor> SearchVendorByLocation(string city, CancellationToken cancellationToken)
         {
-            return _vendorRepository.SearchVendorByLocation(location, cancellationToken);
+            return _vendorRepository.SearchVendorByLocation(city, cancellationToken);
         }
 
         public Task UpdateVendorAsync(Vendor model, CancellationToken cancellationToken)

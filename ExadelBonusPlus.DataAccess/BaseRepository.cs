@@ -53,14 +53,10 @@ namespace ExadelBonusPlus.Services.Models
 
         public virtual Task<TModel> DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
-            //write filters 
-            var idFilter = Builders<TModel>.Filter.Eq("id", id);
-            var softDeletionDefinition = Builders<TModel>.Update.Set("IsDeleted", true);
-            var options = new FindOneAndUpdateOptions<TModel, TModel>();
-
-            return GetCollection().FindOneAndUpdateAsync(idFilter, softDeletionDefinition, options, cancellationToken);
+            return GetCollection().FindOneAndUpdateAsync(Builders<TModel>.Filter.Eq("_id", id), Builders<TModel>.Update.Set("IsDeleted", true),
+                                                                        new FindOneAndUpdateOptions<TModel, TModel>(), cancellationToken);
         }
-        
+
         protected private IMongoCollection<TModel> GetCollection()
         {
             return _database.GetCollection<TModel>(typeof(TModel).Name);
