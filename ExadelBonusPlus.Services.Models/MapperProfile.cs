@@ -20,6 +20,8 @@ namespace ExadelBonusPlus.Services.Models
                 .ForMember(dest => dest.Roles,
                     opt => opt.MapFrom<UserResolver>())
                 .ReverseMap();
+
+            CreateMap<ApplicationRole, RoleDTO.RoleDTO>().ReverseMap();
         }
     }
 }

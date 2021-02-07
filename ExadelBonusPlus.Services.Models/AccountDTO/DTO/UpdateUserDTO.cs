@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ExadelBonusPlus.Services.Models.ViewModel
 {
-    class UpdateUserDTO
+    public class UpdateUserDTO
     {
         public string City { get; set; }
         public string FirstName { get; set; }
