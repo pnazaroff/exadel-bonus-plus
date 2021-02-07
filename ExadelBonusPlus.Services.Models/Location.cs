@@ -9,6 +9,6 @@ namespace ExadelBonusPlus.Services.Models
         public string Country { get; set; }
         public string Address { get; set; }
         public double Lattitude { get; set; }
-        public double Longitude { get; set; }
+        public double Longtitude { get; set; }
     }
 }

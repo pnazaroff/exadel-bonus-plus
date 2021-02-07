@@ -15,7 +15,7 @@ namespace ExadelBonusPlus.WebApi.Dtos
 
             //From dto to model 
             CreateMap<VendorDto, Vendor>()
-                .ForMember(v => v.Location, opts => opts.MapFrom(vd => new Location { City = vd.Location.Address, Address =vd.Location.Address, Country = vd.Location.Country, Lattitude=vd.Location.Lattitude, Longitude=vd.Location.Longitude }));
+                .ForMember(v => v.Location, opts => opts.MapFrom(vd => new Location { City = vd.Location.City, Address =vd.Location.Address, Country = vd.Location.Country, Lattitude=vd.Location.Lattitude, Longtitude=vd.Location.Longtitude }));
 
         }
     }
