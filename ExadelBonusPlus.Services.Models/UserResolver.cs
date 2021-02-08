@@ -11,12 +11,11 @@ namespace ExadelBonusPlus.Services.Models
         {
             _userManager = userManager;
         }
-
+        //to do Task
         public IList<string> Resolve(ApplicationUser source, UserInfoDTO destination, IList<string> destMember, ResolutionContext context)
         {
             var role = _userManager.GetRolesAsync(source).Result;
             return role;
         }
-
     }
 }

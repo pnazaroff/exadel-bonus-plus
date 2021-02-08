@@ -52,6 +52,28 @@ namespace ExadelBonusPlus.WebApi
                     Version = "v1",
                     Title = "exadel-bonus-plus API V1",
                 });
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "Input the JWT like: Bearer {your token}",
+                    Name = "Authorization",
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement{
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] {}
+                    }
+                });
             });
             services.AddApiIdentityConfiguration(_configuration);
             services.AddBonusTransient(services);
@@ -75,7 +97,8 @@ namespace ExadelBonusPlus.WebApi
             );
 
             app.UseRouting();
-
+            app.UseAuthorization();
+            app.UseAuthentication();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGet("/", context => {

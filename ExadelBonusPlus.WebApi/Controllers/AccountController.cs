@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using ExadelBonusPlus.Services;
 using ExadelBonusPlus.Services.Models;
+using IdentityServer4.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -32,7 +33,7 @@ namespace ExadelBonusPlus.WebApi.Controllers
             await _userService.RegisterAsync(registerUser);
             return Ok();
         }
-
+        
         [HttpPost]
         [AllowAnonymous]
         [Route("login")]
@@ -40,10 +41,11 @@ namespace ExadelBonusPlus.WebApi.Controllers
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> Login(LoginUserDTO loginUser)
         {
-            var result = await _userService.LogInAsync(loginUser);
+            var ipAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            var result = await _userService.LogInAsync(loginUser, ipAddress);
             return Ok(result);
         }
-        
+
         [HttpPost]
         [Route("logout")]
         [SwaggerResponse((int)HttpStatusCode.OK)]
@@ -64,5 +66,18 @@ namespace ExadelBonusPlus.WebApi.Controllers
             var result = await _userService.GetUserAsync(id);
             return Ok(result);
         }
-         }
+
+        [HttpGet]
+        [Route("tokenrefresh")]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "refresh your token", Type = typeof(HttpModel<AuthResponce>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<AuthResponce>> GetRefreshToken( string refreshToken)
+        {
+            var ipAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            var result = await _userService.RefreshToken(refreshToken, ipAddress);
+            return Ok(result);
+        }
+
+       
+    }
 }

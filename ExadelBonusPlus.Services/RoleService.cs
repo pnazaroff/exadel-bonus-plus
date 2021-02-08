@@ -27,9 +27,9 @@ namespace ExadelBonusPlus.Services
             return result is null ? throw new ArgumentException("") : _mapper.Map<RoleDTO>(newRole);
         }
 
-        public async Task<RoleDTO> DeleteRole(string roleName)
+        public async Task<RoleDTO> DeleteRole(Guid id)
         {
-            var role = await _roleManager.FindByNameAsync(roleName);
+            var role = await _roleManager.FindByIdAsync(id.ToString());
             if (role is null)
             {
                 throw new ArgumentNullException(nameof(ApplicationRole));
@@ -38,9 +38,9 @@ namespace ExadelBonusPlus.Services
             return result is null ? throw new ArgumentException("") : _mapper.Map<RoleDTO>(role);
         }
 
-        public async Task<RoleDTO> UpdateRole(string roleName)
+        public async Task<RoleDTO> UpdateRole(Guid id, string roleName)
         {
-            var role = await _roleManager.FindByNameAsync(roleName);
+            var role = await _roleManager.FindByIdAsync(id.ToString());
             if (role is null)
             {
                 throw new ArgumentNullException(nameof(ApplicationRole));

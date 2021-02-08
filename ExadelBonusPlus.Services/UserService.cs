@@ -9,7 +9,8 @@ using JWT.Algorithms;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using JWT.Builder;
-using ExadelBonusPlus.Services.Models.ViewModel;
+using System.IO;
+using System.Security.Cryptography;
 
 namespace ExadelBonusPlus.Services
 {
@@ -34,7 +35,7 @@ namespace ExadelBonusPlus.Services
             var user = await _userManager.FindByIdAsync(userId);
             return user is null ? throw new ArgumentException("") : _mapper.Map<UserInfoDTO>(user);
         }
-        public async Task<AuthResponce> LogInAsync(LoginUserDTO loginUser)
+        public async Task<AuthResponce> LogInAsync(LoginUserDTO loginUser, string ipAddress)
         {
             var user = await _userManager.FindByEmailAsync(loginUser.Email);
             if (user.IsActiv)
@@ -43,12 +44,13 @@ namespace ExadelBonusPlus.Services
                 if (result.Succeeded)
                 {
                     var responce = new AuthResponce();
-                    responce.token = await GetFullJwtAsync(user);
+                    responce.AccessToken = await GetFullJwtAsync(user);
+                    responce.RefreshToken = await GetRefreshToken(ipAddress);
                     return responce;
                 }
-                throw new ApplicationException("Wrong login or password");
+               
             }
-            throw new ApplicationException("This person is not an employee of the company");
+            throw new ApplicationException();
         }
         public async Task LogOutAsync()
         {
@@ -113,6 +115,57 @@ namespace ExadelBonusPlus.Services
 
             return result is null ? throw new ArgumentException("") : _mapper.Map<UserInfoDTO>(user);
         }
+        public async Task<UserInfoDTO> AddRoleToUserAsync(string usersId, string roleName)
+        {
+            if (usersId is null || roleName is null)
+            {
+                throw new ArgumentNullException();
+            }
+            var user = await _userManager.FindByIdAsync(usersId);
+            if (user is null)
+            {
+                throw new FileNotFoundException();
+            }
+            if (await _userManager.IsInRoleAsync(user, roleName))
+            {
+                throw new ArgumentNullException();
+            }
+            var result = await _userManager.AddToRoleAsync(user, roleName);
+            return result is null ? throw new ArgumentException("") : _mapper.Map<UserInfoDTO>(user);
+        }
+        public async Task<UserInfoDTO> RemoveUserRoleAsync(string usersId, string roleName)
+        {
+            if (usersId is null || roleName is null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            var user = await _userManager.FindByIdAsync(usersId);
+            if (user is null)
+            {
+                throw new FileNotFoundException();
+            }
+            if (!(await _userManager.IsInRoleAsync(user, roleName)))
+            {
+                throw new ArgumentNullException();
+            }
+            var result = await _userManager.RemoveFromRoleAsync(user, roleName);
+            return result is null ? throw new ArgumentException("") : _mapper.Map<UserInfoDTO>(user);
+        }
+       
+        public Task<AuthResponce> RefreshToken(string refreshToken, string ipAddress)
+        {
+            throw new NotImplementedException();
+        }
+
+
+
+
+
+
+
+
+
         private async Task<string> GetFullJwtAsync(ApplicationUser user)
         {
             try
@@ -133,5 +186,7 @@ namespace ExadelBonusPlus.Services
                 return e.Message;
             }
         }
+
+
     }
 }

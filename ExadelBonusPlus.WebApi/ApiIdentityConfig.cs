@@ -44,6 +44,7 @@ namespace ExadelBonusPlus.WebApi
                         ValidAudience = configuration["AppJwtSettings:Audience"],
                         ValidateIssuerSigningKey = true,
                         ValidateLifetime = true,
+                        ClockSkew = TimeSpan.Zero,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["AppJwtSettings:SecretKey"]))
                     };
                 });
