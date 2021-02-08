@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -7,6 +8,11 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using System.Threading.Tasks;
 using ExadelBonusPlus.Services.Models;
+using AutoMapper;
+using ExadelBonusPlus.DataAccess;
+using ExadelBonusPlus.Services;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 
 namespace ExadelBonusPlus.WebApi
 {
@@ -23,15 +29,24 @@ namespace ExadelBonusPlus.WebApi
             services.Configure<MongoDbSettings>(_configuration.GetSection(
                 nameof(MongoDbSettings)));
 
-            services.AddControllers();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            
+            services.AddControllers()
+                .ConfigureApiBehaviorOptions(options =>
+                {
+                    options.SuppressModelStateInvalidFilter = true; //This string is needed for fluent validation in action filter
+                })
+                .AddFluentValidation();
 
             services.AddSwaggerGen(c => {
-                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+                c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
                     Title = "exadel-bonus-plus API V1",
                 });
             });
+
+            services.AddBonusTransient(services);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
