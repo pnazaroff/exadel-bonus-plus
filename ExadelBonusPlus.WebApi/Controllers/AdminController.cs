@@ -2,7 +2,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using ExadelBonusPlus.Services;
-using ExadelBonusPlus.Services.Models.ViewModel;
+using ExadelBonusPlus.Services.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -29,9 +29,9 @@ namespace ExadelBonusPlus.WebApi.Controllers
         [Authorize(Roles = "Admin")]
         [SwaggerResponse((int)HttpStatusCode.OK, Description = "Delete user", Type = typeof(HttpModel<UserInfoDTO>))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
-        public ActionResult<UserInfoDTO> DeleteUser([FromRoute] Guid userId)
+        public async Task<ActionResult<UserInfoDTO>> DeleteUserAsync([FromRoute] Guid userId)
         {
-            return Ok(_userService.DeleteUserAsync(userId).Result);
+            return Ok(( _userService.DeleteUserAsync(userId)).Result);
         }
 
         [HttpPost]
