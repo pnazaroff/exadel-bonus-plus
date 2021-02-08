@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Text;
+using ExadelBonusPlus.DataAccess;
 using ExadelBonusPlus.Services;
 using ExadelBonusPlus.Services.Models;
-using ExadelBonusPlus.WebApi.Controllers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,8 +16,12 @@ namespace ExadelBonusPlus.WebApi
     {
         public static void AddApiIdentityConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
+           
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IRoleService, RoleService>();
+            services.AddTransient<ITokenRefreshRepository, TokenRefreshRepository>();
+            services.AddTransient<ITokenRefreshService, TokenRefreshService>();
+
 
             services.Configure<AppJwtSettings>(configuration.GetSection(
                 nameof(AppJwtSettings)));

@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ExadelBonusPlus.Services.Models
 {
     public interface ITokenRefreshRepository : IRepository<TokenRefresh, Guid>
     {
-        Task<TokenRefresh> GetRefreshTokenByIpAddress(string ipAddress);
+        Task<IEnumerable<TokenRefresh>> GetRefreshTokenByIpAddress(string ipAddress, CancellationToken cancellationToken = default);
+        Task<IEnumerable<TokenRefresh>> GetRefreshTokenByUserId(Guid userId, CancellationToken cancellationToken = default);
+        Task<IEnumerable<TokenRefresh>> GetRefreshTokenByToken(string token, CancellationToken cancellationToken = default);
     }
 }

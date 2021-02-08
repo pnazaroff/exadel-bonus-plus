@@ -10,24 +10,27 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using JWT.Builder;
 using System.IO;
-using System.Security.Cryptography;
+using System.Linq;
 
 namespace ExadelBonusPlus.Services
 {
     public class UserService : IUserService
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly ITokenRefreshService _tokenRefreshService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly AppJwtSettings _appJwtSettings;
         private readonly IMapper _mapper;
         public UserService(SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
             IMapper mapper,
-            IOptions<AppJwtSettings> appJwtSettings)
+            IOptions<AppJwtSettings> appJwtSettings,
+            ITokenRefreshService tokenRefreshService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _mapper = mapper;
+            _tokenRefreshService = tokenRefreshService;
             _appJwtSettings = appJwtSettings.Value;
         }
         public async Task<UserInfoDTO> GetUserAsync(string userId)
@@ -45,10 +48,10 @@ namespace ExadelBonusPlus.Services
                 {
                     var responce = new AuthResponce();
                     responce.AccessToken = await GetFullJwtAsync(user);
-                    responce.RefreshToken = await GetRefreshToken(ipAddress);
+                    var refreshToken = await _tokenRefreshService.GenerateRefreshToken(ipAddress, user.Id);
+                    responce.RefreshToken = refreshToken.Token;
                     return responce;
                 }
-               
             }
             throw new ApplicationException();
         }
@@ -152,24 +155,33 @@ namespace ExadelBonusPlus.Services
             var result = await _userManager.RemoveFromRoleAsync(user, roleName);
             return result is null ? throw new ArgumentException("") : _mapper.Map<UserInfoDTO>(user);
         }
-       
-        public Task<AuthResponce> RefreshToken(string refreshToken, string ipAddress)
+        public async Task<AuthResponce> RefreshToken(string refreshToken, string ipAddress)
         {
-            throw new NotImplementedException();
+            var tokens = await _tokenRefreshService.GetRefreshTokenByToken(refreshToken);
+
+            var token = tokens.First(t => t.IsActive == true);
+            if (!(token is null))
+            {
+                var newRefreshToken = await _tokenRefreshService.UpdateRefreshToken(ipAddress, token);
+               
+                var user = await _userManager.FindByIdAsync(newRefreshToken.CreatorId.ToString());
+                var jwtToken = await GetFullJwtAsync(user);
+                return new AuthResponce
+                {
+                    RefreshToken = newRefreshToken.Token,
+                    AccessToken = jwtToken
+                };
+            }
+
+            throw new ApplicationException();
         }
-
-
-
-
-
-
-
 
 
         private async Task<string> GetFullJwtAsync(ApplicationUser user)
         {
             try
             {
+                DateTime time = new DateTime(1970, 1, 1);
                 var roles = await _userManager.GetRolesAsync(user);
                 return new JwtBuilder()
                     .WithAlgorithm(new HMACSHA512Algorithm())
@@ -178,6 +190,7 @@ namespace ExadelBonusPlus.Services
                     .AddClaim(JwtClaimTypes.Expiration, DateTimeOffset.UtcNow.AddMinutes(_appJwtSettings.Expiration).ToUnixTimeSeconds())
                     .AddClaim(JwtClaimTypes.Email, user.Email)
                     .AddClaim(JwtClaimTypes.Audience, _appJwtSettings.Audience)
+                    .AddClaim(ClaimName.IssuedAt, (DateTime.UtcNow -time).TotalMilliseconds)
                     .AddClaim(JwtClaimTypes.Role, roles)
                     .Encode();
             }
