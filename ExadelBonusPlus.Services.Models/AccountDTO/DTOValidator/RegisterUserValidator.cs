@@ -1,10 +1,8 @@
-﻿using ExadelBonusPlus.WebApi.ViewModel;
-using FluentValidation;
-using System;
+﻿using FluentValidation;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace ExadelBonusPlus.Services.Models.ViewModel
+namespace ExadelBonusPlus.Services.Models
 {
     class RegisterUserValidator : AbstractValidator<RegisterUserDTO> 
     {

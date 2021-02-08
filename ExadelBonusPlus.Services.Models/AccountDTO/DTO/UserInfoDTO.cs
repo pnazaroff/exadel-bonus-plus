@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ExadelBonusPlus.Services.Models.ViewModel
+namespace ExadelBonusPlus.Services.Models
 {
     public class UserInfoDTO
     {

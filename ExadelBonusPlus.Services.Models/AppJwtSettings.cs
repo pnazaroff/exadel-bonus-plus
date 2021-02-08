@@ -1,4 +1,4 @@
-﻿namespace ExadelBonusPlus.WebApi.Controllers
+﻿namespace ExadelBonusPlus.Services.Models
 {
     public class AppJwtSettings
     {

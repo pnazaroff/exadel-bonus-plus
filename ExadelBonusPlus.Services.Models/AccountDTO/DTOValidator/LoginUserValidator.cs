@@ -1,7 +1,6 @@
-﻿using ExadelBonusPlus.WebApi.ViewModel;
-using FluentValidation;
+﻿using FluentValidation;
 
-namespace ExadelBonusPlus.Services.Models.ViewModel
+namespace ExadelBonusPlus.Services.Models
 {
     class LoginUserValidator : AbstractValidator<LoginUserDTO>
     {

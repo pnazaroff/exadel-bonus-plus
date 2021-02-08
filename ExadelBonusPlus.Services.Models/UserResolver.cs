@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using AutoMapper;
-using ExadelBonusPlus.Services.Models.ViewModel;
 using Microsoft.AspNetCore.Identity;
 
 namespace ExadelBonusPlus.Services.Models

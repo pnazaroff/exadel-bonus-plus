@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ExadelBonusPlus.Services.Models.ViewModel;
-using ExadelBonusPlus.WebApi.ViewModel;
+using ExadelBonusPlus.Services.Models;
 
 namespace ExadelBonusPlus.Services
 {
