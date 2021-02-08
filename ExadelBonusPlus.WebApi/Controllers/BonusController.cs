@@ -38,18 +38,18 @@ namespace ExadelBonusPlus.WebApi
         [HttpGet]
         [SwaggerResponse((int)HttpStatusCode.OK, Description = "All bonus", Type = typeof(ResultDto<List<BonusDto>>))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<ResultDto<IEnumerable<BonusDto>>>> FindAllBonusAsync()
+        public async Task<ActionResult<ResultDto<IEnumerable<BonusDto>>>> FindAllBonusesAsync()
         {
-            return Ok(await _BonusService.FindAllBonusAsync());
+            return Ok(await _BonusService.FindAllBonusesAsync());
         }
 
-        [HttpGet]
-        [Route("active")]
-        [SwaggerResponse((int)HttpStatusCode.OK, Description = "All active bonus", Type = typeof(ResultDto<List<BonusDto>>))]
+        [HttpPost]
+        [Route("find")]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Bonus with filters ond sorting", Type = typeof(ResultDto<List<BonusDto>>))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<ResultDto<IEnumerable<BonusDto>>>> FindAllActiveBonusAsync()
+        public async Task<ActionResult<ResultDto<IEnumerable<BonusDto>>>> FindBonusesAsync([FromBody] BonusFilter bonusFilter)
         {
-            return Ok(await _BonusService.FindAllActiveBonusAsync());
+            return Ok(await _BonusService.FindBonusesAsync(bonusFilter));
         }
 
         [HttpGet]
@@ -95,6 +95,15 @@ namespace ExadelBonusPlus.WebApi
         public async Task<ActionResult<ResultDto<BonusDto>>> DeactivateBonusAsync([FromRoute] Guid id)
         {
             return Ok(await _BonusService.DeactivateBonusAsync(id));
+        }
+
+        [HttpGet]
+        [Route("tags")]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Tags", Type = typeof(List<string>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<ResultDto<List<String>>>> BonusTagsAync()
+        {
+            return Ok(await _BonusService.GetBonusTagsAsync());
         }
 
     }

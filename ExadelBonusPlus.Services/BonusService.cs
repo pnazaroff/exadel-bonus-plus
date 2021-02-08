@@ -13,12 +13,10 @@ namespace ExadelBonusPlus.Services
     public class BonusService : IBonusService
     {
         private readonly IBonusRepository _bonusRepository;
-        private readonly IBonusTagRepository _bonusTagRepository;
         private readonly IMapper _mapper;
-        public BonusService(IBonusRepository bonusRepository, IBonusTagRepository bonusTagRepository, IMapper mapper)
+        public BonusService(IBonusRepository bonusRepository, IMapper mapper)
         {
             _bonusRepository = bonusRepository;
-            _bonusTagRepository = bonusTagRepository;
             _mapper = mapper;
         }
 
@@ -31,19 +29,22 @@ namespace ExadelBonusPlus.Services
             var bonus = _mapper.Map<Bonus>(model);
             bonus.SetInitialValues(bonus);
             await _bonusRepository.AddAsync(bonus, cancellationToken);
-            await AddTagInCollection(bonus, cancellationToken);
             return _mapper.Map<BonusDto>(bonus);
         }
 
-        public async Task<List<BonusDto>> FindAllBonusAsync(CancellationToken cancellationToken)
+        public async Task<List<BonusDto>> FindAllBonusesAsync(CancellationToken cancellationToken)
         {
             var result = await _bonusRepository.GetAllAsync(cancellationToken);
             return _mapper.Map<List<BonusDto>>(result);
         }
         
-        public async Task<List<BonusDto>> FindAllActiveBonusAsync(CancellationToken cancellationToken)
+        public async Task<List<BonusDto>> FindBonusesAsync(BonusFilter bonusFilter, CancellationToken cancellationToken)
         {
-            var result = await _bonusRepository.GetAllActiveBonusAsync(cancellationToken);
+            var sortBy = bonusFilter?.SortBy ?? "Title";
+            if(sortBy != null & typeof(Bonus).GetProperty(sortBy) == null)
+                throw new ArgumentException(Resources.PropertyDoesNotExist);
+
+            var result = await _bonusRepository.GetBonusesAsync(bonusFilter, cancellationToken);
             return _mapper.Map<List<BonusDto>>(result);
         }
 
@@ -70,7 +71,6 @@ namespace ExadelBonusPlus.Services
             var bonus = _mapper.Map<Bonus>(model);
 
             await _bonusRepository.UpdateAsync(id, bonus, cancellationToken);
-            await AddTagInCollection(bonus, cancellationToken);
 
             return model;
         }
@@ -111,24 +111,9 @@ namespace ExadelBonusPlus.Services
             return _mapper.Map<BonusDto>(result);
         }
 
-        private async Task AddTagInCollection(Bonus bonus, CancellationToken cancellationToken)
+        public async Task<IEnumerable<string>> GetBonusTagsAsync(CancellationToken cancellationToken)
         {
-            foreach (string stringBonusTag in bonus.Tags)
-            {
-                BonusTag bonusTag;
-                try // try, becouse mongo throw exception if 
-                {
-                    bonusTag = await _bonusTagRepository.FindTagByNameAsync(stringBonusTag, cancellationToken);
-                    bonusTag.BonusIdList.Add(bonus.Id);
-                    await _bonusTagRepository.UpdateAsync(bonusTag.Id, bonusTag, cancellationToken);
-                }
-                catch(InvalidOperationException e) //if bonusTag didn't find
-                {
-                    bonusTag = new BonusTag() {Name = stringBonusTag};
-                    bonusTag.BonusIdList = new List<Guid>() { bonus.Id };
-                    await _bonusTagRepository.AddAsync(bonusTag, cancellationToken);
-                }
-            }
+            return  await _bonusRepository.GetBonusTagsAsync(cancellationToken);
         }
     }
 }

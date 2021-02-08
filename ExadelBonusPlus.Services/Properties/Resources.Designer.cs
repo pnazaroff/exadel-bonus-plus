@@ -104,5 +104,14 @@ namespace ExadelBonusPlus.Services.Properties {
                 return ResourceManager.GetString("ModelIsNull", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property of sorting does not exist.
+        /// </summary>
+        internal static string PropertyDoesNotExist {
+            get {
+                return ResourceManager.GetString("PropertyDoesNotExist", resourceCulture);
+            }
+        }
     }
 }
