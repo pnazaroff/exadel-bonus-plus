@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using ExadelBonusPlus.Services.Models;
-using IdentityServer4.Models;
 
 namespace ExadelBonusPlus.Services
 {

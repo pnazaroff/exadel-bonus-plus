@@ -3,7 +3,7 @@ using MongoDbGenericRepository.Attributes;
 
 namespace ExadelBonusPlus.Services.Models
 {
-    [CollectionName("RefreshToken")]
+   
     public class TokenRefresh:IEntity<Guid>
     {
         public Guid Id { get; set; }
