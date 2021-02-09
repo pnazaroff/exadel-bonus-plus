@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ExadelBonusPlus.Services.Models.Interfaces;
+using System;
 using System.Collections.Generic;
 
 namespace ExadelBonusPlus.Services.Models
