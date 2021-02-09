@@ -7,14 +7,11 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using System.Threading.Tasks;
-using ExadelBonusPlus.DataAccess;
-using ExadelBonusPlus.Services;
 using ExadelBonusPlus.Services.Models;
 using AutoMapper;
 using ExadelBonusPlus.DataAccess;
 using ExadelBonusPlus.Services;
 using FluentValidation;
-using FluentValidation.AspNetCore;
 using FluentValidation.AspNetCore;
 
 namespace ExadelBonusPlus.WebApi
