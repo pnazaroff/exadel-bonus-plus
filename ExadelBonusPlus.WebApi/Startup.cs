@@ -29,6 +29,8 @@ namespace ExadelBonusPlus.WebApi
             services.Configure<MongoDbSettings>(_configuration.GetSection(
                 nameof(MongoDbSettings)));
 
+            services.AddCors();
+
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             
             services.AddControllers()
@@ -68,6 +70,10 @@ namespace ExadelBonusPlus.WebApi
             );
 
             app.UseRouting();
+
+            app.UseCors(builder => builder.AllowAnyOrigin()
+                                          .AllowAnyMethod()
+                                          .AllowAnyHeader());
 
             app.UseEndpoints(endpoints =>
             {

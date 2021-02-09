@@ -21,27 +21,29 @@ namespace ExadelBonusPlus.DataAccess
             FilterDefinition<Bonus> filter =
                 Builders<Bonus>.Filter.Eq(new ExpressionFieldDefinition<Bonus, bool>(x => x.IsDeleted), false);
 
-            var isActive = bonusFilter?.FilterBy?.IsActive;
-            if(isActive != null)
+            if(bonusFilter?.FilterBy?.IsActive != null)
+            {
                 filter = filter & Builders<Bonus>.Filter.Eq(new ExpressionFieldDefinition<Bonus, bool>(x => x.IsActive),
-                    (bool)isActive);
+                    (bool)bonusFilter?.FilterBy?.IsActive);
+            }
 
-            var title = bonusFilter?.FilterBy?.Title;
-            if (!String.IsNullOrEmpty(title))
-                filter = filter & Builders<Bonus>.Filter.Regex(new ExpressionFieldDefinition<Bonus, string>(x => x.Title), new BsonRegularExpression(title));
+            if (!String.IsNullOrEmpty(bonusFilter?.FilterBy?.Title))
+            {
+                filter = filter & Builders<Bonus>.Filter.Regex(new ExpressionFieldDefinition<Bonus, string>(x => x.Title), new BsonRegularExpression(bonusFilter?.FilterBy?.Title));
+            }
 
-            var tags = bonusFilter?.FilterBy?.Tags;
-            if (tags != null && tags.Count>0)
-                filter = filter & Builders<Bonus>.Filter.AnyIn(b => b.Tags, tags);
+            if (bonusFilter?.FilterBy?.Tags != null && bonusFilter?.FilterBy?.Tags.Count > 0)
+            {
+                filter = filter & Builders<Bonus>.Filter.AnyIn(b => b.Tags, bonusFilter?.FilterBy?.Tags);
+            }
 
-            var date = bonusFilter?.FilterBy?.Date;
-            if (date != null)
-                filter = filter & Builders<Bonus>.Filter.Lte(x => x.DateStart, date) &
-                         Builders<Bonus>.Filter.Gte(x => x.DateEnd, date);
-
-            var sortBy = bonusFilter?.SortBy ?? "Title";
-
-            return await GetCollection().Find(filter).Sort(Builders<Bonus>.Sort.Ascending(sortBy)).ToListAsync(cancellationToken);
+            if (bonusFilter?.FilterBy?.Date != null)
+            {
+                filter = filter & Builders<Bonus>.Filter.Lte(x => x.DateStart, bonusFilter?.FilterBy?.Date) &
+                      Builders<Bonus>.Filter.Gte(x => x.DateEnd, bonusFilter?.FilterBy?.Date);
+            }
+            
+            return await GetCollection().Find(filter).Sort(Builders<Bonus>.Sort.Ascending(bonusFilter?.SortBy ?? "Title")).ToListAsync(cancellationToken);
         }
 
         public Task<Bonus> ActivateBonusAsync(Guid id,  CancellationToken cancellationToken)
