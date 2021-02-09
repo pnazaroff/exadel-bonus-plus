@@ -18,6 +18,6 @@ namespace ExadelBonusPlus.Services.Interfaces
 
         Task DeleteVendorAsync(Guid id, CancellationToken cancellationToken=default);
 
-        Task<Vendor> SearchVendorByLocation(string city, CancellationToken cancellationToken=default);
+        Task<Vendor> SearchVendorByLocationAsync(string city, CancellationToken cancellationToken=default);
     }
 }
