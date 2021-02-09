@@ -1,7 +1,4 @@
-﻿using ExadelBonusPlus.Services.Models.Interfaces;
-using System;
-
-namespace ExadelBonusPlus.Services.Models
+﻿namespace ExadelBonusPlus.Services.Models
 {
     public class Location
     {

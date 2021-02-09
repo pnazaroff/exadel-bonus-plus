@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ExadelBonusPlus.Services.Models.Interfaces
+namespace ExadelBonusPlus.Services.Models
 {
     public interface IRepository<TModel, TId>
         where TModel : IEntity<TId>
@@ -14,6 +14,7 @@ namespace ExadelBonusPlus.Services.Models.Interfaces
         Task<IEnumerable<TModel>> GetAllAsync(CancellationToken cancellationToken = default);
         Task<TModel> GetByIdAsync(TId id, CancellationToken cancellationToken = default);
         Task UpdateAsync(TId id, TModel obj, CancellationToken cancellationToken = default);
-        Task<TModel> DeleteAsync(TId id, CancellationToken cancellationToken = default);
+        Task<TModel> RemoveAsync(TId id, CancellationToken cancellationToken = default);
+
     }
 }
