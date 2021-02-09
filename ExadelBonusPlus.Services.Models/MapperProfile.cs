@@ -12,6 +12,13 @@ namespace ExadelBonusPlus.Services.Models
 
             //Only for tests
             CreateMap<BonusDto, AddBonusDto>(); 
+            
+            CreateMap<ApplicationUser, UserInfoDTO > ()
+                .ForMember(dest => dest.Roles,
+                    opt => opt.MapFrom<UserResolver>())
+                .ReverseMap();
+
+            CreateMap<ApplicationRole, RoleDTO.RoleDTO>().ReverseMap();
         }
     }
 }
