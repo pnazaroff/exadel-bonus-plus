@@ -7,11 +7,14 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using System.Threading.Tasks;
+using ExadelBonusPlus.DataAccess;
+using ExadelBonusPlus.Services;
 using ExadelBonusPlus.Services.Models;
 using AutoMapper;
 using ExadelBonusPlus.DataAccess;
 using ExadelBonusPlus.Services;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using FluentValidation.AspNetCore;
 
 namespace ExadelBonusPlus.WebApi
@@ -30,7 +33,7 @@ namespace ExadelBonusPlus.WebApi
                 nameof(MongoDbSettings)));
 
             services.AddCors();
-
+            
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             
             services.AddControllers()
@@ -46,11 +49,32 @@ namespace ExadelBonusPlus.WebApi
                     Version = "v1",
                     Title = "exadel-bonus-plus API V1",
                 });
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "Input the JWT like: Bearer {your token}",
+                    Name = "Authorization",
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey
             });
-
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement{
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] {}
+                    }
+                });
+            });
+            services.AddApiIdentityConfiguration(_configuration);
             services.AddBonusTransient(services);
         }
-
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -71,9 +95,13 @@ namespace ExadelBonusPlus.WebApi
 
             app.UseRouting();
 
+            app.UseAuthorization();
+            app.UseAuthentication();
+
             app.UseCors(builder => builder.AllowAnyOrigin()
                                           .AllowAnyMethod()
                                           .AllowAnyHeader());
+
 
             app.UseEndpoints(endpoints =>
             {
