@@ -1,10 +1,8 @@
-﻿using ExadelBonusPlus.WebApi.ViewModel;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using AutoMapper;
 using ExadelBonusPlus.Services.Models;
 using IdentityModel;
-using ExadelBonusPlus.WebApi.Controllers;
 using JWT.Algorithms;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
@@ -41,18 +39,22 @@ namespace ExadelBonusPlus.Services
         public async Task<AuthResponce> LogInAsync(LoginUserDTO loginUser, string ipAddress)
         {
             var user = await _userManager.FindByEmailAsync(loginUser.Email);
-            if (user.IsActiv)
+            if (user != null)
             {
-                var result = await _signInManager.PasswordSignInAsync(loginUser.Email, loginUser.Password, false, true);
-                if (result.Succeeded)
+                if (user.IsActive)
                 {
-                    var responce = new AuthResponce();
-                    responce.AccessToken = await GetFullJwtAsync(user);
-                    var refreshToken = await _tokenRefreshService.GenerateRefreshToken(ipAddress, user.Id);
-                    responce.RefreshToken = refreshToken.Token;
-                    return responce;
+                    var result = await _signInManager.PasswordSignInAsync(loginUser.Email, loginUser.Password, false, true);
+                    if (result.Succeeded)
+                    {
+                        var responce = new AuthResponce();
+                        responce.AccessToken = await GetFullJwtAsync(user);
+                        var refreshToken = await _tokenRefreshService.GenerateRefreshToken(ipAddress, user.Id);
+                        responce.RefreshToken = refreshToken.Token;
+                        return responce;
+                    }
                 }
             }
+               
             throw new ApplicationException();
         }
         public async Task LogOutAsync()
@@ -70,7 +72,7 @@ namespace ExadelBonusPlus.Services
                 UserName = registerUser.Email,
                 Email = registerUser.Email,
                 EmailConfirmed = true,
-                IsActiv = true,
+                IsActive = true,
                 City = registerUser.City,
                 FirstName = registerUser.FirstName,
                 LastName = registerUser.LastName,
@@ -93,7 +95,7 @@ namespace ExadelBonusPlus.Services
         public async Task<UserInfoDTO> DeleteUserAsync(Guid userId)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
-            user.IsActiv = false;
+            user.IsActive = false;
             var result = await _userManager.UpdateAsync(user);
 
             return result is null ? throw new ArgumentException("") : _mapper.Map<UserInfoDTO>(user);
@@ -101,7 +103,7 @@ namespace ExadelBonusPlus.Services
         public async Task<UserInfoDTO> RestoreUserAsync(Guid userId)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
-            user.IsActiv = true;
+            user.IsActive = true;
             var result = await _userManager.UpdateAsync(user);
 
             return result is null ? throw new ArgumentException("") : _mapper.Map<UserInfoDTO>(user);
@@ -109,7 +111,7 @@ namespace ExadelBonusPlus.Services
         public async Task<UserInfoDTO> UpdateUserAsync(Guid userId, UpdateUserDTO updateUserDto)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
-            user.IsActiv = true;
+            user.IsActive = true;
             user.LastName = updateUserDto.LastName;
             user.City = updateUserDto.City;
             user.FirstName = updateUserDto.FirstName;

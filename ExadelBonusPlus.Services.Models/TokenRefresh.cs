@@ -21,5 +21,6 @@ namespace ExadelBonusPlus.Services.Models
         public Guid CreatorId { get ; set ; }
         public DateTime? ModifiedDate { get; set; }
         public Guid ModifierId { get; set; }
+        public bool IsDeleted { get ; set ; }
     }
 }

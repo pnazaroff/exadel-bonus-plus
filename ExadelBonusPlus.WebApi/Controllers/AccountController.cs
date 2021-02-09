@@ -73,7 +73,6 @@ namespace ExadelBonusPlus.WebApi.Controllers
         public async Task<ActionResult<AuthResponce>> GetRefreshToken( string refreshToken)
         {
             var ipAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            //var id = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
             var result = await _userService.RefreshToken(refreshToken, ipAddress);
             return Ok(result);
         }

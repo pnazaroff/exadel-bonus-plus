@@ -31,7 +31,7 @@ namespace ExadelBonusPlus.WebApi.Controllers
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<UserInfoDTO>> DeleteUserAsync([FromRoute] Guid id)
         {
-            var result = _userService.DeleteUserAsync(id);
+            var result = await _userService.DeleteUserAsync(id);
             return Ok(result);
         }
 
@@ -82,7 +82,7 @@ namespace ExadelBonusPlus.WebApi.Controllers
         [HttpGet]
         [Route("user/{id}")]
         [Authorize(Roles = "Admin")]
-        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Update user info",
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Get info about user",
             Type = typeof(HttpModel<UserInfoDTO>))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<UserInfoDTO>> GetUserByIdAsync([FromRoute] Guid id)
@@ -103,7 +103,7 @@ namespace ExadelBonusPlus.WebApi.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [Route("role")]
         [SwaggerResponse((int)HttpStatusCode.OK, Description = "Create role", Type = typeof(HttpModel<UserInfoDTO>))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]

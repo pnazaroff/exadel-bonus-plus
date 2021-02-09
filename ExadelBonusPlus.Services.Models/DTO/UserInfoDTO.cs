@@ -11,7 +11,7 @@ namespace ExadelBonusPlus.Services.Models
         public string LastName { get; set; }
         public string City { get; set; }
         public string PhoneNumber { get; set; }
-        public bool IsActiv { get; set; }
+        public bool IsActive { get; set; }
         public IList<string> Roles { get; set; }
     }
 }

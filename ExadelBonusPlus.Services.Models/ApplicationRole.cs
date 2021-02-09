@@ -3,7 +3,7 @@ using MongoDbGenericRepository.Attributes;
 
 namespace ExadelBonusPlus.Services.Models
 {
-    [CollectionName("Roles")]
+    
     public class ApplicationRole : MongoIdentityRole
     {
        

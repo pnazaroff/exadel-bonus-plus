@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace ExadelBonusPlus.Services.Models
 {
-    class RegisterUserValidator : AbstractValidator<RegisterUserDTO> 
+    class RegisterUserValidator : AbstractValidator<RegisterUserDTO>
     {
         public RegisterUserValidator()
         {
@@ -34,15 +34,9 @@ namespace ExadelBonusPlus.Services.Models
         }
         private bool IsValidPassword(string arg)
         {
-            if (arg.Any(s => char.IsSymbol(s)))
+            if (arg.Any(s => char.IsSymbol(s)) && arg.Any(s => char.IsNumber(s)) && arg.Any(s => char.IsLetter(s)))
             {
-                if (arg.Any(s => char.IsNumber(s)))
-                {
-                    if (arg.Any(s => char.IsLetter(s)))
-                    {
-                        return true;
-                    }
-                }
+                return true;
             }
             return false;
         }
