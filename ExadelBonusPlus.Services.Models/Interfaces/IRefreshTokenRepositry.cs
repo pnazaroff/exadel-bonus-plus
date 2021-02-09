@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace ExadelBonusPlus.Services.Models
 {
-    public interface IRefreshTokenRepositry : IRepository<RefreshToken, Guid>
+    public interface IRefreshTokenRepositry : IRepository<TokenRefresh, Guid>
     {
-        public Task<IEnumerable<RefreshToken>> GetByCreatorIdAsync(Guid creatorId, CancellationToken cancellationToken = default);
+        public Task<IEnumerable<TokenRefresh>> GetByCreatorIdAsync(Guid creatorId, CancellationToken cancellationToken = default);
     }
 }

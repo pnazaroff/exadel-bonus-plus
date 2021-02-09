@@ -1,18 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
 using AutoMapper;
-using ExadelBonusPlus.WebApi.Controllers;
 
 namespace ExadelBonusPlus.Services.Models
 {
-    class MapperProfile : Profile
+    public class MapperProfile: Profile
     {
         public MapperProfile()
         {
-            CreateMap<HistoryDto, History>().ReverseMap();
-            CreateMap<string, ApplicationRole>().ReverseMap();
-            CreateMap<UserInfo, ApplicationUser>().ReverseMap();
-           
+            CreateMap<BonusDto, Bonus>().ReverseMap();
+            CreateMap<AddBonusDto, Bonus>().AfterMap((src, dest) => dest.Id = Guid.NewGuid());
+
+            //Only for tests
+            CreateMap<BonusDto, AddBonusDto>(); 
+            
+            CreateMap<ApplicationUser, UserInfoDTO > ()
+                .ForMember(dest => dest.Roles,
+                    opt => opt.MapFrom<UserResolver>())
+                .ReverseMap();
+
+            CreateMap<ApplicationRole, RoleDTO.RoleDTO>().ReverseMap();
         }
     }
 }

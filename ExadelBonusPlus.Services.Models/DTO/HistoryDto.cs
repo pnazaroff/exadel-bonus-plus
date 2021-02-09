@@ -6,9 +6,8 @@ namespace ExadelBonusPlus.WebApi.Controllers
     public class HistoryDto
     {
         public Guid id { get; set; }
-        public UserInfo UserInfo { get; set; }
-        public string BonusName { get; set; }
-        public string PromeCode { get; set; }
+        public UserInfoDTO UserInfo { get; set; }
+        public BonusDto Bonus { get; set; }
         public DateTime UsegeDate { get; set; }
     }
 }

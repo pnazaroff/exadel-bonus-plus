@@ -4,9 +4,10 @@ using System.Text;
 
 namespace ExadelBonusPlus.Services.Models
 {
-    public class AppSettings
+    public class ResultDto<TModel>
     {
-        public string Secret { get; set; }
-        public string Issuer { get; set; }
+        public TModel Value { get; set; }
+
+        public List<string> Errors { get; set; }
     }
 }

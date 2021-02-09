@@ -1,134 +1,127 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Security.Claims;
 using System.Threading.Tasks;
+using ExadelBonusPlus.Services;
 using ExadelBonusPlus.Services.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace ExadelBonusPlus.WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class AdminController : ControllerBase
     {
+        private readonly IUserService _userService;
+        private readonly IRoleService _roleService;
 
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<ApplicationRole> _roleManager;
-
-        public AdminController(RoleManager<ApplicationRole> roleManager,
-                               UserManager<ApplicationUser> userManager)
+        public AdminController(IUserService userService,
+                                IRoleService roleService)
         {
-            _roleManager = roleManager;
-            _userManager = userManager;
+            _userService = userService;
+            _roleService = roleService;
         }
-        [HttpPost]
-        [Route("role")]
+        [HttpDelete]
+        [Route("user/{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> CreateRole(string roleName)
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Delete user", Type = typeof(HttpModel<UserInfoDTO>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<UserInfoDTO>> DeleteUserAsync([FromRoute] Guid id)
         {
-            
-            ApplicationRole newRole = new ApplicationRole
-            {
-                Name = roleName
-            };
-            var result = await _roleManager.CreateAsync(newRole);
-            if (result.Succeeded)
-            {
-                return Ok("Role created");
-            }
-            else
-            {
-                List<string> errorList = new List<string>();
-                foreach (var error in result.Errors)
-                {
-                    errorList.Add(error.Description);
-                }
+            var result = await _userService.DeleteUserAsync(id);
+            return Ok(result);
+        }
 
-                return BadRequest(errorList);
-            }
-
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [Route("user/{id}")]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Restore user", Type = typeof(HttpModel<UserInfoDTO>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<UserInfoDTO>> RestoreUser([FromRoute] Guid id)
+        {
+            var result = await _userService.RestoreUserAsync(id);
+            return Ok(result);
+        }
+        
+        [HttpPut]
+        [Authorize(Roles = "Admin")]
+        [Route("user/{id}/addroles")]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Add role to user", Type = typeof(HttpModel<UserInfoDTO>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<UserInfoDTO>> AddRoleToUserAsync([FromRoute] Guid id,  string roleName)
+        {
+            var result = await _userService.AddRoleToUserAsync(id.ToString(), roleName);
+            return Ok(result);
         }
 
         [HttpPut]
-        [Route("role")]
         [Authorize(Roles = "Admin")]
-        [SwaggerResponse((int)HttpStatusCode.OK)]
-        [SwaggerResponse((int)HttpStatusCode.BadRequest)]
-        [SwaggerResponse((int)HttpStatusCode.NotFound)]
-        [SwaggerResponse((int)HttpStatusCode.Forbidden)]
-
-        public async Task<IActionResult> EditUserInRole(string usersName, string roleId)
+        [Route("user/{id}/removeroles")]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Remove role from user", Type = typeof(HttpModel<UserInfoDTO>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<UserInfoDTO>> RemoveUserRoleAsync([FromRoute] Guid id,  string roleName)
         {
-            var role = await _roleManager.FindByIdAsync(roleId);
-            if (role == null)
-            {
-                return NotFound("NotFound role with id = " + roleId);
-            }
-            else
-            {
-                var userNew = await _userManager.FindByEmailAsync(usersName);
-                IdentityResult result = null;
-                if (await _userManager.IsInRoleAsync(userNew, role.Name))
-                {
-                    return BadRequest("User in the choose role");
-                }
+            var result = await _userService.AddRoleToUserAsync(id.ToString(), roleName);
+            return Ok(result);
+        }
 
-                result = await _userManager.AddToRoleAsync(userNew, role.Name);
-                if (!result.Succeeded)
-                {
-                    List<string> errorList = new List<string>();
-                    foreach (var error in result.Errors)
-                    {
-                        errorList.Add(error.Description);
-                    }
-                    return BadRequest(errorList);
-                }
+        [HttpPut]
+        [Authorize(Roles = "Admin")]
+        [Route("user/{id}")]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Update user info", Type = typeof(HttpModel<UserInfoDTO>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<UserInfoDTO>> UdpateUserAsync([FromRoute] Guid id, [FromBody] UpdateUserDTO updateUserDto)
+        {
+            var result = await _userService.UpdateUserAsync(id, updateUserDto);
+            return Ok(result);
+        }
 
-                return BadRequest(userNew.UserName + " in Role:" + role.Name);
-            }
+        [HttpGet]
+        [Route("user/{id}")]
+        [Authorize(Roles = "Admin")]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Get info about user",
+            Type = typeof(HttpModel<UserInfoDTO>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<UserInfoDTO>> GetUserByIdAsync([FromRoute] Guid id)
+        {
+            var result = await _userService.GetUserAsync(id.ToString());
+            return Ok(result);
         }
 
         [HttpDelete]
         [Route("role")]
         [Authorize(Roles = "Admin")]
-        [SwaggerResponse((int)HttpStatusCode.OK)]
-        [SwaggerResponse((int)HttpStatusCode.BadRequest)]
-        [SwaggerResponse((int)HttpStatusCode.Forbidden)]
-        [SwaggerResponse((int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> DeleteRole(Guid roleId)
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Delete role", Type = typeof(HttpModel<UserInfoDTO>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<UserInfoDTO>> DeleteRoleAsync(Guid id)
         {
-
-            if (User.HasClaim(ClaimTypes.Role, "Admin"))
-            {
-                var role = await _roleManager.FindByIdAsync(roleId.ToString());
-                if (role == null)
-                {
-                    return NotFound("NotFound role with id = " + roleId.ToString());
-                }
-
-                var result = await _roleManager.DeleteAsync(role);
-                if (result.Succeeded)
-                {
-                    return Ok("Role is deleted");
-                }
-
-                List<string> errorList = new List<string>();
-                foreach (var error in result.Errors)
-                {
-                    errorList.Add(error.Description);
-                }
-
-                return BadRequest(errorList);
-            }
-            return StatusCode(403);
+            var result = await _roleService.DeleteRole(id);
+            return Ok(result);
         }
 
+        [HttpPost]
+        //[Authorize(Roles = "Admin")]
+        [Route("role")]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Create role", Type = typeof(HttpModel<UserInfoDTO>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<UserInfoDTO>> CreateRoleAsync(string roleName)
+        {
+            var result = await _roleService.AddRole(roleName);
+            return Ok(result);
+        }
+
+        [HttpPut]
+        [Authorize(Roles = "Admin")]
+        [Route("role/{id}")]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Update role ", Type = typeof(HttpModel<UserInfoDTO>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<UserInfoDTO>> UdpateRoleAsync([FromRoute] Guid id , string roleName)
+        {
+            var result = await _roleService.UpdateRole(id, roleName);
+            return Ok(result);
+        }
     }
 }
-

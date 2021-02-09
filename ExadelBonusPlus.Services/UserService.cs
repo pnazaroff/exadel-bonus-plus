@@ -1,195 +1,218 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Text;
+﻿using System;
 using System.Threading.Tasks;
+using AutoMapper;
 using ExadelBonusPlus.Services.Models;
+using IdentityModel;
+using JWT.Algorithms;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-using System.IdentityModel.Tokens.Jwt;
+using JWT.Builder;
 using System.Linq;
-using System.Security.Cryptography;
-using Microsoft.IdentityModel.Tokens;
-using ExadelBonusPlus.WebApi.ViewModel;
+using ExadelBonusPlus.Services.Properties;
 
 namespace ExadelBonusPlus.Services
 {
     public class UserService : IUserService
     {
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly AppSettings _appSettings;
-        private readonly IRefreshTokenRepositry _refreshTokenRepositry;
-        public UserService(UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
-            IRefreshTokenRepositry refreshTokenRepositry,
-            IOptions<AppSettings> appSettings)
+        private readonly ITokenRefreshService _tokenRefreshService;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly AppJwtSettings _appJwtSettings;
+        private readonly IMapper _mapper;
+        public UserService(SignInManager<ApplicationUser> signInManager,
+            UserManager<ApplicationUser> userManager,
+            IMapper mapper,
+            IOptions<AppJwtSettings> appJwtSettings,
+            ITokenRefreshService tokenRefreshService)
         {
-            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager)); ;
-            _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager)); ;
-            _refreshTokenRepositry = refreshTokenRepositry ?? throw new ArgumentNullException(nameof(refreshTokenRepositry)); ;
-            _appSettings = appSettings.Value ?? throw new ArgumentNullException(nameof(appSettings.Value)); ;
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _mapper = mapper;
+            _tokenRefreshService = tokenRefreshService;
+            _appJwtSettings = appJwtSettings.Value;
         }
-
-        public async Task<ApplicationUser> GetUserInfoAsync(string userId)
+        public async Task<UserInfoDTO> GetUserAsync(string userId)
         {
-            return await _userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByIdAsync(userId);
+
+            return user is null ? throw new ArgumentException("", Resources.FindbyIdError) : _mapper.Map<UserInfoDTO>(user);
         }
-
-
+        public async Task<AuthResponce> LogInAsync(LoginUserDTO loginUser, string ipAddress)
+        {
+            var user = await _userManager.FindByEmailAsync(loginUser.Email);
+            if (user is null)
+            {
+                throw new ArgumentException("", Resources.FindbyIdError);
+            }
+            if (user.IsActive)
+            {
+                var result = await _signInManager.PasswordSignInAsync(loginUser.Email, loginUser.Password, false, true);
+                if (result.Succeeded)
+                {
+                    var responce = new AuthResponce();
+                    responce.AccessToken = await GetFullJwtAsync(user);
+                    var refreshToken = await _tokenRefreshService.GenerateRefreshToken(ipAddress, user.Id);
+                    responce.RefreshToken = refreshToken.Token;
+                    return responce;
+                }
+            }
+            throw new ArgumentException("", Resources.LoginFailed);
+        }
         public async Task LogOutAsync()
         {
-            var result = _signInManager.SignOutAsync();
+            await _signInManager.SignOutAsync();
         }
-
-        public async Task<string> RegisterAsync(string email, string password)
+        public async Task RegisterAsync(RegisterUserDTO registerUser)
         {
-            var user = new ApplicationUser(email, email);
+            if (registerUser is null)
+            {
+                throw new ArgumentNullException("", Resources.ModelIsNull);
+            }
+            var user = new ApplicationUser
+            {
+                UserName = registerUser.Email,
+                Email = registerUser.Email,
+                EmailConfirmed = true,
+                IsActive = true,
+                City = registerUser.City,
+                FirstName = registerUser.FirstName,
+                LastName = registerUser.LastName,
+                PhoneNumber = registerUser.PhoneNumber
+            };
             try
             {
-                var result = await _userManager.CreateAsync(user, password);
+                var result = await _userManager.CreateAsync(user, registerUser.Password);
                 if (result.Succeeded)
                 {
-                    return "Created"; //Need callback for redirect login page
-                }
-
-                List<string> errorList = new List<string>();
-                foreach (var error in result.Errors)
-                {
-                    errorList.Add(error.Description);
-                }
-
-                return errorList.ToString();
-            }
-            catch (Exception e)
-            {
-                return e.Message;
-            }
-        }
-        
-        async Task<AuthResponce> IUserService.LogInAsync(string email, string password)
-        {
-            var user = await _userManager.FindByEmailAsync(email);
-            if (user != null)
-            {
-                var result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
-                if (result.Succeeded)
-                {
-                    try
-                    {
-                        var role = await _signInManager.UserManager.GetRolesAsync(user);
-                        var token =  CreateToken(user, role);
-
-                        var refreshToken = await _refreshTokenRepositry.GetByCreatorIdAsync(user.Id);
-                        RefreshToken refresh;
-                        if (refreshToken != null)
-                        {
-                            if (refreshToken.Any(x=>x.IsActive == true))
-                            {
-                                refresh = refreshToken.Where(x => x.IsActive == true).FirstOrDefault();
-                                return new AuthResponce
-                                {
-                                    AccessToken = token,
-                                    RefreshToken = refresh.Value
-                                };
-                            }
-                            else
-                            {
-                                refresh = CreateRefreshToken(user);
-                                await _refreshTokenRepositry.AddAsync(refresh);
-                                return new AuthResponce
-                                {
-                                    AccessToken = token,
-                                    RefreshToken = refresh.Value
-                                };
-                            }
-                        }
-
-                        
-                        refresh = CreateRefreshToken(user);
-                        await _refreshTokenRepositry.AddAsync(refresh);
-                        return new AuthResponce
-                        {
-                            AccessToken = token,
-                            RefreshToken = refresh.Value
-                        };
-                    }
-                    catch (Exception e)
-                    {
-                        var m = e.Message;
-                        throw new ArgumentNullException(nameof(AuthResponce));
-                    }
-                }
-            }
-            throw new ArgumentNullException(nameof(user));
-        }
-
-        public async Task<AuthResponce> RefreshAccessTokenAsync(string email, string refreshToken)
-        {
-            try
-            {
-                var user = await _userManager.FindByEmailAsync(email);
-                var role = await _signInManager.UserManager.GetRolesAsync(user);
-                var oldRefreshToken = await _refreshTokenRepositry.GetByCreatorIdAsync(user.Id);
-                var curruntRefreshToken = oldRefreshToken.First(x => x.Value == refreshToken);
-
-                if (curruntRefreshToken.IsActive)
-                {
-                    var token = CreateToken(user, role);
-                    curruntRefreshToken.ModifiedDate = DateTime.Now;
-                    curruntRefreshToken.ModifierId = user.Id;
-                    return new AuthResponce
-                    {
-                        AccessToken = token,
-                        RefreshToken = curruntRefreshToken.Value
-                    };
+                    //Redirect("loginPath")
                 }
             }
             catch (Exception e)
             {
+                Console.WriteLine(e);
                 throw;
             }
-          
-            throw new ArgumentNullException(nameof(RefreshToken));
         }
-
-        private string CreateToken(ApplicationUser applicationUser, IList<string> applicationRole)
+        public async Task<UserInfoDTO> DeleteUserAsync(Guid userId)
         {
-            var claims = new List<Claim>
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            if (user is null)
             {
-                new Claim(JwtRegisteredClaimNames.Sub, applicationUser.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, applicationUser.Email),
-            };
-            if (applicationRole.Count != 0)
+                throw new ArgumentNullException("", Resources.FindbyIdError);
+
+            }
+            user.IsActive = false;
+            var result = await _userManager.UpdateAsync(user);
+            return result is null ? throw new ArgumentException("", Resources.DeleteError) : _mapper.Map<UserInfoDTO>(user);
+        }
+        public async Task<UserInfoDTO> RestoreUserAsync(Guid userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            if (user is null)
             {
-                foreach (var r in applicationRole)
-                {
-                    claims.Add(new Claim("role", r));
-                }
+                throw new ArgumentNullException("", Resources.FindbyIdError);
+
+            }
+            user.IsActive = true;
+            var result = await _userManager.UpdateAsync(user);
+            return result is null ? throw new ArgumentException("", Resources.DeleteError) : _mapper.Map<UserInfoDTO>(user);
+
+        }
+        public async Task<UserInfoDTO> UpdateUserAsync(Guid userId, UpdateUserDTO updateUserDto)
+        {
+            if (userId == Guid.Empty)
+            {
+                throw new ArgumentNullException("", Resources.IdentifierIsNull);
+            }
+            if (updateUserDto is null)
+            {
+                throw new ArgumentNullException("", Resources.ModelIsNull);
+            }
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            user.IsActive = true;
+            user.LastName = updateUserDto.LastName;
+            user.City = updateUserDto.City;
+            user.FirstName = updateUserDto.FirstName;
+            user.PhoneNumber = updateUserDto.PhoneNumber;
+            var result = await _userManager.UpdateAsync(user);
+
+            return result is null ? throw new ArgumentException("", Resources.FindError) : _mapper.Map<UserInfoDTO>(user);
+        }
+        public async Task<UserInfoDTO> AddRoleToUserAsync(string usersId, string roleName)
+        {
+            if (usersId is null || roleName is null)
+            {
+                throw new ArgumentException("", Resources.ModelIsNull);
+            }
+            var user = await _userManager.FindByIdAsync(usersId);
+            if (user is null)
+            {
+                throw new ArgumentException("", Resources.FindbyIdError);
+            }
+            if (await _userManager.IsInRoleAsync(user, roleName))
+            {
+                throw new ArgumentException("", Resources.UserInRole);
+            }
+            var result = await _userManager.AddToRoleAsync(user, roleName);
+            return result is null ? throw new ArgumentException("", Resources.CreateError) : _mapper.Map<UserInfoDTO>(user);
+        }
+        public async Task<UserInfoDTO> RemoveUserRoleAsync(string usersId, string roleName)
+        {
+            if (usersId is null || roleName is null)
+            {
+                throw new ArgumentException("", Resources.ModelIsNull);
             }
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.Secret));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
-            var token = new JwtSecurityToken(_appSettings.Issuer, _appSettings.Issuer, claims,
-                expires: DateTime.Now.AddMinutes(5), signingCredentials: creds);
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-        
-        private RefreshToken CreateRefreshToken(ApplicationUser user)
-        {
-            using (var generator = new RNGCryptoServiceProvider())
+            var user = await _userManager.FindByIdAsync(usersId);
+            if (user is null)
             {
-                var payload = Guid.NewGuid().ToString().Replace("-", "");
-                return new RefreshToken
+                throw new ArgumentException("", Resources.FindbyIdError);
+            }
+            if (!(await _userManager.IsInRoleAsync(user, roleName)))
+            {
+                throw new ArgumentException("", Resources.UserInRole);
+            }
+            var result = await _userManager.RemoveFromRoleAsync(user, roleName);
+            return result is null ? throw new ArgumentException("", Resources.DeleteError) : _mapper.Map<UserInfoDTO>(user);
+        }
+        public async Task<AuthResponce> RefreshToken(string refreshToken, string ipAddress)
+        {
+            var tokens = await _tokenRefreshService.GetRefreshTokenByToken(refreshToken);
+
+            var token = tokens.First(t => t.IsActive == true);
+            if (!(token is null))
+            {
+                var newRefreshToken = await _tokenRefreshService.UpdateRefreshToken(ipAddress, token);
+
+                var user = await _userManager.FindByIdAsync(newRefreshToken.CreatorId.ToString());
+                var jwtToken = await GetFullJwtAsync(user);
+                return new AuthResponce
                 {
-                    CreatedDate = DateTime.Now,
-                    CreatorId = user.Id,
-                    Expires = DateTime.Now.AddDays(2),
-                    Value = payload
+                    RefreshToken = newRefreshToken.Token,
+                    AccessToken = jwtToken
                 };
             }
+
+            throw new ArgumentNullException("", Resources.FindError);
         }
+        private async Task<string> GetFullJwtAsync(ApplicationUser user)
+        {
+
+            DateTime time = new DateTime(1970, 1, 1);
+            var roles = await _userManager.GetRolesAsync(user);
+            return new JwtBuilder()
+                .WithAlgorithm(new HMACSHA512Algorithm())
+                .WithSecret(_appJwtSettings.SecretKey)
+                .AddClaim(JwtClaimTypes.Subject, user.Id)
+                .AddClaim(JwtClaimTypes.Expiration, DateTimeOffset.UtcNow.AddMinutes(_appJwtSettings.Expiration).ToUnixTimeSeconds())
+                .AddClaim(JwtClaimTypes.Email, user.Email)
+                .AddClaim(JwtClaimTypes.Audience, _appJwtSettings.Audience)
+                .AddClaim(ClaimName.IssuedAt, (DateTime.UtcNow - time).TotalMilliseconds)
+                .AddClaim(JwtClaimTypes.Role, roles)
+                .Encode();
+
+        }
+
 
     }
 }

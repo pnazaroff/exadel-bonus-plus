@@ -8,6 +8,7 @@
   <ItemGroup>
     <PackageReference Include="AspNetCore.Identity.MongoDbCore" Version="2.1.1" />
     <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="FluentValidation" Version="9.5.0" />
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="5.0.2" />
     <PackageReference Include="MongoDB.Bson" Version="2.11.5" />
   </ItemGroup>

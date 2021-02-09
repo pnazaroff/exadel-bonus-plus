@@ -1,5 +1,4 @@
 using System;
-using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -7,14 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System.Threading.Tasks;
-using ExadelBonusPlus.Services;
-using ExadelBonusPlus.Services.Models;
-using Microsoft.AspNetCore.Identity;
-using ExadelBonusPlus.DataAccess;
-using ExadelBonusPlus.Services.Interfaces;
 using AutoMapper;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
+using ExadelBonusPlus.Services.Models;
+using FluentValidation.AspNetCore;
 
 namespace ExadelBonusPlus.WebApi
 {
@@ -30,18 +24,25 @@ namespace ExadelBonusPlus.WebApi
         {
             services.Configure<MongoDbSettings>(_configuration.GetSection(
                 nameof(MongoDbSettings)));
-
-
-
+            
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            services.AddScoped<IRefreshTokenRepositry, RefreshTokenRepository>();
+            services.AddControllers()
+                .ConfigureApiBehaviorOptions(options => 
+                {
+                    options.SuppressModelStateInvalidFilter = true;
+                })
+                .AddFluentValidation();
 
-            services.AddControllers();
-            services.Configure<AppSettings>(_configuration.GetSection("Token"));
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+            services.AddControllers()
+                .ConfigureApiBehaviorOptions(options =>
+                {
+                    options.SuppressModelStateInvalidFilter = true; //This string is needed for fluent validation in action filter
+                })
+                .AddFluentValidation();
+
+            services.AddSwaggerGen(c => {
+                c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
                     Title = "exadel-bonus-plus API V1",
@@ -69,43 +70,9 @@ namespace ExadelBonusPlus.WebApi
                     }
                 });
             });
-
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddCookie(cfg => cfg.SlidingExpiration = true)
-                .AddJwtBearer(cfg =>
-                {
-                    cfg.RequireHttpsMetadata = false;
-                    cfg.SaveToken = true;
-                    cfg.TokenValidationParameters = new TokenValidationParameters()
-                    {
-                        ClockSkew = TimeSpan.Zero,
-                        ValidateIssuer = false,
-                        ValidIssuer = _configuration["Token:Issuer"],
-                        ValidateAudience = false,
-                        ValidAudience = _configuration["Token:Audience"],
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Token:Secret"]))
-                    };
-                });
-
-            services.AddIdentity<ApplicationUser, ApplicationRole>()
-                .AddMongoDbStores<ApplicationUser, ApplicationRole, Guid>
-                (
-                    _configuration["MongoDbSettings:ConnectionString"],
-                    _configuration["MongoDbSettings:DatabaseName"])
-                .AddSignInManager()
-                .AddDefaultTokenProviders();
-
-
-
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IRefreshTokenRepositry, RefreshTokenRepository>();
-
-            services.AddScoped<IHistoryRepositry, HistoryRepositry>();
-            services.AddScoped<IHistoryService, HistoryService>();
-
+            services.AddApiIdentityConfiguration(_configuration);
+            services.AddBonusTransient(services);
         }
-
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -117,15 +84,16 @@ namespace ExadelBonusPlus.WebApi
                 app.UseDeveloperExceptionPage(developerExceptionPageOptions);
             }
             app.UseStaticFiles();
-            app.UseRouting();
-            app.UseAuthorization();
-            app.UseAuthentication();
+
             app.UseSwagger();
 
             app.UseSwaggerUI(options =>
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "Exadel Bonus Plus API v1")
             );
 
+            app.UseRouting();
+            app.UseAuthorization();
+            app.UseAuthentication();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGet("/", context =>

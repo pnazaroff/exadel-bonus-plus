@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.AccessControl;
 using System.Threading.Tasks;
 
-namespace ExadelBonusPlus.WebApi.ViewModel
+namespace ExadelBonusPlus.Services.Models
 {
     public class AuthResponce
     {
