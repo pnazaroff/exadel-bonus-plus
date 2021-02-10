@@ -22,6 +22,11 @@ namespace ExadelBonusPlus.WebApi.Controllers
             _vendorService = vendorService;
             _mapper = mapper;
         }
+        //[HttpGet]
+        //public async Task<ActionResult<IEnumerable<VendorDto>>> GenerateAndGetVendors(CancellationToken cancellationToken)
+        //{
+
+        //}
         [HttpGet]
         public async Task<ActionResult<IEnumerable<VendorDto>>> GetVendors(CancellationToken cancellationToken)
         {
