@@ -70,13 +70,13 @@ namespace ExadelBonusPlus.WebApi.Controllers
         [HttpGet("{city}")]
         public async Task<ActionResult<VendorDto>> GetVendorByCity(string city, CancellationToken cancellationToken)
         {
-            var vendor = await _vendorService.SearchVendorByLocation(city, cancellationToken);
+            var vendor = await _vendorService.SearchVendorByLocationAsync(city, cancellationToken);
 
             if (vendor == null)
             {
                 return NotFound();
             }
-            var vendorDto = _mapper.Map<Vendor, VendorDto>(vendor);
+            var vendorDto = _mapper.Map<IEnumerable<Vendor>, IEnumerable<VendorDto>>(vendor);
 
             return Ok(vendorDto);
         }
