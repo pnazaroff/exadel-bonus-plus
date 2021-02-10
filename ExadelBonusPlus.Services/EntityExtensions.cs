@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using ExadelBonusPlus.Services.Models;
+using ExadelBonusPlus.Services.Models.Interfaces;
 
 namespace ExadelBonusPlus.Services
 {

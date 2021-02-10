@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using ExadelBonusPlus.Services.Models.Interfaces;
 using ExadelBonusPlus.Services.Models;
 using ExadelBonusPlus.Services;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace ExadelBonusPlus.DataAccess
@@ -16,20 +18,21 @@ namespace ExadelBonusPlus.DataAccess
         private readonly MongoClient _mongoClient;
         private readonly IMongoDatabase _database;
 
-        public BaseRepository(IOptions<MongoDbSettings> mongoDbSettings)
+        protected private BaseRepository(IOptions<MongoDbSettings> mongoDbSettings)
         {
             _mongoDbSettings = mongoDbSettings.Value;
             _mongoClient = new MongoClient(_mongoDbSettings.ConnectionString);
             _database = _mongoClient.GetDatabase(_mongoDbSettings.DatabaseName);
         }
 
-        public virtual Task AddAsync(TModel obj, CancellationToken cancellationToken)
+        public virtual Task AddAsync(TModel model, CancellationToken cancellationToken)
         {
-            return GetCollection().InsertOneAsync(obj, cancellationToken);
+            return GetCollection().InsertOneAsync(model, cancellationToken);
         }
         
         public virtual async Task<IEnumerable<TModel>> GetAllAsync(CancellationToken cancellationToken)
         {
+
             return await GetCollection().Find(Builders<TModel>.Filter.Eq(new ExpressionFieldDefinition<TModel, bool>(x => x.IsDeleted), false)).ToListAsync(cancellationToken);
         }
 

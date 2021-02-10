@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using ExadelBonusPlus.DataAccess;
 using ExadelBonusPlus.Services;
 using ExadelBonusPlus.Services.Models;
+using ExadelBonusPlus.Services.Interfaces;
+using ExadelBonusPlus.Services.Models.Interfaces;
 using AutoMapper;
 using ExadelBonusPlus.DataAccess;
 using ExadelBonusPlus.Services;
@@ -31,7 +33,10 @@ namespace ExadelBonusPlus.WebApi
         {
             services.Configure<MongoDbSettings>(_configuration.GetSection(
                 nameof(MongoDbSettings)));
-            
+          
+            services.AddAutoMapper(typeof(Startup).Assembly);
+            services.AddScoped<IVendorService, VendorService>();
+            services.AddScoped<IVendorRepository, VendorRepository>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddControllers()
