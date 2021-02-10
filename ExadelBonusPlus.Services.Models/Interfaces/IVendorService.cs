@@ -13,7 +13,7 @@ namespace ExadelBonusPlus.Services.Models
 
         Task<IEnumerable<VendorDto>> GetAllVendorsAsync(CancellationToken cancellationToken = default);
 
-        Task<Vendor> GetVendorByIdAsync(Guid id, CancellationToken cancellationToken=default);
+        Task<VendorDto> GetVendorByIdAsync(Guid id, CancellationToken cancellationToken=default);
 
         Task UpdateVendorAsync(Vendor model, CancellationToken cancellationToken=default);
 
