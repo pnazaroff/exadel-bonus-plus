@@ -8,7 +8,7 @@ namespace ExadelBonusPlus.Services.Models
 {
     public interface IVendorService
     {
-        Task AddVendorAsync(Vendor model, CancellationToken cancellationToken=default);
+        Task<VendorDto> AddVendorAsync(VendorDto model, CancellationToken cancellationToken=default);
 
         Task<IEnumerable<Vendor>> GetAllVendorsAsync(CancellationToken cancellationToken = default);
 

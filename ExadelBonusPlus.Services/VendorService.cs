@@ -1,4 +1,6 @@
-﻿using ExadelBonusPlus.Services.Models;
+﻿using AutoMapper;
+using ExadelBonusPlus.Services.Models;
+using ExadelBonusPlus.Services.Properties;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -9,14 +11,24 @@ namespace ExadelBonusPlus.Services
     public class VendorService : IVendorService
     {
         private IVendorRepository _vendorRepository;
-        public VendorService(IVendorRepository vendorRepository)
+        private readonly IMapper _mapper;
+
+        public VendorService(IVendorRepository vendorRepository, IMapper mapper)
         {
             _vendorRepository = vendorRepository;
+            _mapper = mapper;
         }
-        public Task AddVendorAsync(Vendor model, CancellationToken cancellationToken)
+        public async Task<VendorDto> AddVendorAsync(VendorDto model, CancellationToken cancellationToken)
         {
-            return _vendorRepository.AddAsync(model, cancellationToken);
-        }
+            if (model is null)
+            {
+                throw new ArgumentNullException("", Resources.ModelIsNull);
+            }
+            var vendor = _mapper.Map<Vendor>(model);
+            vendor.SetInitialValues(vendor);
+            await _vendorRepository.AddAsync(vendor, cancellationToken);
+            return _mapper.Map<VendorDto>(vendor);
+         }
 
         public Task DeleteVendorAsync(Guid id, CancellationToken cancellationToken)
         {

@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using ExadelBonusPlus.Services.Models;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -41,13 +43,11 @@ namespace ExadelBonusPlus.WebApi.Controllers
             return Ok(vendorDto);
         }
         [HttpPost]
-        public async Task AddVendor([FromBody]VendorDto model, CancellationToken cancellationToken)
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Vendor added ", Type = typeof(ResultDto<VendorDto>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<ResultDto<VendorDto>>> AddVendor([FromBody]VendorDto model, CancellationToken cancellationToken)
         {
-            var vendor = _mapper.Map<VendorDto, Vendor>(model);
-            vendor.CreatedDate = DateTime.Now;
-            vendor.IsDeleted = false;
-
-            await _vendorService.AddVendorAsync(vendor, cancellationToken);
+           return Ok(await _vendorService.AddVendorAsync(model, cancellationToken));
         }
 
         [HttpPut]
