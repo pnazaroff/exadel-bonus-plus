@@ -23,6 +23,8 @@ namespace ExadelBonusPlus.WebApi.Controllers
             _mapper = mapper;
         }
         [HttpGet]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "All bonus", Type = typeof(ResultDto<List<BonusDto>>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<IEnumerable<VendorDto>>> GetVendors(CancellationToken cancellationToken)
         {
             var vendors = await _vendorService.GetAllVendorsAsync(cancellationToken);
