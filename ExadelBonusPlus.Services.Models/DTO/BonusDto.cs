@@ -10,7 +10,7 @@ namespace ExadelBonusPlus.Services.Models
         public string Description { get; set; }
         public string Type { get; set; }
         public string Phone { get; set; }
-        public Guid Company { get; set; }
+        public VendorDto Company { get; set; }
         public DateTime DateStart { get; set; }
         public DateTime DateEnd { get; set; }
         public int Rating { get; set; }

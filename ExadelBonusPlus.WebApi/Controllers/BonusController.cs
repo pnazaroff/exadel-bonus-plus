@@ -65,7 +65,7 @@ namespace ExadelBonusPlus.WebApi
         [Route("{id}")]
         [SwaggerResponse((int)HttpStatusCode.OK, Description = "Bonus updated ", Type = typeof(ResultDto<BonusDto>))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<ResultDto<BonusDto>>> UpdateBonusAsync([FromRoute][Required] Guid id, [FromBody][Required] BonusDto Bonus)
+        public async Task<ActionResult<ResultDto<BonusDto>>> UpdateBonusAsync([FromRoute][Required] Guid id, [FromBody][Required] UpdateBonusDto Bonus)
         {
             return Ok(await _BonusService.UpdateBonusAsync(id, Bonus));
         }

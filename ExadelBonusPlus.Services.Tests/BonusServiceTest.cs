@@ -77,7 +77,7 @@ namespace ExadelBonusPlus.Services.Tests
         {
             CreateDefaultBonusServiceInstance();
             var idBonus = _fakeBonuseDtos[0].Id;
-            var bonusDto = _fakeBonuseDtos[0];
+            var bonusDto = _mapper.Map<UpdateBonusDto>(_fakeBonuseDtos[0]);
 
             var bonus = await _bonusService.UpdateBonusAsync(idBonus, bonusDto, default(CancellationToken));
 

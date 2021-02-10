@@ -8,12 +8,15 @@ namespace ExadelBonusPlus.Services
 {
     public static class EntityExtensions
     {
-        public static void SetInitialValues(this IEntity<Guid> entityClass, IEntity<Guid> model)
+        public static void SetInitialValues(this IEntity<Guid> model)
         {
             model.CreatedDate = DateTime.Now;
+        }
 
-            if(model.GetType() == typeof(Bonus))
-                (model as Bonus).IsActive = true;
+        public static void SetInitialValues(this Bonus model)
+        {
+            model.CreatedDate = DateTime.Now;
+            model.IsActive = true;
         }
     }
 }
