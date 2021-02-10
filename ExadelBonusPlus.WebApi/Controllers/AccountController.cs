@@ -29,6 +29,7 @@ namespace ExadelBonusPlus.WebApi.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("register")]
+        [Authorize(Roles = "Admin")]
         [SwaggerResponse((int)HttpStatusCode.OK)]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult> Register(RegisterUserDTO registerUser)
