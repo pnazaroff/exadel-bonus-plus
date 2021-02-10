@@ -43,9 +43,15 @@ namespace ExadelBonusPlus.Services
             return _mapper.Map<IEnumerable<VendorDto>>(result);
         }
 
-        public Task<Vendor> GetVendorByIdAsync(Guid id, CancellationToken cancellationToken)
+        public async Task<VendorDto> GetVendorByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            return _vendorRepository.GetByIdAsync(id, cancellationToken);
+            if (id == Guid.Empty)
+            {
+                throw new ArgumentNullException("", Resources.IdentifierIsNull);
+            }
+            var result = await _vendorRepository.GetByIdAsync(id, cancellationToken);
+            return result is null ? throw new ArgumentException("", Resources.FindbyIdError) : _mapper.Map<VendorDto>(result);
+
         }
 
         public Task<IEnumerable<Vendor>> SearchVendorByLocationAsync(string city, CancellationToken cancellationToken)
