@@ -15,9 +15,9 @@ namespace ExadelBonusPlus.Services.Models
 
         Task<VendorDto> GetVendorByIdAsync(Guid id, CancellationToken cancellationToken=default);
 
-        Task UpdateVendorAsync(Vendor model, CancellationToken cancellationToken=default);
+        Task<VendorDto> UpdateVendorAsync(Guid id,VendorDto model, CancellationToken cancellationToken=default);
 
-        Task DeleteVendorAsync(Guid id, CancellationToken cancellationToken=default);
+        Task<VendorDto> DeleteVendorAsync(Guid id, CancellationToken cancellationToken=default);
 
         Task<IEnumerable<Vendor>> SearchVendorByLocationAsync(string city, CancellationToken cancellationToken=default);
     }

@@ -31,9 +31,16 @@ namespace ExadelBonusPlus.Services
             return _mapper.Map<VendorDto>(vendor);
          }
 
-        public Task DeleteVendorAsync(Guid id, CancellationToken cancellationToken)
+        public async Task<VendorDto> DeleteVendorAsync(Guid id, CancellationToken cancellationToken)
         {
-            return _vendorRepository.RemoveAsync(id, cancellationToken);
+            if (id == Guid.Empty)
+            {
+                throw new ArgumentNullException("", Resources.IdentifierIsNull);
+            }
+
+            var result = await _vendorRepository.RemoveAsync(id, cancellationToken);
+
+            return _mapper.Map<VendorDto>(result);
         }
 
         public async Task<IEnumerable<VendorDto>> GetAllVendorsAsync(CancellationToken cancellationToken)
@@ -59,9 +66,21 @@ namespace ExadelBonusPlus.Services
             return _vendorRepository.SearchVendorByLocationAsync(city, cancellationToken);
         }
 
-        public Task UpdateVendorAsync(Vendor model, CancellationToken cancellationToken)
+        public async Task<VendorDto> UpdateVendorAsync(Guid id, VendorDto model, CancellationToken cancellationToken)
         {
-            return _vendorRepository.UpdateAsync(model.Id, model, cancellationToken);
-        }
+            if(id == Guid.Empty)
+            {
+                throw new ArgumentNullException("", Resources.IdentifierIsNull);
+            }
+            if (model is null)
+            {
+                throw new ArgumentNullException("", Resources.ModelIsNull);
+            }
+            var vendor = _mapper.Map<Vendor>(model);
+
+            await _vendorRepository.UpdateAsync(id, vendor, cancellationToken);
+
+            return model;
+         }
     }
 }
