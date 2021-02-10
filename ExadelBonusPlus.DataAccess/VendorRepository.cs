@@ -1,5 +1,4 @@
 ﻿using ExadelBonusPlus.Services.Models;
-using ExadelBonusPlus.Services.Models.Interfaces;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using System;

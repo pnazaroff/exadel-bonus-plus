@@ -56,7 +56,7 @@ namespace ExadelBonusPlus.WebApi.Controllers
 
         [HttpGet]
         [Route("getInfo")]
-        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Get info about authorized user", Type = typeof(HttpModel<UserInfoDTO>))]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Get info about authorized user", Type = typeof(ResultDto<UserInfoDTO>))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<UserInfoDTO>> GetUserInfoAsync()
         {
@@ -67,7 +67,7 @@ namespace ExadelBonusPlus.WebApi.Controllers
 
         [HttpPost]
         [Route("tokenrefresh")]
-        [SwaggerResponse((int)HttpStatusCode.OK, Description = "refresh your token", Type = typeof(HttpModel<AuthResponce>))]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "refresh your token", Type = typeof(ResultDto<AuthResponce>))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
         [AllowAnonymous]
         public async Task<ActionResult<AuthResponce>> GetRefreshToken( string refreshToken)

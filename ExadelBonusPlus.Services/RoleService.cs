@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using ExadelBonusPlus.Services.Models;
-using ExadelBonusPlus.Services.Models.RoleDTO;
 using Microsoft.AspNetCore.Identity;
 
 namespace ExadelBonusPlus.Services

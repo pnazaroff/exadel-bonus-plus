@@ -18,8 +18,6 @@ namespace ExadelBonusPlus.Services.Tests
     {
         private Mock<IBonusRepository> _bonusRep;
         private IBonusRepository _mockBonusRep;
-        private Mock<IBonusTagRepository> _bonusTagRep;
-        private IBonusTagRepository _mockBonusTagRep;
         private BonusService _bonusService;
         private IMapper _mapper;
         private List<BonusDto> _fakeBonuseDtos;
@@ -45,18 +43,18 @@ namespace ExadelBonusPlus.Services.Tests
         {
             CreateDefaultBonusServiceInstance();
 
-            var bonusList = await _bonusService.FindAllBonusAsync(default(CancellationToken));
+            var bonusList = await _bonusService.FindAllBonusesAsync(default(CancellationToken));
 
             Assert.NotNull(bonusList);
             return bonusList;
         }
 
         [Fact]
-        public async Task<List<BonusDto>> Bonus_FindAllActiveBonusAsync_Return_ListBonusDTO()
+        public async Task<List<BonusDto>> Bonus_FindBonusesAsync_Return_ListBonusDTO()
         {
             CreateDefaultBonusServiceInstance();
 
-            var bonusList = await _bonusService.FindAllActiveBonusAsync(default(CancellationToken));
+            var bonusList = await _bonusService.FindBonusesAsync(new BonusFilter(), default(CancellationToken));
 
             Assert.NotNull(bonusList);
             return bonusList;
@@ -123,6 +121,17 @@ namespace ExadelBonusPlus.Services.Tests
             return bonus;
         }
 
+        [Fact]
+        public async Task<List<String>> Bonus_GetBonusTagsAsync_Return_ListString()
+        {
+            CreateDefaultBonusServiceInstance();
+            
+            var tags = await _bonusService.GetBonusTagsAsync(default(CancellationToken));
+
+            Assert.True(tags.Count()>0);
+            return tags as List<string>;
+        }
+
         private void CreateDefaultBonusServiceInstance()
         {
             var myProfile = new MapperProfile();
@@ -150,22 +159,18 @@ namespace ExadelBonusPlus.Services.Tests
             _bonusRep = new Mock<IBonusRepository>();
             _bonusRep.Setup(s => s.AddAsync(It.IsAny<Bonus>(), default(CancellationToken)));
             _bonusRep.Setup(s => s.GetAllAsync(default(CancellationToken))).ReturnsAsync(_mapper.Map<List<Bonus>>(_fakeBonuseDtos));
-            _bonusRep.Setup(s => s.GetAllActiveBonusAsync(default(CancellationToken))).ReturnsAsync(_mapper.Map<List<Bonus>>(_fakeBonuseDtos));
+            _bonusRep.Setup(s => s.GetBonusesAsync(It.IsAny<BonusFilter>(), default(CancellationToken))).ReturnsAsync(_mapper.Map<List<Bonus>>(_fakeBonuseDtos));
             _bonusRep.Setup(s => s.GetByIdAsync(It.IsAny<Guid>(), default(CancellationToken))).ReturnsAsync(_mapper.Map<Bonus>(_fakeBonuseDtos[0]));
             _bonusRep.Setup(s => s.UpdateAsync(It.IsAny<Guid>(), It.IsAny<Bonus>(), default(CancellationToken)));
             _bonusRep.Setup(s => s.RemoveAsync(It.IsAny<Guid>(), default(CancellationToken))).ReturnsAsync(_mapper.Map<Bonus>(_fakeBonuseDtos[0]));
             _bonusRep.Setup(s => s.ActivateBonusAsync(It.IsAny<Guid>(), default(CancellationToken))).ReturnsAsync(_mapper.Map<Bonus>(_fakeBonuseDtos[0]));
             _fakeBonuseDtos[9].IsActive = false;
             _bonusRep.Setup(s => s.DeactivateBonusAsync(It.IsAny<Guid>(), default(CancellationToken))).ReturnsAsync(_mapper.Map<Bonus>(_fakeBonuseDtos[9]));
+            _bonusRep.Setup(s => s.GetBonusTagsAsync(default(CancellationToken))).ReturnsAsync(new List<string>(){"Pizza","Coffee"});
 
             _mockBonusRep = _bonusRep.Object;
 
-            _bonusTagRep = new Mock<IBonusTagRepository>();
-            _bonusTagRep.Setup(s => s.AddAsync(It.IsAny<BonusTag>(), default(CancellationToken)));
-
-            _mockBonusTagRep = _bonusTagRep.Object;
-
-            _bonusService = new BonusService(_mockBonusRep, _mockBonusTagRep, _mapper);
+            _bonusService = new BonusService(_mockBonusRep, _mapper);
         }
 }
 }

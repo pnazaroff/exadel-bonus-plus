@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ExadelBonusPlus.Services.Models.Interfaces
+namespace ExadelBonusPlus.Services.Models
 {
     public interface IVendorRepository : IRepository<Vendor, Guid>
     {

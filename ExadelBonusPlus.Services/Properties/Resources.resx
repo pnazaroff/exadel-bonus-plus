@@ -132,4 +132,7 @@
   <data name="ModelIsNull" xml:space="preserve">
     <value>Model can't be null</value>
   </data>
+  <data name="PropertyDoesNotExist" xml:space="preserve">
+    <value>Property of sorting does not exist</value>
+  </data>
 </root>

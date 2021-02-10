@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using ExadelBonusPlus.Services.Models;
 
-namespace ExadelBonusPlus.Services
+namespace ExadelBonusPlus.Services.Models
 {
     public interface IUserService
     {

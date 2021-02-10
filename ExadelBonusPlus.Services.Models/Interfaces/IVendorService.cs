@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ExadelBonusPlus.Services.Interfaces
+namespace ExadelBonusPlus.Services.Models
 {
     public interface IVendorService
     {
