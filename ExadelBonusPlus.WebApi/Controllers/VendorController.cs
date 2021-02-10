@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,7 +33,9 @@ namespace ExadelBonusPlus.WebApi.Controllers
             return Ok(vendors);
         }
         [HttpGet("{id:Guid}")]
-        public async Task<ActionResult<VendorDto>> GetVendor(Guid id, CancellationToken cancellationToken)
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Vendor by ID", Type = typeof(ResultDto<VendorDto>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<ResultDto<VendorDto>>> GetVendor(Guid id, CancellationToken cancellationToken)
         {
             var vendor = await _vendorService.GetVendorByIdAsync(id, cancellationToken);
 
@@ -47,18 +50,20 @@ namespace ExadelBonusPlus.WebApi.Controllers
         }
 
         [HttpPut]
-        public async Task UpdateVendor(VendorDto model, CancellationToken cancellationToken)
+        [Route("{id}")]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Vendor Updated ", Type = typeof(ResultDto<VendorDto>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<ResultDto<VendorDto>>> UpdateVendor([FromRoute][Required] Guid id, [FromBody][Required] VendorDto vendor,CancellationToken cancellationToken)
         {
-            var vendor = _mapper.Map<VendorDto, Vendor>(model);
-            vendor.ModifiedDate = DateTime.Now;
-
-            await _vendorService.UpdateVendorAsync(vendor, cancellationToken);
+            return Ok(await _vendorService.UpdateVendorAsync(id, vendor, cancellationToken));
         }
         [HttpDelete]
-        public async Task DeleteVendor(Guid id, CancellationToken cancellationToken)
+        [Route("{id}")]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Vendor Deleted ", Type = typeof(ResultDto<VendorDto>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<ResultDto<VendorDto>>> DeleteVendor([FromRoute]Guid id, CancellationToken cancellationToken)
         {
-            //should be working on deletion 
-            await _vendorService.DeleteVendorAsync(id, cancellationToken);
+            return Ok(await _vendorService.DeleteVendorAsync(id, cancellationToken));
         }
 
         [HttpGet("{city}")]
