@@ -16,11 +16,8 @@ namespace ExadelBonusPlus.Services.Models
         public DateTime? ModifiedDate { get; set; }
         public Guid ModifierId { get; set; }
         public bool IsDeleted { get; set; }
-
-
-        public Guid UserId { get; set; }
+        public int Rating { get; set; }
         public Guid BonusId { get; set; }
 
-        public string PromoCode { get; set; }
     }
 }

@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-using ExadelBonusPlus.Services.Models;
+using ExadelBonusPlus.Services.Models.DTO;
 
 namespace ExadelBonusPlus.Services.Models
 {
     public interface IHistoryService
     {
-        Task<History> AddHistory(History model);
-        Task<History> DeleteHistory(Guid id);
-        Task<IEnumerable<History>> GetAllHistory();
-        Task<History> GetHistoryById(Guid id);
-        Task<IEnumerable<History>> GetHistoryByUsageDate(DateTime usageDateStart, DateTime usegeDateEnd);
-        Task<IEnumerable<History>> GetUserHistory(Guid userId );
-        Task<IEnumerable<History>> GetBonusHistory(Guid bonusId );
+        Task<HistoryDto> AddHistory(AddHistoryDTO model, CancellationToken cancellationToken = default);
+        Task<HistoryDto> DeleteHistory(Guid id, CancellationToken cancellationToken = default);
+        Task<IEnumerable<HistoryDto>> GetAllHistory(CancellationToken cancellationToken = default);
+        Task<HistoryDto> GetHistoryById(Guid id, CancellationToken cancellationToken = default);
+        Task<IEnumerable<UserHistoryDto>> GetUserHistoryByUsageDate(Guid userId ,DateTime usageDateStart, DateTime usegeDateEnd, CancellationToken cancellationToken = default);
+        Task<IEnumerable<BonusHistoryDto>> GetBonusHistoryByUsageDate(Guid vendorId ,DateTime usageDateStart, DateTime usegeDateEnd, CancellationToken cancellationToken = default);
+        Task<IEnumerable<UserHistoryDto>> GetUserAllHistory(Guid userId, CancellationToken cancellationToken = default);
+        Task<IEnumerable<BonusHistoryDto>> GetBonusAllHistory(Guid bonusId, CancellationToken cancellationToken = default);
 
     }
 }

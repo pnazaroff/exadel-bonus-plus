@@ -49,7 +49,7 @@ namespace ExadelBonusPlus.WebApi.Controllers
         }
         
         [HttpPut]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [Route("user/{id}/addroles")]
         [SwaggerResponse((int)HttpStatusCode.OK, Description = "Add role to user", Type = typeof(ResultDto<UserInfoDTO>))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]

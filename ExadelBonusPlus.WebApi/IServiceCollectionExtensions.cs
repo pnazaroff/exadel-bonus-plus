@@ -31,7 +31,7 @@ namespace ExadelBonusPlus.WebApi
 
         public static void AddHistoryTransient(this IServiceCollection services)
         {
-            services.AddTransient<IHistoryRepositry, HistoryRepositry>();
+            services.AddTransient<IHistoryRepository, HistoryRepository>();
             services.AddTransient<IHistoryService, HistoryService>();
         }
 

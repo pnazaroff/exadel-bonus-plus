@@ -1,12 +1,12 @@
 ﻿using System;
-using ExadelBonusPlus.Services.Models;
+using ExadelBonusPlus.Services.Models.DTO;
 
-namespace ExadelBonusPlus.WebApi.Controllers
+namespace ExadelBonusPlus.Services.Models
 {
     public class HistoryDto
     {
         public Guid id { get; set; }
-        public UserInfoDTO UserInfo { get; set; }
+        public UserInfoHistoryDto UserInfo { get; set; }
         public BonusDto Bonus { get; set; }
         public DateTime UsegeDate { get; set; }
     }

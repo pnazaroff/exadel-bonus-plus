@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 
-namespace ExadelBonusPlus.Services.Models
+namespace ExadelBonusPlus.Services.Models.DTO
 {
-    public class UserInfoDTO
+    public class UserInfoHistoryDto
     {
         public Guid Id { get; set; }
         public string Email { get; set; }
@@ -11,7 +10,5 @@ namespace ExadelBonusPlus.Services.Models
         public string LastName { get; set; }
         public string City { get; set; }
         public string PhoneNumber { get; set; }
-        public bool IsActive { get; set; }
-        public IList<string> Roles { get; set; }
     }
 }
