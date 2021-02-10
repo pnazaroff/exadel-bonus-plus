@@ -1,7 +1,11 @@
+
+﻿using ExadelBonusPlus.Services.Models.Interfaces;
+using System;
+using System.Linq.Expressions;
+using System.Text;
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using ExadelBonusPlus.Services.Models;
 
 namespace ExadelBonusPlus.Services.Models
 {
@@ -13,5 +17,6 @@ namespace ExadelBonusPlus.Services.Models
         Task<TModel> GetByIdAsync(TId id, CancellationToken cancellationToken = default);
         Task UpdateAsync(TId id, TModel obj, CancellationToken cancellationToken = default);
         Task<TModel> RemoveAsync(TId id, CancellationToken cancellationToken = default);
+
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace ExadelBonusPlus.Services.Models
+﻿namespace ExadelBonusPlus.Services.Models.Interfaces
 {
     using System;
 

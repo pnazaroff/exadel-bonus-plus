@@ -8,6 +8,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using System.Threading.Tasks;
 using ExadelBonusPlus.Services.Models;
+using ExadelBonusPlus.Services.Interfaces;
+using ExadelBonusPlus.Services.Models.Interfaces;
 using AutoMapper;
 using ExadelBonusPlus.DataAccess;
 using ExadelBonusPlus.Services;
@@ -31,6 +33,8 @@ namespace ExadelBonusPlus.WebApi
 
             services.AddCors();
             
+            services.AddScoped<IVendorService, VendorService>();
+            services.AddScoped<IVendorRepository, VendorRepository>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             
             services.AddControllers()
@@ -54,7 +58,7 @@ namespace ExadelBonusPlus.WebApi
                     BearerFormat = "JWT",
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.ApiKey
-            });
+                });
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement{
                     {
                         new OpenApiSecurityScheme
