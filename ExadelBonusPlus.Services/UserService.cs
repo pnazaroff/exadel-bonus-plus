@@ -7,8 +7,8 @@ using JWT.Algorithms;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using JWT.Builder;
-using System.IO;
 using System.Linq;
+using ExadelBonusPlus.Services.Properties;
 
 namespace ExadelBonusPlus.Services
 {
@@ -34,28 +34,29 @@ namespace ExadelBonusPlus.Services
         public async Task<UserInfoDTO> GetUserAsync(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
-            return user is null ? throw new ArgumentException("") : _mapper.Map<UserInfoDTO>(user);
+
+            return user is null ? throw new ArgumentException("", Resources.FindbyIdError) : _mapper.Map<UserInfoDTO>(user);
         }
         public async Task<AuthResponce> LogInAsync(LoginUserDTO loginUser, string ipAddress)
         {
             var user = await _userManager.FindByEmailAsync(loginUser.Email);
-            if (user != null)
+            if (user is null)
             {
-                if (user.IsActive)
+                throw new ArgumentException("", Resources.FindbyIdError);
+            }
+            if (user.IsActive)
+            {
+                var result = await _signInManager.PasswordSignInAsync(loginUser.Email, loginUser.Password, false, true);
+                if (result.Succeeded)
                 {
-                    var result = await _signInManager.PasswordSignInAsync(loginUser.Email, loginUser.Password, false, true);
-                    if (result.Succeeded)
-                    {
-                        var responce = new AuthResponce();
-                        responce.AccessToken = await GetFullJwtAsync(user);
-                        var refreshToken = await _tokenRefreshService.GenerateRefreshToken(ipAddress, user.Id);
-                        responce.RefreshToken = refreshToken.Token;
-                        return responce;
-                    }
+                    var responce = new AuthResponce();
+                    responce.AccessToken = await GetFullJwtAsync(user);
+                    var refreshToken = await _tokenRefreshService.GenerateRefreshToken(ipAddress, user.Id);
+                    responce.RefreshToken = refreshToken.Token;
+                    return responce;
                 }
             }
-               
-            throw new ApplicationException();
+            throw new ArgumentException("", Resources.LoginFailed);
         }
         public async Task LogOutAsync()
         {
@@ -65,7 +66,7 @@ namespace ExadelBonusPlus.Services
         {
             if (registerUser is null)
             {
-                throw new ArgumentNullException("");
+                throw new ArgumentNullException("", Resources.ModelIsNull);
             }
             var user = new ApplicationUser
             {
@@ -95,21 +96,38 @@ namespace ExadelBonusPlus.Services
         public async Task<UserInfoDTO> DeleteUserAsync(Guid userId)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
+            if (user is null)
+            {
+                throw new ArgumentNullException("", Resources.FindbyIdError);
+
+            }
             user.IsActive = false;
             var result = await _userManager.UpdateAsync(user);
-
-            return result is null ? throw new ArgumentException("") : _mapper.Map<UserInfoDTO>(user);
+            return result is null ? throw new ArgumentException("", Resources.DeleteError) : _mapper.Map<UserInfoDTO>(user);
         }
         public async Task<UserInfoDTO> RestoreUserAsync(Guid userId)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
+            if (user is null)
+            {
+                throw new ArgumentNullException("", Resources.FindbyIdError);
+
+            }
             user.IsActive = true;
             var result = await _userManager.UpdateAsync(user);
+            return result is null ? throw new ArgumentException("", Resources.DeleteError) : _mapper.Map<UserInfoDTO>(user);
 
-            return result is null ? throw new ArgumentException("") : _mapper.Map<UserInfoDTO>(user);
         }
         public async Task<UserInfoDTO> UpdateUserAsync(Guid userId, UpdateUserDTO updateUserDto)
         {
+            if (userId == Guid.Empty)
+            {
+                throw new ArgumentNullException("", Resources.IdentifierIsNull);
+            }
+            if (updateUserDto is null)
+            {
+                throw new ArgumentNullException("", Resources.ModelIsNull);
+            }
             var user = await _userManager.FindByIdAsync(userId.ToString());
             user.IsActive = true;
             user.LastName = updateUserDto.LastName;
@@ -118,44 +136,44 @@ namespace ExadelBonusPlus.Services
             user.PhoneNumber = updateUserDto.PhoneNumber;
             var result = await _userManager.UpdateAsync(user);
 
-            return result is null ? throw new ArgumentException("") : _mapper.Map<UserInfoDTO>(user);
+            return result is null ? throw new ArgumentException("", Resources.FindError) : _mapper.Map<UserInfoDTO>(user);
         }
         public async Task<UserInfoDTO> AddRoleToUserAsync(string usersId, string roleName)
         {
             if (usersId is null || roleName is null)
             {
-                throw new ArgumentNullException();
+                throw new ArgumentException("", Resources.ModelIsNull);
             }
             var user = await _userManager.FindByIdAsync(usersId);
             if (user is null)
             {
-                throw new FileNotFoundException();
+                throw new ArgumentException("", Resources.FindbyIdError);
             }
             if (await _userManager.IsInRoleAsync(user, roleName))
             {
-                throw new ArgumentNullException();
+                throw new ArgumentException("", Resources.UserInRole);
             }
             var result = await _userManager.AddToRoleAsync(user, roleName);
-            return result is null ? throw new ArgumentException("") : _mapper.Map<UserInfoDTO>(user);
+            return result is null ? throw new ArgumentException("", Resources.CreateError) : _mapper.Map<UserInfoDTO>(user);
         }
         public async Task<UserInfoDTO> RemoveUserRoleAsync(string usersId, string roleName)
         {
             if (usersId is null || roleName is null)
             {
-                throw new ArgumentNullException();
+                throw new ArgumentException("", Resources.ModelIsNull);
             }
 
             var user = await _userManager.FindByIdAsync(usersId);
             if (user is null)
             {
-                throw new FileNotFoundException();
+                throw new ArgumentException("", Resources.FindbyIdError);
             }
             if (!(await _userManager.IsInRoleAsync(user, roleName)))
             {
-                throw new ArgumentNullException();
+                throw new ArgumentException("", Resources.UserInRole);
             }
             var result = await _userManager.RemoveFromRoleAsync(user, roleName);
-            return result is null ? throw new ArgumentException("") : _mapper.Map<UserInfoDTO>(user);
+            return result is null ? throw new ArgumentException("", Resources.DeleteError) : _mapper.Map<UserInfoDTO>(user);
         }
         public async Task<AuthResponce> RefreshToken(string refreshToken, string ipAddress)
         {
@@ -165,7 +183,7 @@ namespace ExadelBonusPlus.Services
             if (!(token is null))
             {
                 var newRefreshToken = await _tokenRefreshService.UpdateRefreshToken(ipAddress, token);
-               
+
                 var user = await _userManager.FindByIdAsync(newRefreshToken.CreatorId.ToString());
                 var jwtToken = await GetFullJwtAsync(user);
                 return new AuthResponce
@@ -175,31 +193,23 @@ namespace ExadelBonusPlus.Services
                 };
             }
 
-            throw new ApplicationException();
+            throw new ArgumentNullException("", Resources.FindError);
         }
-
-
         private async Task<string> GetFullJwtAsync(ApplicationUser user)
         {
-            try
-            {
-                DateTime time = new DateTime(1970, 1, 1);
-                var roles = await _userManager.GetRolesAsync(user);
-                return new JwtBuilder()
-                    .WithAlgorithm(new HMACSHA512Algorithm())
-                    .WithSecret(_appJwtSettings.SecretKey)
-                    .AddClaim(JwtClaimTypes.Subject, user.Id)
-                    .AddClaim(JwtClaimTypes.Expiration, DateTimeOffset.UtcNow.AddMinutes(_appJwtSettings.Expiration).ToUnixTimeSeconds())
-                    .AddClaim(JwtClaimTypes.Email, user.Email)
-                    .AddClaim(JwtClaimTypes.Audience, _appJwtSettings.Audience)
-                    .AddClaim(ClaimName.IssuedAt, (DateTime.UtcNow -time).TotalMilliseconds)
-                    .AddClaim(JwtClaimTypes.Role, roles)
-                    .Encode();
-            }
-            catch (Exception e)
-            {
-                return e.Message;
-            }
+
+            DateTime time = new DateTime(1970, 1, 1);
+            var roles = await _userManager.GetRolesAsync(user);
+            return new JwtBuilder()
+                .WithAlgorithm(new HMACSHA512Algorithm())
+                .WithSecret(_appJwtSettings.SecretKey)
+                .AddClaim(JwtClaimTypes.Subject, user.Id)
+                .AddClaim(JwtClaimTypes.Expiration, DateTimeOffset.UtcNow.AddMinutes(_appJwtSettings.Expiration).ToUnixTimeSeconds())
+                .AddClaim(JwtClaimTypes.Email, user.Email)
+                .AddClaim(JwtClaimTypes.Audience, _appJwtSettings.Audience)
+                .AddClaim(ClaimName.IssuedAt, (DateTime.UtcNow - time).TotalMilliseconds)
+                .AddClaim(JwtClaimTypes.Role, roles)
+                .Encode();
         }
 
 

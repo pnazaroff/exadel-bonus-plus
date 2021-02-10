@@ -13,6 +13,9 @@ namespace ExadelBonusPlus.WebApi.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [ValidationFilter]
+    [ExceptionFilter]
+    [HttpModelResultFilter]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class AccountController : ControllerBase
     {
@@ -26,6 +29,8 @@ namespace ExadelBonusPlus.WebApi.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("register")]
+        [SwaggerResponse((int)HttpStatusCode.OK)]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult> Register(RegisterUserDTO registerUser)
         {
             await _userService.RegisterAsync(registerUser);
@@ -37,6 +42,8 @@ namespace ExadelBonusPlus.WebApi.Controllers
         [Route("login")]
         [SwaggerResponse((int)HttpStatusCode.OK)]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Get info about authorized user", Type = typeof(ResultDto<UserInfoDTO>))]
+        
         public async Task<IActionResult> Login(LoginUserDTO loginUser)
         {
             var ipAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString();

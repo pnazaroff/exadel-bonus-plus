@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using ExadelBonusPlus.DataAccess;
 using ExadelBonusPlus.Services;
 using ExadelBonusPlus.Services.Models;
+using ExadelBonusPlus.Services.Models.DTOValidator;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -20,8 +20,19 @@ namespace ExadelBonusPlus.WebApi
             services.AddTransient<IBonusRepository, BonusRepository>();
             services.AddTransient<IBonusService, BonusService>();
 
+            
+
             services.AddTransient<IValidator<AddBonusDto>, AddBonusDtoValidator>();
             services.AddTransient<IValidator<BonusDto>, BonusDtoValidator>();
+
+
+
+        }
+
+        public static void AddHistoryTransient(this IServiceCollection services)
+        {
+            services.AddTransient<IHistoryRepositry, HistoryRepositry>();
+            services.AddTransient<IHistoryService, HistoryService>();
         }
 
         public static void AddVendorTransient(this IServiceCollection services)
@@ -34,7 +45,11 @@ namespace ExadelBonusPlus.WebApi
         {
 
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IValidator<RegisterUserDTO>, RegisterUserValidator>();
+            services.AddTransient<IValidator<LoginUserDTO>, LoginUserValidator>();
+            services.AddTransient<IValidator<UpdateUserDTO>, UpdateUserValidator>();
             services.AddTransient<IRoleService, RoleService>();
+            
             services.AddTransient<ITokenRefreshRepository, TokenRefreshRepository>();
             services.AddTransient<ITokenRefreshService, TokenRefreshService>();
 

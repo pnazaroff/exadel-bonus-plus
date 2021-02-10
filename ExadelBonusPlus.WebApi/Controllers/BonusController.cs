@@ -7,7 +7,6 @@ using ExadelBonusPlus.Services.Models;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 using System.Threading.Tasks;
-using ExadelBonusPlus.Services;
 
 namespace ExadelBonusPlus.WebApi
 {

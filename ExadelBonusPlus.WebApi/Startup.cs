@@ -7,8 +7,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System.Threading.Tasks;
 using ExadelBonusPlus.Services.Models;
-using ExadelBonusPlus.DataAccess;
-using ExadelBonusPlus.Services;
 using FluentValidation.AspNetCore;
 
 namespace ExadelBonusPlus.WebApi
@@ -20,7 +18,7 @@ namespace ExadelBonusPlus.WebApi
         {
             _configuration = configuration;
         }
-        
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<MongoDbSettings>(_configuration.GetSection(
@@ -66,8 +64,9 @@ namespace ExadelBonusPlus.WebApi
                     }
                 });
             });
-            services.AddApiIdentityConfiguration(_configuration);
             services.AddBonusTransient();
+            services.AddHistoryTransient();
+            services.AddApiIdentityConfiguration(configuration: _configuration);
             services.AddVendorTransient();
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -100,7 +99,8 @@ namespace ExadelBonusPlus.WebApi
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", context => {
+                endpoints.MapGet("/", context =>
+                {
                     context.Response.Redirect("/swagger/");
                     return Task.CompletedTask;
                 });

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
-using ExadelBonusPlus.Services;
 using ExadelBonusPlus.Services.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -12,6 +11,9 @@ namespace ExadelBonusPlus.WebApi.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [ValidationFilter]
+    [ExceptionFilter]
+    [HttpModelResultFilter]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class AdminController : ControllerBase
     {
