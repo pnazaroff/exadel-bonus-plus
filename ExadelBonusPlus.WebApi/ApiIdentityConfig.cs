@@ -3,6 +3,7 @@ using System.Text;
 using ExadelBonusPlus.DataAccess;
 using ExadelBonusPlus.Services;
 using ExadelBonusPlus.Services.Models;
+using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +19,8 @@ namespace ExadelBonusPlus.WebApi
         {
            
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IValidator<RegisterUserDTO>, RegisterUserValidator>();
+            services.AddTransient<IValidator<LoginUserDTO>, LoginUserValidator>();
             services.AddTransient<IRoleService, RoleService>();
             services.AddTransient<ITokenRefreshRepository, TokenRefreshRepository>();
             services.AddTransient<ITokenRefreshService, TokenRefreshService>();
