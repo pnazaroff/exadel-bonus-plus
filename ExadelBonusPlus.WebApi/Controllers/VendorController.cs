@@ -36,13 +36,7 @@ namespace ExadelBonusPlus.WebApi.Controllers
         {
             var vendor = await _vendorService.GetVendorByIdAsync(id, cancellationToken);
 
-            if (vendor == null)
-            {
-                return NotFound();
-            }
-            var vendorDto = _mapper.Map<Vendor, VendorDto>(vendor);
-            
-            return Ok(vendorDto);
+            return Ok(vendor);
         }
         [HttpPost]
         [SwaggerResponse((int)HttpStatusCode.OK, Description = "Vendor added ", Type = typeof(ResultDto<VendorDto>))]
