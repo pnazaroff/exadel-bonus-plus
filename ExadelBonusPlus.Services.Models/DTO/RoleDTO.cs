@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ExadelBonusPlus.Services.Models.RoleDTO
+namespace ExadelBonusPlus.Services.Models
 {
     public class RoleDTO
     {

@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using ExadelBonusPlus.Services.Models.Interfaces;
 using ExadelBonusPlus.Services.Models;
-using ExadelBonusPlus.Services;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;

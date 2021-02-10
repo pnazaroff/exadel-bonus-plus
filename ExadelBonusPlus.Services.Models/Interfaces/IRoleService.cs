@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ExadelBonusPlus.Services.Models.RoleDTO;
 
-namespace ExadelBonusPlus.Services
+namespace ExadelBonusPlus.Services.Models
 {
     public interface IRoleService
     {

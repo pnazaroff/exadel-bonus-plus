@@ -1,6 +1,4 @@
-﻿using ExadelBonusPlus.Services.Interfaces;
-using ExadelBonusPlus.Services.Models;
-using ExadelBonusPlus.Services.Models.Interfaces;
+﻿using ExadelBonusPlus.Services.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading;

@@ -4,16 +4,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using System.Threading.Tasks;
 using ExadelBonusPlus.Services.Models;
-using ExadelBonusPlus.Services.Interfaces;
-using ExadelBonusPlus.Services.Models.Interfaces;
-using AutoMapper;
 using ExadelBonusPlus.DataAccess;
 using ExadelBonusPlus.Services;
-using FluentValidation;
 using FluentValidation.AspNetCore;
 
 namespace ExadelBonusPlus.WebApi
@@ -33,8 +28,6 @@ namespace ExadelBonusPlus.WebApi
 
             services.AddCors();
             
-            services.AddScoped<IVendorService, VendorService>();
-            services.AddScoped<IVendorRepository, VendorRepository>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             
             services.AddControllers()
@@ -74,7 +67,8 @@ namespace ExadelBonusPlus.WebApi
                 });
             });
             services.AddApiIdentityConfiguration(_configuration);
-            services.AddBonusTransient(services);
+            services.AddBonusTransient();
+            services.AddVendorTransient();
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {

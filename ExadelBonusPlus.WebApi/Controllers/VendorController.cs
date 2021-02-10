@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using ExadelBonusPlus.Services.Interfaces;
 using ExadelBonusPlus.Services.Models;
-using ExadelBonusPlus.WebApi.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
