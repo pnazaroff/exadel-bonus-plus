@@ -1,4 +1,5 @@
 ﻿using System;
+using ExadelBonusPlus.Services.Models.Interfaces;
 using MongoDbGenericRepository.Attributes;
 
 namespace ExadelBonusPlus.Services.Models
