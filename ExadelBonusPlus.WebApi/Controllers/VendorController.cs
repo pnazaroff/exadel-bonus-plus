@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ExadelBonusPlus.Services.Models;
+using ExadelBonusPlus.Services.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
@@ -25,11 +26,10 @@ namespace ExadelBonusPlus.WebApi.Controllers
         [HttpGet]
         [SwaggerResponse((int)HttpStatusCode.OK, Description = "All Vendors", Type = typeof(ResultDto<List<BonusDto>>))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<IEnumerable<VendorDto>>> GetVendors(CancellationToken cancellationToken)
+        public async Task<ActionResult<ResultDto<IEnumerable<VendorDto>>>> GetVendors(CancellationToken cancellationToken)
         {
             var vendors = await _vendorService.GetAllVendorsAsync(cancellationToken);
-            var vendorsDto = _mapper.Map<IEnumerable<Vendor>, IEnumerable<VendorDto>>(vendors);
-            return Ok(vendorsDto);
+            return Ok(vendors);
         }
         [HttpGet("{id:Guid}")]
         public async Task<ActionResult<VendorDto>> GetVendor(Guid id, CancellationToken cancellationToken)
@@ -47,7 +47,7 @@ namespace ExadelBonusPlus.WebApi.Controllers
         [HttpPost]
         [SwaggerResponse((int)HttpStatusCode.OK, Description = "Vendor added ", Type = typeof(ResultDto<VendorDto>))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<ResultDto<VendorDto>>> AddVendor([FromBody]VendorDto model, CancellationToken cancellationToken)
+        public async Task<ActionResult<ResultDto<AddVendorDto>>> AddVendor([FromBody]AddVendorDto model, CancellationToken cancellationToken)
         {
            return Ok(await _vendorService.AddVendorAsync(model, cancellationToken));
         }

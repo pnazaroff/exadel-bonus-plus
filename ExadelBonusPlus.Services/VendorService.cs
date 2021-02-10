@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ExadelBonusPlus.Services.Models;
+using ExadelBonusPlus.Services.Models.DTO;
 using ExadelBonusPlus.Services.Properties;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace ExadelBonusPlus.Services
             _vendorRepository = vendorRepository;
             _mapper = mapper;
         }
-        public async Task<VendorDto> AddVendorAsync(VendorDto model, CancellationToken cancellationToken)
+        public async Task<VendorDto> AddVendorAsync(AddVendorDto model, CancellationToken cancellationToken)
         {
             if (model is null)
             {
@@ -35,9 +36,11 @@ namespace ExadelBonusPlus.Services
             return _vendorRepository.RemoveAsync(id, cancellationToken);
         }
 
-        public Task<IEnumerable<Vendor>> GetAllVendorsAsync(CancellationToken cancellationToken)
+        public async Task<IEnumerable<VendorDto>> GetAllVendorsAsync(CancellationToken cancellationToken)
         {
-            return _vendorRepository.GetAllAsync(cancellationToken);
+            var result = await _vendorRepository.GetAllAsync(cancellationToken);
+
+            return _mapper.Map<IEnumerable<VendorDto>>(result);
         }
 
         public Task<Vendor> GetVendorByIdAsync(Guid id, CancellationToken cancellationToken)
