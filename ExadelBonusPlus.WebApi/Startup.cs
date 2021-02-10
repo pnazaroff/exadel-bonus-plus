@@ -7,6 +7,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using System.Threading.Tasks;
+using ExadelBonusPlus.DataAccess;
+using ExadelBonusPlus.Services;
 using ExadelBonusPlus.Services.Models;
 using ExadelBonusPlus.Services.Interfaces;
 using ExadelBonusPlus.Services.Models.Interfaces;
@@ -14,6 +16,7 @@ using AutoMapper;
 using ExadelBonusPlus.DataAccess;
 using ExadelBonusPlus.Services;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using FluentValidation.AspNetCore;
 
 namespace ExadelBonusPlus.WebApi
@@ -30,13 +33,19 @@ namespace ExadelBonusPlus.WebApi
         {
             services.Configure<MongoDbSettings>(_configuration.GetSection(
                 nameof(MongoDbSettings)));
+          
             services.AddAutoMapper(typeof(Startup).Assembly);
-
             services.AddScoped<IVendorService, VendorService>();
             services.AddScoped<IVendorRepository, VendorRepository>();
-
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            
+
+            services.AddControllers()
+                .ConfigureApiBehaviorOptions(options => 
+                {
+                    options.SuppressModelStateInvalidFilter = true;
+                })
+                .AddFluentValidation();
+
             services.AddControllers()
                 .ConfigureApiBehaviorOptions(options =>
                 {
@@ -50,10 +59,32 @@ namespace ExadelBonusPlus.WebApi
                     Version = "v1",
                     Title = "exadel-bonus-plus API V1",
                 });
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "Input the JWT like: Bearer {your token}",
+                    Name = "Authorization",
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement{
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] {}
+                    }
+                });
             });
+            services.AddApiIdentityConfiguration(_configuration);
             services.AddBonusTransient(services);
         }
-
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -73,7 +104,8 @@ namespace ExadelBonusPlus.WebApi
             );
 
             app.UseRouting();
-
+            app.UseAuthorization();
+            app.UseAuthentication();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGet("/", context => {
