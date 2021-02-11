@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
-using ExadelBonusPlus.Services;
 using ExadelBonusPlus.Services.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -12,7 +11,10 @@ namespace ExadelBonusPlus.WebApi.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [ValidationFilter]
+    [ExceptionFilter]
+    [HttpModelResultFilter]
+    [Authorize]
     public class AdminController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -103,7 +105,7 @@ namespace ExadelBonusPlus.WebApi.Controllers
         }
 
         [HttpPost]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [Route("role")]
         [SwaggerResponse((int)HttpStatusCode.OK, Description = "Create role", Type = typeof(ResultDto<UserInfoDTO>))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
