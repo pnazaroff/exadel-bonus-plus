@@ -1,8 +1,12 @@
 ﻿using AutoMapper;
 using ExadelBonusPlus.Services.Models;
+using ExadelBonusPlus.Services.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,48 +25,45 @@ namespace ExadelBonusPlus.WebApi.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<VendorDto>>> GetVendors(CancellationToken cancellationToken)
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "All Vendors", Type = typeof(ResultDto<List<BonusDto>>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<ResultDto<IEnumerable<VendorDto>>>> GetVendors(CancellationToken cancellationToken)
         {
             var vendors = await _vendorService.GetAllVendorsAsync(cancellationToken);
-            var vendorsDto = _mapper.Map<IEnumerable<Vendor>, IEnumerable<VendorDto>>(vendors);
-            return Ok(vendorsDto);
+            return Ok(vendors);
         }
         [HttpGet("{id:Guid}")]
-        public async Task<ActionResult<VendorDto>> GetVendor(Guid id, CancellationToken cancellationToken)
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Vendor by ID", Type = typeof(ResultDto<VendorDto>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<ResultDto<VendorDto>>> GetVendor(Guid id, CancellationToken cancellationToken)
         {
             var vendor = await _vendorService.GetVendorByIdAsync(id, cancellationToken);
 
-            if (vendor == null)
-            {
-                return NotFound();
-            }
-            var vendorDto = _mapper.Map<Vendor, VendorDto>(vendor);
-            
-            return Ok(vendorDto);
+            return Ok(vendor);
         }
         [HttpPost]
-        public async Task AddVendor([FromBody]VendorDto model, CancellationToken cancellationToken)
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Vendor added ", Type = typeof(ResultDto<VendorDto>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<ResultDto<AddVendorDto>>> AddVendor([FromBody]AddVendorDto model, CancellationToken cancellationToken)
         {
-            var vendor = _mapper.Map<VendorDto, Vendor>(model);
-            vendor.CreatedDate = DateTime.Now;
-            vendor.IsDeleted = false;
-
-            await _vendorService.AddVendorAsync(vendor, cancellationToken);
+           return Ok(await _vendorService.AddVendorAsync(model, cancellationToken));
         }
 
         [HttpPut]
-        public async Task UpdateVendor(VendorDto model, CancellationToken cancellationToken)
+        [Route("{id}")]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Vendor Updated ", Type = typeof(ResultDto<VendorDto>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<ResultDto<VendorDto>>> UpdateVendor([FromRoute][Required] Guid id, [FromBody][Required] VendorDto vendor,CancellationToken cancellationToken)
         {
-            var vendor = _mapper.Map<VendorDto, Vendor>(model);
-            vendor.ModifiedDate = DateTime.Now;
-
-            await _vendorService.UpdateVendorAsync(vendor, cancellationToken);
+            return Ok(await _vendorService.UpdateVendorAsync(id, vendor, cancellationToken));
         }
         [HttpDelete]
-        public async Task DeleteVendor(Guid id, CancellationToken cancellationToken)
+        [Route("{id}")]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Vendor Deleted ", Type = typeof(ResultDto<VendorDto>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<ResultDto<VendorDto>>> DeleteVendor([FromRoute]Guid id, CancellationToken cancellationToken)
         {
-            //should be working on deletion 
-            await _vendorService.DeleteVendorAsync(id, cancellationToken);
+            return Ok(await _vendorService.DeleteVendorAsync(id, cancellationToken));
         }
 
         [HttpGet("{city}")]

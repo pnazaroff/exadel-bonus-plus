@@ -7,7 +7,6 @@ using ExadelBonusPlus.Services.Models;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 using System.Threading.Tasks;
-using ExadelBonusPlus.Services;
 
 namespace ExadelBonusPlus.WebApi
 {
@@ -16,6 +15,7 @@ namespace ExadelBonusPlus.WebApi
     [ValidationFilter]
     [ExceptionFilter]
     [HttpModelResultFilter]
+    
     public class BonusController : ControllerBase
     {
         private readonly ILogger<BonusController> _logger;

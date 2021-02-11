@@ -4,11 +4,11 @@ using System.Text.RegularExpressions;
 
 namespace ExadelBonusPlus.Services.Models
 {
-    class RegisterUserValidator : AbstractValidator<RegisterUserDTO>
+   public  class RegisterUserValidator : AbstractValidator<RegisterUserDTO>
     {
         public RegisterUserValidator()
         {
-            RuleFor(model => model.Email).NotNull().EmailAddress();
+            RuleFor(model => model.Email).NotNull().EmailAddress().WithMessage("Check your email");
             RuleFor(model => model.Password).Cascade(CascadeMode.StopOnFirstFailure)
                 .NotNull().WithMessage("Please enter your password")
                 .Length(8, 25).WithMessage("Password's lenght must greater than 8 letters and less than 25 letters")
@@ -21,8 +21,8 @@ namespace ExadelBonusPlus.Services.Models
             RuleFor(model => model.City).NotNull();
             RuleFor(model => model.PhoneNumber)
                 .Cascade(CascadeMode.StopOnFirstFailure)
-                .NotNull().WithMessage("Please enter your password").
-                Must(IsValidPhone).WithMessage("Password's must contain alphabet, numeric, symbol");
+                .NotNull().WithMessage("Please enter your phonenumber").
+                Must(IsValidPhone).WithMessage("Please check your phonenumber");
         }
         private bool IsPasswordConfirmed(string confirmPassword, string password)
         {
@@ -34,7 +34,7 @@ namespace ExadelBonusPlus.Services.Models
         }
         private bool IsValidPassword(string arg)
         {
-            if (arg.Any(s => char.IsSymbol(s)) && arg.Any(s => char.IsNumber(s)) && arg.Any(s => char.IsLetter(s)))
+            if (arg.Any(s => char.IsNumber(s)) && arg.Any(s => char.IsLetter(s)))
             {
                 return true;
             }

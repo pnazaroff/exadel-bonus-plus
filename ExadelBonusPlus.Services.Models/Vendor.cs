@@ -8,7 +8,6 @@ namespace ExadelBonusPlus.Services.Models
         public string Name { get; set; }
         public string Email { get; set; }
         public string Description { get; set; }
-        public Location Location { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime CreatedDate {get;set;}
         public Guid CreatorId {get;set;}

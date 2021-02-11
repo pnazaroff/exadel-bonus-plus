@@ -28,14 +28,25 @@ namespace ExadelBonusPlus.Services.Models
 
             CreateMap<ApplicationRole, RoleDTO>().ReverseMap();
 
-            //From model to dto
-            CreateMap<Vendor, VendorDto>()
-                .ForMember(vd => vd.Location, opts => opts.MapFrom(v => v.Location));
-            CreateMap<Location, LocationDto>();
+            CreateMap<AddHistoryDTO, History>().AfterMap((src, dest) =>
+            {
+                dest.BonusId = src.BonusId;
+                dest.CreatedDate = src.DateUse;
+                dest.CreatorId = src.UserId;
+                dest.Rating = src.Rating;
 
-            //From dto to model 
-            CreateMap<VendorDto, Vendor>()
-                .ForMember(v => v.Location, opts => opts.MapFrom(vd => new Location { City = vd.Location.City, Address = vd.Location.Address, Country = vd.Location.Country, Latitude = vd.Location.Latitude, Longitude = vd.Location.Longitude }));
+            }).ReverseMap();
+            CreateMap<History, HistoryDto>().ReverseMap();
+            CreateMap<History, BonusHistoryDto>().ReverseMap();
+            CreateMap<History, UserHistoryDto>().ReverseMap();
+
+            //From model to dto
+            CreateMap<Vendor, VendorDto>().ReverseMap();
+            CreateMap<Location, LocationDto>().ReverseMap();
+            CreateMap<AddVendorDto, Vendor>()
+                .AfterMap((src, dest) => dest.Id = Guid.NewGuid());
+
+            
         }
     }
 }
