@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using ExadelBonusPlus.Services.Models;
-using ExadelBonusPlus.Services.Models.DTO;
 using ExadelBonusPlus.Services.Properties;
 using System;
 using System.Collections.Generic;
@@ -26,7 +25,7 @@ namespace ExadelBonusPlus.Services
                 throw new ArgumentNullException("", Resources.ModelIsNull);
             }
             var vendor = _mapper.Map<Vendor>(model);
-            vendor.SetInitialValues(vendor);
+            vendor.SetInitialValues();
             await _vendorRepository.AddAsync(vendor, cancellationToken);
             return _mapper.Map<VendorDto>(vendor);
          }
