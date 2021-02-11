@@ -63,9 +63,15 @@ namespace ExadelBonusPlus.WebApi
                     configuration["MongoDbSettings:DatabaseName"])
                 .AddSignInManager()
                 .AddDefaultTokenProviders();
-
-
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("DefaultPolicy", policy =>
+                {
+                    policy.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme);
+                    policy.RequireAuthenticatedUser();
+                });
+            });
+            services.AddAuthentication()
                 .AddCookie(cfg => cfg.SlidingExpiration = true)
                 .AddJwtBearer(cfg =>
                 {

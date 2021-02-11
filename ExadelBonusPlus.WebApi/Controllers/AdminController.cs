@@ -14,7 +14,6 @@ namespace ExadelBonusPlus.WebApi.Controllers
     [ValidationFilter]
     [ExceptionFilter]
     [HttpModelResultFilter]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class AdminController : ControllerBase
     {
         private readonly IUserService _userService;

@@ -16,7 +16,6 @@ namespace ExadelBonusPlus.WebApi.Controllers
     [ValidationFilter]
     [ExceptionFilter]
     [HttpModelResultFilter]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class AccountController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -27,7 +26,6 @@ namespace ExadelBonusPlus.WebApi.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
         [Route("register")]
         [Authorize(Roles = "Admin")]
         [SwaggerResponse((int)HttpStatusCode.OK)]

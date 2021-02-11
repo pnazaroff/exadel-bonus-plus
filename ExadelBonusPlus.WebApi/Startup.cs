@@ -89,9 +89,9 @@ namespace ExadelBonusPlus.WebApi
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            
             app.UseAuthentication();
-
+            app.UseAuthorization();
             app.UseCors(builder => builder.AllowAnyOrigin()
                                           .AllowAnyMethod()
                                           .AllowAnyHeader());

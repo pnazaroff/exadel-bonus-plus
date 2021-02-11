@@ -17,7 +17,6 @@ namespace ExadelBonusPlus.WebApi.Controllers
     [ExceptionFilter]
     [ValidationFilter]
     [HttpModelResultFilter]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class HistoryController : ControllerBase
     {
         private readonly IHistoryService _historyService;
