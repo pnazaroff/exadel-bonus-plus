@@ -111,6 +111,18 @@ namespace ExadelBonusPlus.Services
             return _mapper.Map<BonusDto>(result);
         }
 
+        public async Task<BonusDto> UpdateBonusRatingAsync(Guid id, double rating, CancellationToken cancellationToken)
+        {
+            if (id == Guid.Empty)
+            {
+                throw new ArgumentNullException("", Resources.IdentifierIsNull);
+            }
+
+            var result = await _bonusRepository.UpdateBonusRatingAsync(id, rating, cancellationToken);
+
+            return _mapper.Map<BonusDto>(result);
+        }
+
         public async Task<IEnumerable<string>> GetBonusTagsAsync(CancellationToken cancellationToken)
         {
             return  await _bonusRepository.GetBonusTagsAsync(cancellationToken);

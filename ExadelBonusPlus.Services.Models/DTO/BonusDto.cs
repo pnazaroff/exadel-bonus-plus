@@ -13,7 +13,7 @@ namespace ExadelBonusPlus.Services.Models
         public VendorDto Company { get; set; }
         public DateTime DateStart { get; set; }
         public DateTime DateEnd { get; set; }
-        public int Rating { get; set; }
+        public double Rating { get; set; }
         public bool IsActive { get; set; }
         public List<Location> Locations { get; set; }
         public string[] Tags { get; set; }

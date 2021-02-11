@@ -60,6 +60,13 @@ namespace ExadelBonusPlus.DataAccess
                 new FindOneAndUpdateOptions<Bonus, Bonus>(){ ReturnDocument = ReturnDocument.After }, cancellationToken);
         }
 
+        public Task<Bonus> UpdateBonusRatingAsync(Guid id, double rating, CancellationToken cancellationToken)
+        {
+            return GetCollection().FindOneAndUpdateAsync(Builders<Bonus>.Filter.Eq(new ExpressionFieldDefinition<Bonus, Guid>(x => x.Id), id),
+                Builders<Bonus>.Update.Set(new ExpressionFieldDefinition<Bonus, double>(x => x.Rating), rating),
+                new FindOneAndUpdateOptions<Bonus, Bonus>() { ReturnDocument = ReturnDocument.After }, cancellationToken);
+        }
+
         public Task<Bonus> DeactivateBonusAsync(Guid id, CancellationToken cancellationToken)
         {
             return GetCollection().FindOneAndUpdateAsync(Builders<Bonus>.Filter.Eq(new ExpressionFieldDefinition<Bonus, Guid>(x => x.Id), id),
