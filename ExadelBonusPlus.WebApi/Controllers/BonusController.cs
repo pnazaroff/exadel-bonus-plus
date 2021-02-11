@@ -15,6 +15,7 @@ namespace ExadelBonusPlus.WebApi
     [ValidationFilter]
     [ExceptionFilter]
     [HttpModelResultFilter]
+    
     public class BonusController : ControllerBase
     {
         private readonly ILogger<BonusController> _logger;

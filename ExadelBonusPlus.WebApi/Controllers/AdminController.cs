@@ -14,6 +14,7 @@ namespace ExadelBonusPlus.WebApi.Controllers
     [ValidationFilter]
     [ExceptionFilter]
     [HttpModelResultFilter]
+    [Authorize]
     public class AdminController : ControllerBase
     {
         private readonly IUserService _userService;
