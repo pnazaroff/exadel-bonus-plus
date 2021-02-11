@@ -20,6 +20,7 @@ namespace ExadelBonusPlus.DataAccess
         {
             FilterDefinition<Bonus> filter =
                 Builders<Bonus>.Filter.Eq(new ExpressionFieldDefinition<Bonus, bool>(x => x.IsDeleted), false);
+            List<SortDefinition<Bonus>> sortBy = new List<SortDefinition<Bonus>>();
 
             if(bonusFilter?.IsActive != null)
             {
@@ -42,8 +43,14 @@ namespace ExadelBonusPlus.DataAccess
                 filter = filter & Builders<Bonus>.Filter.Lte(x => x.DateStart, bonusFilter?.Date) &
                       Builders<Bonus>.Filter.Gte(x => x.DateEnd, bonusFilter?.Date);
             }
-            
-            return await GetCollection().Find(filter).Sort(Builders<Bonus>.Sort.Ascending(bonusFilter?.SortBy ?? "Title")).ToListAsync(cancellationToken);
+
+            if ((bonusFilter?.LastCount ?? 0) != 0)
+            {
+                sortBy.Add(Builders<Bonus>.Sort.Descending("CreatedDate"));
+            }
+            sortBy.Add(Builders<Bonus>.Sort.Ascending(bonusFilter?.SortBy ?? "Title"));
+
+            return await GetCollection().Find(filter).Sort(Builders<Bonus>.Sort.Combine(sortBy)).Limit(bonusFilter?.LastCount ?? 0).ToListAsync(cancellationToken);
         }
 
         public Task<Bonus> ActivateBonusAsync(Guid id,  CancellationToken cancellationToken)

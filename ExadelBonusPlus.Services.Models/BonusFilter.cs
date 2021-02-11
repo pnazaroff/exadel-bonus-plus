@@ -11,6 +11,7 @@ namespace ExadelBonusPlus.Services.Models
         public List<string> Tags { get; set; }
         public DateTime Date { get; set; }
         public string Title { get; set; }
+        public int LastCount { get; set; }
         public string SortBy { get; set; }
     }
 }
