@@ -14,6 +14,14 @@ namespace ExadelBonusPlus.Services
 
             if(model.GetType() == typeof(Bonus))
                 (model as Bonus).IsActive = true;
+
+            if (model.GetType()==typeof(Vendor))
+            {
+                (model as Vendor).IsDeleted = false;
+            }
+
+
+
         }
     }
 }

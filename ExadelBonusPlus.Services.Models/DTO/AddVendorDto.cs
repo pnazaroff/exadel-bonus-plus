@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
-namespace ExadelBonusPlus.Services.Models
+namespace ExadelBonusPlus.Services.Models.DTO
 {
-    public class VendorDto
+    public  class AddVendorDto
     {
-        public Guid Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
         public string Description { get; set; }
