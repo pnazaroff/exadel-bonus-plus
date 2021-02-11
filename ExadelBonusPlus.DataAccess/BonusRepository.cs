@@ -21,26 +21,26 @@ namespace ExadelBonusPlus.DataAccess
             FilterDefinition<Bonus> filter =
                 Builders<Bonus>.Filter.Eq(new ExpressionFieldDefinition<Bonus, bool>(x => x.IsDeleted), false);
 
-            if(bonusFilter?.FilterBy?.IsActive != null)
+            if(bonusFilter?.IsActive != null)
             {
                 filter = filter & Builders<Bonus>.Filter.Eq(new ExpressionFieldDefinition<Bonus, bool>(x => x.IsActive),
-                    (bool)bonusFilter?.FilterBy?.IsActive);
+                    (bool)bonusFilter?.IsActive);
             }
 
-            if (!String.IsNullOrEmpty(bonusFilter?.FilterBy?.Title))
+            if (!String.IsNullOrEmpty(bonusFilter?.Title))
             {
-                filter = filter & Builders<Bonus>.Filter.Regex(new ExpressionFieldDefinition<Bonus, string>(x => x.Title), new BsonRegularExpression(bonusFilter?.FilterBy?.Title));
+                filter = filter & Builders<Bonus>.Filter.Regex(new ExpressionFieldDefinition<Bonus, string>(x => x.Title), new BsonRegularExpression(bonusFilter?.Title));
             }
 
-            if (bonusFilter?.FilterBy?.Tags != null && bonusFilter?.FilterBy?.Tags.Count > 0)
+            if (bonusFilter?.Tags != null && bonusFilter?.Tags.Count > 0)
             {
-                filter = filter & Builders<Bonus>.Filter.AnyIn(b => b.Tags, bonusFilter?.FilterBy?.Tags);
+                filter = filter & Builders<Bonus>.Filter.AnyIn(b => b.Tags, bonusFilter?.Tags);
             }
 
-            if (bonusFilter?.FilterBy?.Date != null)
+            if (bonusFilter?.Date != null && bonusFilter?.Date != DateTime.MinValue)
             {
-                filter = filter & Builders<Bonus>.Filter.Lte(x => x.DateStart, bonusFilter?.FilterBy?.Date) &
-                      Builders<Bonus>.Filter.Gte(x => x.DateEnd, bonusFilter?.FilterBy?.Date);
+                filter = filter & Builders<Bonus>.Filter.Lte(x => x.DateStart, bonusFilter?.Date) &
+                      Builders<Bonus>.Filter.Gte(x => x.DateEnd, bonusFilter?.Date);
             }
             
             return await GetCollection().Find(filter).Sort(Builders<Bonus>.Sort.Ascending(bonusFilter?.SortBy ?? "Title")).ToListAsync(cancellationToken);

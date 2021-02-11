@@ -36,18 +36,9 @@ namespace ExadelBonusPlus.WebApi
         }
 
         [HttpGet]
-        [SwaggerResponse((int)HttpStatusCode.OK, Description = "All bonus", Type = typeof(ResultDto<List<BonusDto>>))]
-        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<ResultDto<IEnumerable<BonusDto>>>> FindAllBonusesAsync()
-        {
-            return Ok(await _BonusService.FindAllBonusesAsync());
-        }
-
-        [HttpPost]
-        [Route("find")]
         [SwaggerResponse((int)HttpStatusCode.OK, Description = "Bonus with filters ond sorting", Type = typeof(ResultDto<List<BonusDto>>))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<ResultDto<IEnumerable<BonusDto>>>> FindBonusesAsync([FromBody] BonusFilter bonusFilter)
+        public async Task<ActionResult<ResultDto<IEnumerable<BonusDto>>>> FindBonusesAsync([FromQuery] BonusFilter bonusFilter)
         {
             return Ok(await _BonusService.FindBonusesAsync(bonusFilter));
         }

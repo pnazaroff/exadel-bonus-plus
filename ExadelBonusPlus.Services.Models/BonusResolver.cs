@@ -25,7 +25,16 @@ namespace ExadelBonusPlus.Services.Models
             }
             else
             {
-                return _mapper.Map<VendorDto>(_vendorService.GetVendorByIdAsync(source.CompanyId).GetAwaiter().GetResult());
+                try
+                {
+                    return _mapper.Map<VendorDto>(_vendorService.GetVendorByIdAsync(source.CompanyId).GetAwaiter()
+                        .GetResult());
+                }
+                catch
+                {
+                    //Vendor does not finded by Id
+                    return new VendorDto();
+                }
             }
             
              
