@@ -56,7 +56,7 @@ namespace ExadelBonusPlus.Services
                     return responce;
                 }
             }
-            throw new ArgumentException("", Resources.LoginFailed);
+            throw new ArgumentException(Resources.LoginFailed);
         }
         public async Task LogOutAsync()
         {
@@ -79,19 +79,13 @@ namespace ExadelBonusPlus.Services
                 LastName = registerUser.LastName,
                 PhoneNumber = registerUser.PhoneNumber
             };
-            try
-            {
+           
                 var result = await _userManager.CreateAsync(user, registerUser.Password);
                 if (result.Succeeded)
                 {
                     //Redirect("loginPath")
                 }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+           
         }
         public async Task<UserInfoDTO> DeleteUserAsync(Guid userId)
         {
