@@ -60,9 +60,9 @@ namespace ExadelBonusPlus.Services
 
         }
 
-        public Task<IEnumerable<Vendor>> SearchVendorByLocationAsync(string city, CancellationToken cancellationToken)
+        public Task<List<Vendor>> SearchVendorByNameAsync(string name, CancellationToken cancellationToken)
         {
-            return _vendorRepository.SearchVendorByLocationAsync(city, cancellationToken);
+            return _vendorRepository.SearchVendorByNameAsync(name, cancellationToken);
         }
 
         public async Task<VendorDto> UpdateVendorAsync(Guid id, VendorDto model, CancellationToken cancellationToken)

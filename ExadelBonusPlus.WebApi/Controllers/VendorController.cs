@@ -68,7 +68,7 @@ namespace ExadelBonusPlus.WebApi.Controllers
         [HttpGet("{city}")]
         public async Task<ActionResult<VendorDto>> GetVendorByCity(string city, CancellationToken cancellationToken)
         {
-            var vendor = await _vendorService.SearchVendorByLocationAsync(city, cancellationToken);
+            var vendor = await _vendorService.SearchVendorByNameAsync(city, cancellationToken);
 
             if (vendor == null)
             {

@@ -7,6 +7,6 @@ namespace ExadelBonusPlus.Services.Models
 {
     public interface IVendorRepository : IRepository<Vendor, Guid>
     {
-        Task<IEnumerable<Vendor>> SearchVendorByLocationAsync(string  city, CancellationToken cancellationToken);
+        Task<List<Vendor>> SearchVendorByNameAsync(string  name, CancellationToken cancellationToken);
     }
 }

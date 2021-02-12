@@ -15,10 +15,11 @@ namespace ExadelBonusPlus.DataAccess
         {
 
         }
-        //should implement
-        public Task<IEnumerable<Vendor>> SearchVendorByLocationAsync(string city, CancellationToken cancellationToken)
+        //should implement 
+        public Task<List<Vendor>> SearchVendorByNameAsync(string name, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return GetCollection().Find(Builders<Vendor>.Filter.Eq(new ExpressionFieldDefinition<Vendor, string>(x => x.Name), name)
+                                        & Builders<Vendor>.Filter.Eq(new ExpressionFieldDefinition<Vendor, bool>(x => x.IsDeleted), false)).ToListAsync(cancellationToken);
         }
 
     }
