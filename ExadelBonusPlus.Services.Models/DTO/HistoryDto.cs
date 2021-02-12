@@ -1,5 +1,4 @@
 ﻿using System;
-using ExadelBonusPlus.Services.Models.DTO;
 
 namespace ExadelBonusPlus.Services.Models
 {

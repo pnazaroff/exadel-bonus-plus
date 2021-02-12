@@ -14,10 +14,10 @@ namespace ExadelBonusPlus.Services.Models
         public string Description { get; set; }
         public string Type { get; set; }
         public string Phone { get; set; }
-        public Guid Company { get; set; }
+        public Guid CompanyId { get; set; }
         public DateTime DateStart { get; set; }
         public DateTime DateEnd { get; set; }
-        public int Rating { get; set; }
+        public double Rating { get; set; }
         public List<Location> Locations { get; set; }
         public List<string> Tags { get; set; }
         public bool IsDeleted { get; set; }

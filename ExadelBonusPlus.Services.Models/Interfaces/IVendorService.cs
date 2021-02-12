@@ -1,6 +1,4 @@
-﻿using ExadelBonusPlus.Services.Models;
-using ExadelBonusPlus.Services.Models.DTO;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;

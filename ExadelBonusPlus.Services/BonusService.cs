@@ -27,7 +27,7 @@ namespace ExadelBonusPlus.Services
                 throw new ArgumentNullException("", Resources.ModelIsNull);
             }
             var bonus = _mapper.Map<Bonus>(model);
-            bonus.SetInitialValues(bonus);
+            bonus.SetInitialValues();
             await _bonusRepository.AddAsync(bonus, cancellationToken);
             return _mapper.Map<BonusDto>(bonus);
         }
@@ -58,7 +58,7 @@ namespace ExadelBonusPlus.Services
             return result is null ? throw new ArgumentException("", Resources.FindbyIdError) : _mapper.Map<BonusDto>(result);
         }
 
-        public async Task<BonusDto> UpdateBonusAsync(Guid id, BonusDto model, CancellationToken cancellationToken)
+        public async Task<BonusDto> UpdateBonusAsync(Guid id, UpdateBonusDto model, CancellationToken cancellationToken)
         {
             if (id == Guid.Empty)
             {
@@ -72,7 +72,7 @@ namespace ExadelBonusPlus.Services
 
             await _bonusRepository.UpdateAsync(id, bonus, cancellationToken);
 
-            return model;
+            return _mapper.Map<BonusDto>(model); ;
         }
 
         public async Task<BonusDto> DeleteBonusAsync(Guid id, CancellationToken cancellationToken)
@@ -107,6 +107,18 @@ namespace ExadelBonusPlus.Services
             }
 
             var result = await _bonusRepository.DeactivateBonusAsync(id, cancellationToken);
+
+            return _mapper.Map<BonusDto>(result);
+        }
+
+        public async Task<BonusDto> UpdateBonusRatingAsync(Guid id, double rating, CancellationToken cancellationToken)
+        {
+            if (id == Guid.Empty)
+            {
+                throw new ArgumentNullException("", Resources.IdentifierIsNull);
+            }
+
+            var result = await _bonusRepository.UpdateBonusRatingAsync(id, rating, cancellationToken);
 
             return _mapper.Map<BonusDto>(result);
         }

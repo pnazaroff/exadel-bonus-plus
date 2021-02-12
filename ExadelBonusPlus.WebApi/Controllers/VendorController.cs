@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using ExadelBonusPlus.Services.Models;
-using ExadelBonusPlus.Services.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System;

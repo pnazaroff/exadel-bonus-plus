@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using ExadelBonusPlus.Services.Models.DTO;
 
 namespace ExadelBonusPlus.Services.Models
 {

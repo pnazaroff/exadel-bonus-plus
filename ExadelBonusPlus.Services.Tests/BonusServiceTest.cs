@@ -74,7 +74,7 @@ namespace ExadelBonusPlus.Services.Tests
         {
             CreateDefaultBonusServiceInstance();
             var idBonus = _fakeBonuseDtos[0].Id;
-            var bonusDto = _fakeBonuseDtos[0];
+            var bonusDto = _mapper.Map<UpdateBonusDto>(_fakeBonuseDtos[0]);
 
             var bonus = await _bonusService.UpdateBonusAsync(idBonus, bonusDto, default(CancellationToken));
 
@@ -115,6 +115,19 @@ namespace ExadelBonusPlus.Services.Tests
             var bonus = await _bonusService.DeactivateBonusAsync(idBonus, default(CancellationToken));
 
             Assert.False(bonus.IsActive);
+            return bonus;
+        }
+
+        [Fact]
+        public async Task<BonusDto> Bonus_UpdateBonusRatingAsync_Return_BonusDTO()
+        {
+            CreateDefaultBonusServiceInstance();
+            var idBonus = _fakeBonuseDtos[0].Id;
+            double rating = 4.55;
+
+            var bonus = await _bonusService.UpdateBonusRatingAsync(idBonus, rating, default(CancellationToken));
+
+            Assert.True(bonus.Rating > 0);
             return bonus;
         }
 
@@ -163,6 +176,8 @@ namespace ExadelBonusPlus.Services.Tests
             _bonusRep.Setup(s => s.ActivateBonusAsync(It.IsAny<Guid>(), default(CancellationToken))).ReturnsAsync(_mapper.Map<Bonus>(_fakeBonuseDtos[0]));
             _fakeBonuseDtos[9].IsActive = false;
             _bonusRep.Setup(s => s.DeactivateBonusAsync(It.IsAny<Guid>(), default(CancellationToken))).ReturnsAsync(_mapper.Map<Bonus>(_fakeBonuseDtos[9]));
+            _fakeBonuseDtos[0].Rating = 3.00;
+            _bonusRep.Setup(s => s.UpdateBonusRatingAsync(It.IsAny<Guid>(), It.IsAny<double>(), default(CancellationToken))).ReturnsAsync(_mapper.Map<Bonus>(_fakeBonuseDtos[0]));
             _bonusRep.Setup(s => s.GetBonusTagsAsync(default(CancellationToken))).ReturnsAsync(new List<string>(){"Pizza","Coffee"});
 
             _mockBonusRep = _bonusRep.Object;
