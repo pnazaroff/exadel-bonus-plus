@@ -137,8 +137,7 @@ namespace ExadelBonusPlus.Services.Tests
         private void CreateDefaultBonusServiceInstance()
         {
             var myProfile = new MapperProfile();
-            var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-            _mapper = new Mapper(configuration);
+            _mapper = new MapperConfiguration(cfg => cfg.AddProfile(myProfile)).CreateMapper();
 
             var bonusGenerator = Generator
                     .For<BonusDto>()

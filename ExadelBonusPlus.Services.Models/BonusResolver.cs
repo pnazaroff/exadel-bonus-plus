@@ -14,9 +14,7 @@ namespace ExadelBonusPlus.Services.Models
             _vendorService = vendorService;
             _mapper = mapper;
         }
-        public BonusResolver()
-        {
-        }
+
         public  VendorDto Resolve(Bonus source, BonusDto destination, VendorDto destMember, ResolutionContext context)
         {
             if (source.CompanyId == Guid.Empty || _vendorService == null)
