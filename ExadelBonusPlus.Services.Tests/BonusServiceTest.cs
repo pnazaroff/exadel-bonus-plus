@@ -5,10 +5,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using ExadelBonusPlus.Services.Models;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using NUnit.Framework;
 using SampleDataGenerator;
 using Xunit;
+using Xunit.Abstractions;
+using Xunit.DependencyInjection;
 using Assert = Xunit.Assert;
 
 namespace ExadelBonusPlus.Services.Tests
@@ -18,14 +21,23 @@ namespace ExadelBonusPlus.Services.Tests
         private Mock<IBonusRepository> _bonusRep;
         private IBonusRepository _mockBonusRep;
         private BonusService _bonusService;
+        private Mock<IVendorRepository> _vendorRep;
+        private IVendorRepository _mockVendorRep;
+        private VendorService _vendorService;
         private IMapper _mapper;
         private List<BonusDto> _fakeBonuseDtos;
 
         public BonusServiceTest()
         {
+            
         }
 
-        [Fact]
+        public void Startup()
+        {
+
+        }
+
+       [Fact]
         public async Task Bonus_AddBonusAsync_Return_BonusDto()
         {
             CreateDefaultBonusServiceInstance();
@@ -137,7 +149,8 @@ namespace ExadelBonusPlus.Services.Tests
         private void CreateDefaultBonusServiceInstance()
         {
             var myProfile = new MapperProfile();
-            _mapper = new MapperConfiguration(cfg => cfg.AddProfile(myProfile)).CreateMapper();
+            var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
+            _mapper = new Mapper(configuration);
 
             var bonusGenerator = Generator
                     .For<BonusDto>()
@@ -174,6 +187,42 @@ namespace ExadelBonusPlus.Services.Tests
             _mockBonusRep = _bonusRep.Object;
 
             _bonusService = new BonusService(_mockBonusRep, _mapper);
+
+            _vendorRep = new Mock<IVendorRepository>();
+            _vendorRep.Setup(s => s.GetByIdAsync(It.IsAny<Guid>(), default(CancellationToken))).ReturnsAsync(_mapper.Map<Vendor>(new Vendor()));
+            _mockVendorRep = _vendorRep.Object;
+            _vendorService = new VendorService(_mockVendorRep, _mapper);
+
+            var bonusResolver = new BonusResolver(_vendorService, _mapper);
+
+            //var services = new ServiceCollection();
+            //services.AddSingleton<BonusResolver>(bonusResolver);
+
+            //var startup = new TestingStartup(default);
+            //startup.ConfigureServices(services);
+            //var provider = services.BuildServiceProvider();
         }
-}
+    }
+
+    public partial class Startup
+    {
+        public Startup()
+        {
+            var a = 1;
+        }
+
+        protected void ConfigureServices(IServiceCollection services)
+        {
+            var myProfile = new MapperProfile();
+            var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
+            var _mapper = new Mapper(configuration);
+
+            var _vendorRep = new Mock<IVendorRepository>();
+            _vendorRep.Setup(s => s.GetByIdAsync(It.IsAny<Guid>(), default(CancellationToken))).ReturnsAsync(_mapper.Map<Vendor>(new Vendor()));
+            var _mockVendorRep = _vendorRep.Object;
+
+            var _vendorService = new VendorService(_mockVendorRep, _mapper);
+            services.AddSingleton<IVendorService>(_vendorService);
+        }
+    }
 }

@@ -17,12 +17,6 @@ namespace ExadelBonusPlus.Services.Models
 
         public  VendorDto Resolve(Bonus source, BonusDto destination, VendorDto destMember, ResolutionContext context)
         {
-            if (source.CompanyId == Guid.Empty || _vendorService == null)
-            {
-                return new VendorDto();
-            }
-            else
-            {
                 try
                 {
                     return _mapper.Map<VendorDto>(_vendorService.GetVendorByIdAsync(source.CompanyId).GetAwaiter()
@@ -33,9 +27,6 @@ namespace ExadelBonusPlus.Services.Models
                     //Vendor does not finded by Id
                     return new VendorDto();
                 }
-            }
-            
-             
         }
     }
 }

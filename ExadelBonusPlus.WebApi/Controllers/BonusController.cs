@@ -92,10 +92,18 @@ namespace ExadelBonusPlus.WebApi
         [Route("tags")]
         [SwaggerResponse((int)HttpStatusCode.OK, Description = "Tags", Type = typeof(List<string>))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<ResultDto<List<String>>>> BonusTagsAync()
+        public async Task<ActionResult<ResultDto<List<String>>>> GetBonusTagsAync()
         {
             return Ok(await _BonusService.GetBonusTagsAsync());
         }
 
+        [HttpGet]
+        [Route("cities")]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Cities", Type = typeof(List<string>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<ResultDto<List<String>>>> GetCitiesAync()
+        {
+            return Ok(await _BonusService.GetCitiesAsync());
+        }
     }
 }

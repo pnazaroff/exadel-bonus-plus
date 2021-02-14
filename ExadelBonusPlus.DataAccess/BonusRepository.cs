@@ -33,15 +33,26 @@ namespace ExadelBonusPlus.DataAccess
                 filter = filter & Builders<Bonus>.Filter.Regex(new ExpressionFieldDefinition<Bonus, string>(x => x.Title), new BsonRegularExpression(bonusFilter?.Title));
             }
 
+            if (!String.IsNullOrEmpty(bonusFilter?.City))
+            {
+                filter = filter & Builders<Bonus>.Filter.ElemMatch(x => x.Locations, y => y.City == bonusFilter.City);
+            }
+
             if (bonusFilter?.Tags != null && bonusFilter?.Tags.Count > 0)
             {
                 filter = filter & Builders<Bonus>.Filter.AnyIn(b => b.Tags, bonusFilter?.Tags);
             }
 
-            if (bonusFilter?.Date != null && bonusFilter?.Date != DateTime.MinValue)
+            if (bonusFilter?.DateStart != null && bonusFilter?.DateStart != DateTime.MinValue)
             {
-                filter = filter & Builders<Bonus>.Filter.Lte(x => x.DateStart, bonusFilter?.Date) &
-                      Builders<Bonus>.Filter.Gte(x => x.DateEnd, bonusFilter?.Date);
+                filter = filter & Builders<Bonus>.Filter.Gte(x => x.DateStart, bonusFilter?.DateStart) |
+                      Builders<Bonus>.Filter.Gte(x => x.DateEnd, bonusFilter?.DateStart);
+            }
+
+            if (bonusFilter?.DateEnd != null && bonusFilter?.DateEnd != DateTime.MinValue)
+            {
+                filter = filter & Builders<Bonus>.Filter.Lte(x => x.DateStart, bonusFilter?.DateEnd) |
+                         Builders<Bonus>.Filter.Lte(x => x.DateEnd, bonusFilter?.DateEnd);
             }
 
             if ((bonusFilter?.LastCount ?? 0) != 0)
@@ -77,6 +88,13 @@ namespace ExadelBonusPlus.DataAccess
         public async Task<IEnumerable<string>> GetBonusTagsAsync(CancellationToken cancellationToken)
         {
             return await GetCollection().Distinct<string>("Tags", Builders<Bonus>.Filter.Eq(new ExpressionFieldDefinition<Bonus, bool>(x => x.IsDeleted), false)
+                                                                  & Builders<Bonus>.Filter.Eq(new ExpressionFieldDefinition<Bonus, bool>(x => x.IsActive), true)).ToListAsync(cancellationToken);
+        }
+
+        public async Task<IEnumerable<string>> GetCitiesAsync(CancellationToken cancellationToken)
+        {
+            FieldDefinition<Bonus, string> field = "Locations.City";
+            return await GetCollection().Distinct<string>(field, Builders<Bonus>.Filter.Eq(new ExpressionFieldDefinition<Bonus, bool>(x => x.IsDeleted), false)
                                                                   & Builders<Bonus>.Filter.Eq(new ExpressionFieldDefinition<Bonus, bool>(x => x.IsActive), true)).ToListAsync(cancellationToken);
         }
     }

@@ -127,5 +127,10 @@ namespace ExadelBonusPlus.Services
         {
             return  await _bonusRepository.GetBonusTagsAsync(cancellationToken);
         }
+
+        public async Task<IEnumerable<string>> GetCitiesAsync(CancellationToken cancellationToken)
+        {
+            return await _bonusRepository.GetCitiesAsync(cancellationToken);
+        }
     }
 }

@@ -9,8 +9,10 @@ namespace ExadelBonusPlus.Services.Models
     {
         public bool? IsActive { get; set; }
         public List<string> Tags { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime DateStart { get; set; }
+        public DateTime DateEnd { get; set; }
         public string Title { get; set; }
+        public string City { get; set; }
         public int LastCount { get; set; }
         public string SortBy { get; set; }
     }
