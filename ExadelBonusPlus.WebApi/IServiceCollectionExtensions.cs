@@ -20,13 +20,8 @@ namespace ExadelBonusPlus.WebApi
             services.AddTransient<IBonusRepository, BonusRepository>();
             services.AddTransient<IBonusService, BonusService>();
 
-            
-
             services.AddTransient<IValidator<AddBonusDto>, AddBonusDtoValidator>();
             services.AddTransient<IValidator<BonusDto>, BonusDtoValidator>();
-
-
-
         }
 
         public static void AddHistoryTransient(this IServiceCollection services)
@@ -39,6 +34,9 @@ namespace ExadelBonusPlus.WebApi
         {
             services.AddScoped<IVendorService, VendorService>();
             services.AddScoped<IVendorRepository, VendorRepository>();
+
+            services.AddTransient<IValidator<AddVendorDto>, AddVendorDtoValidator>();
+            services.AddTransient<IValidator<VendorDto>, VendorDtoValidator>();
         }
 
         public static void AddApiIdentityConfiguration(this IServiceCollection services, IConfiguration configuration)
