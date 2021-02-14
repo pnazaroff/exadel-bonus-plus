@@ -11,7 +11,7 @@ namespace ExadelBonusPlus.Services.Models.DTOValidator
         {
             RuleFor(v => v).NotNull();
             RuleFor(v => v.Name).NotEmpty().NotEmpty();
-            RuleFor(v => v.Email).NotNull().NotEmpty();
+            RuleFor(v => v.Email).NotNull().NotEmpty().EmailAddress(); ;
         }
     }
 
@@ -23,6 +23,7 @@ namespace ExadelBonusPlus.Services.Models.DTOValidator
             RuleFor(v => v).NotNull();
             RuleFor(v => v.Id).NotEmpty();
             RuleFor(v => v.Name).Length(1, int.MaxValue);
+            RuleFor(v => v.Email).NotNull().EmailAddress();
         }
     }
 }

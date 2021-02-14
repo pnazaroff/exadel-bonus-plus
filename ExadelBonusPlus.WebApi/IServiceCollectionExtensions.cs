@@ -35,8 +35,8 @@ namespace ExadelBonusPlus.WebApi
             services.AddScoped<IVendorService, VendorService>();
             services.AddScoped<IVendorRepository, VendorRepository>();
 
-            services.AddTransient<IValidator<AddVendorDto>, AddVendorDtoValidator>();
-            services.AddTransient<IValidator<VendorDto>, VendorDtoValidator>();
+            services.AddScoped<IValidator<AddVendorDto>, AddVendorDtoValidator>();
+            services.AddScoped<IValidator<VendorDto>, VendorDtoValidator>();
         }
 
         public static void AddApiIdentityConfiguration(this IServiceCollection services, IConfiguration configuration)
