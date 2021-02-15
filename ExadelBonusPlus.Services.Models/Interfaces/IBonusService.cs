@@ -19,6 +19,6 @@ namespace ExadelBonusPlus.Services.Models
         Task<BonusDto> UpdateBonusRatingAsync(Guid id, double rating, CancellationToken cancellationToken = default);
         Task<IEnumerable<string>> GetBonusTagsAsync(CancellationToken cancellationToken = default);
         Task<IEnumerable<string>> GetCitiesAsync(CancellationToken cancellationToken = default);
-
+        Task<List<BonusStatisticDto>> GetBonusStatisticAsync(BonusFilter bonusFilter, CancellationToken cancellationToken = default);
     }
 }

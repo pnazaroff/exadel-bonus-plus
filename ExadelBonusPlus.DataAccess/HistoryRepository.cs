@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -39,6 +40,13 @@ namespace ExadelBonusPlus.DataAccess
             var filterLess = Builders<History>.Filter.Lte("CreatedDate", usageDateEnd);
             var filterMore = Builders<History>.Filter.Gte("CreatedDate", usageDate);
             return await GetCollection().Find(filterLess & filterMore & filterUser).ToListAsync(cancellationToken);
+        }
+
+        public async Task<int> GetCountHistoryByBonusIdAsync(Guid bonusId, CancellationToken cancellationToken = default)
+        {
+            var filterUser = Builders<History>.Filter.Eq("BonusId", bonusId);
+            var result = await GetCollection().Find(filterUser).ToListAsync(cancellationToken);
+            return result.Count();
         }
     }
 }
