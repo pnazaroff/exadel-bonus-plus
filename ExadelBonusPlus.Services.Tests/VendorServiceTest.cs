@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Autofac.Extras.Moq;
+using AutoMapper;
 using Bogus;
 using ExadelBonusPlus.Services.Models;
 using FluentValidation;
@@ -15,8 +16,6 @@ namespace ExadelBonusPlus.Services.Tests
     public class VendorServiceTest
     {
         private IMapper _mapper;
-        private List<VendorDto> _fakeVendors;
-        private List<AddVendorDto> _fakeAddVendors;
         private VendorService _vendorService;
         private IValidator<VendorDto> _vendorDtoValidator;
         private IVendorRepository _vendorRepository;
@@ -24,41 +23,56 @@ namespace ExadelBonusPlus.Services.Tests
 
         public VendorServiceTest()
         {
-            _fakeVendors = new List<VendorDto>();
-            _fakeAddVendors = new List<AddVendorDto>();
+            
         }
         [Fact]
-        public async Task<List<VendorDto>> Vendor_FindAllVendorAsync_Return_ListVendorDTO()
+        public async Task GetAllVendorAsync_ShouldReturn_ListVendorDtosAsync()
         {
-            CreateDefaultVendorServiceInstance();
+            var fakeVendorDtos = GenerateSampleVendors();
+            var fakeVendors = MapDtoListToDomainObjectList(fakeVendorDtos.Result);
+            using (var mock = AutoMock.GetLoose())
+            {
+                mock.Mock<IRepository<Vendor, Guid>>()
+                    .Setup(x => x.GetAllAsync(default))
+                    .Returns(fakeVendors);
+                
+                mock.Mock<IVendorRepository>()
+                    .Setup(x => x.GetAllAsync(default))
+                    .Returns(fakeVendors);
 
-            var vendorList = await _vendorService.GetAllVendorsAsync(default(CancellationToken));
+                var serviceInstance = mock.Create<VendorService>();
 
-            Xunit.Assert.NotNull(vendorList);
-            return (List<VendorDto>)vendorList;
+                var expected = fakeVendorDtos;
+                var actual = serviceInstance.GetAllVendorsAsync(default);
+
+                Xunit.Assert.NotNull(actual);
+                //Xunit.Assert.Equal(expected.Result.Count(), actual.Result.Count());
+            }
         }
-        private void CreateDefaultVendorServiceInstance()
+
+
+        /// <summary>
+        /// Generates realistic fake data
+        /// </summary>
+        /// <returns>Vendor objects</returns>
+        private async Task<IEnumerable<VendorDto>> GenerateSampleVendors()
         {
-            var myProfile = new MapperProfile();
-            var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-            _mapper = new Mapper(configuration);
             var vendorsGenerator = new Faker<VendorDto>()
                 .RuleFor(v => v.Id, f => Guid.NewGuid())
                 .RuleFor(v => v.Name, f => f.Company.CompanyName())
                 .RuleFor(v => v.Email, (f, v) => f.Internet.Email(v.Name));
+            
+            return await Task.Run(() => vendorsGenerator.Generate(10));
+        }
 
+        private async Task<IEnumerable<Vendor>> MapDtoListToDomainObjectList(IEnumerable<VendorDto> source)
+        {
+            var myProfile = new MapperProfile();
+            var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
+            _mapper = new Mapper(configuration);
 
-            var addVendorsGenerator = new Faker<AddVendorDto>()
-                .RuleFor(v => v.Name, f => f.Company.CompanyName())
-                .RuleFor(v => v.Email, (f, v) => f.Internet.Email(v.Name));
-
-            for (int i = 0; i < 10; i++)
-            {
-                _fakeVendors.Add(vendorsGenerator.Generate());
-                _fakeAddVendors.Add(addVendorsGenerator.Generate());
-            }
-
-            _vendorService = new VendorService(_vendorRepository, _mapper, _vendorDtoValidator, _addVendorDtoValidator);
-         }
+            var result = await Task.Run(() => _mapper.Map<IEnumerable<Vendor>>(source));
+            return result;
+        }
     }
 }

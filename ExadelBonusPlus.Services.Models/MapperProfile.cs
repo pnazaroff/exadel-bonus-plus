@@ -45,8 +45,10 @@ namespace ExadelBonusPlus.Services.Models
             CreateMap<Location, LocationDto>().ReverseMap();
             CreateMap<AddVendorDto, Vendor>()
                 .AfterMap((src, dest) => dest.Id = Guid.NewGuid());
+            //From dto to model
+            CreateMap<VendorDto, Vendor>();
 
-            
+
         }
     }
 }
