@@ -26,6 +26,8 @@ namespace ExadelBonusPlus.Services
             {
                 throw new ArgumentNullException("", Resources.ModelIsNull);
             }
+            if (model.Rating == 0)
+                model.Rating = -1;
             var history = _mapper.Map<History>(model);
              await _historyRepository.AddAsync(history, cancellationToken);
             return _mapper.Map<HistoryDto>(history);

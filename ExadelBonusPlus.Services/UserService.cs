@@ -169,7 +169,7 @@ namespace ExadelBonusPlus.Services
         {
             var tokens = await _tokenRefreshService.GetRefreshTokenByToken(refreshToken);
 
-            var token = tokens.FirstOrDefault(t => t.IsActive == true);
+            var token = tokens.Where(i=>i.CreatedByIp == ipAddress).FirstOrDefault(t => t.IsActive == true);
             if (!(token is null))
             {
                 var newRefreshToken = await _tokenRefreshService.UpdateRefreshToken(ipAddress, token);

@@ -15,7 +15,6 @@ namespace ExadelBonusPlus.Services.Models
             CreateMap<BonusDto, AddBonusDto>();
             CreateMap<UserInfoDTO, ApplicationUser>();
 
-
             CreateMap<UpdateUserDTO, ApplicationUser>().ReverseMap();
             CreateMap<ApplicationUser, UserInfoDTO>()
                 .ForMember(dest => dest.Roles,
