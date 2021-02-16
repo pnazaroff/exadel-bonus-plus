@@ -32,11 +32,11 @@ namespace ExadelBonusPlus.WebApi
 
         public static void AddVendorTransient(this IServiceCollection services)
         {
-            services.AddScoped<IVendorService, VendorService>();
-            services.AddScoped<IVendorRepository, VendorRepository>();
+            services.AddTransient<IVendorService, VendorService>();
+            services.AddTransient<IVendorRepository, VendorRepository>();
 
-            services.AddScoped<IValidator<AddVendorDto>, AddVendorDtoValidator>();
-            services.AddScoped<IValidator<VendorDto>, VendorDtoValidator>();
+            services.AddTransient<IValidator<AddVendorDto>, AddVendorDtoValidator>();
+            services.AddTransient<IValidator<VendorDto>, VendorDtoValidator>();
         }
 
         public static void AddApiIdentityConfiguration(this IServiceCollection services, IConfiguration configuration)
