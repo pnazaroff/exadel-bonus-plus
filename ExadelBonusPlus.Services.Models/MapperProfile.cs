@@ -17,6 +17,15 @@ namespace ExadelBonusPlus.Services.Models
             CreateMap<AddBonusDto, Bonus>().AfterMap((src, dest) => dest.Id = Guid.NewGuid());
             CreateMap<UpdateBonusDto, Bonus>().ReverseMap();
             CreateMap<UpdateBonusDto, BonusDto>().ReverseMap();
+            CreateMap<Bonus, BonusStatisticDto>().ForMember(dest => dest.CompanyName,
+                opt =>
+                {
+                    opt.MapFrom<BonusStatisticCompanyNameResolver>();
+                }).ForMember(dest => dest.Visits,
+                opt =>
+                {
+                    opt.MapFrom<BonusStatisticVisitsResolver>();
+                });
 
             //Only for tests
             CreateMap<BonusDto, AddBonusDto>(); 

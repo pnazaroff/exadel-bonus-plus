@@ -127,5 +127,20 @@ namespace ExadelBonusPlus.Services
         {
             return  await _bonusRepository.GetBonusTagsAsync(cancellationToken);
         }
+
+        public async Task<IEnumerable<string>> GetCitiesAsync(CancellationToken cancellationToken)
+        {
+            return await _bonusRepository.GetCitiesAsync(cancellationToken);
+        }
+
+        public async Task<List<BonusStatisticDto>> GetBonusStatisticAsync(BonusFilter bonusFilter, CancellationToken cancellationToken)
+        {
+            var sortBy = bonusFilter?.SortBy ?? "Title";
+            if (sortBy != null & typeof(Bonus).GetProperty(sortBy) == null)
+                throw new ArgumentException(Resources.PropertyDoesNotExist);
+
+            var result = await _bonusRepository.GetBonusStatisticAsync(bonusFilter, cancellationToken);
+            return _mapper.Map<List<BonusStatisticDto>>(result);
+        }
     }
 }

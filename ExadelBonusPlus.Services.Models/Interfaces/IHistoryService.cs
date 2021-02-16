@@ -15,6 +15,6 @@ namespace ExadelBonusPlus.Services.Models
         Task<IEnumerable<BonusHistoryDto>> GetBonusHistoryByUsageDate(Guid vendorId ,DateTime usageDateStart, DateTime usegeDateEnd, CancellationToken cancellationToken = default);
         Task<IEnumerable<UserHistoryDto>> GetUserAllHistory(Guid userId, CancellationToken cancellationToken = default);
         Task<IEnumerable<BonusHistoryDto>> GetBonusAllHistory(Guid bonusId, CancellationToken cancellationToken = default);
-
+        Task<int> GetCountHistoryByBonusIdAsync(Guid bonusId, CancellationToken cancellationToken = default);
     }
 }

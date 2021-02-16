@@ -89,5 +89,10 @@ namespace ExadelBonusPlus.Services
             return !(history is null) ? _mapper.Map<List<BonusHistoryDto>>(history) : throw new ArgumentNullException("", Resources.FindError);
 
         }
+
+        public async Task<int> GetCountHistoryByBonusIdAsync(Guid bonusId, CancellationToken cancellationToken = default)
+        {
+            return await _historyRepository.GetCountHistoryByBonusIdAsync(bonusId, cancellationToken);
+        }
     }
 }
