@@ -46,7 +46,7 @@ namespace ExadelBonusPlus.Services.Models
             CreateMap<AddVendorDto, Vendor>()
                 .AfterMap((src, dest) => dest.Id = Guid.NewGuid());
 
-            
+
         }
     }
 }
