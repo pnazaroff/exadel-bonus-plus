@@ -9,6 +9,5 @@ namespace ExadelBonusPlus.Services.Models
         public BonusDto BonusDto { get; set; }
         public DateTime UsageDate { get; set; }
         public int Rating { get; set; }
-
     }
 }
