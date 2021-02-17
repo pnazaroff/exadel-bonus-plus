@@ -96,5 +96,19 @@ namespace ExadelBonusPlus.Services
         {
             return await _historyRepository.GetCountHistoryByBonusIdAsync(bonusId, cancellationToken);
         }
+
+        public async Task<UserHistoryDto> EstimateBonus(Guid historyId, int estimate, CancellationToken cancellationToken = default)
+        {
+            var history =  await _historyRepository.GetByIdAsync(historyId, cancellationToken);
+            if (history is null)
+            {
+                throw new ArgumentNullException("", Resources.IdentifierIsNull);
+            }
+            history.Rating = estimate;
+            await _historyRepository.UpdateAsync(historyId, history, cancellationToken);
+            return _mapper.Map<UserHistoryDto>(history);
+        }
+
+
     }
 }
