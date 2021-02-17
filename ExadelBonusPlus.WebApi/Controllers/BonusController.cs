@@ -7,6 +7,7 @@ using ExadelBonusPlus.Services.Models;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ExadelBonusPlus.WebApi
 {
@@ -15,7 +16,6 @@ namespace ExadelBonusPlus.WebApi
     [ValidationFilter]
     [ExceptionFilter]
     [HttpModelResultFilter]
-    
     public class BonusController : ControllerBase
     {
         private readonly ILogger<BonusController> _logger;
@@ -36,18 +36,9 @@ namespace ExadelBonusPlus.WebApi
         }
 
         [HttpGet]
-        [SwaggerResponse((int)HttpStatusCode.OK, Description = "All bonus", Type = typeof(ResultDto<List<BonusDto>>))]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Bonus with filters and sorting", Type = typeof(ResultDto<List<BonusDto>>))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<ResultDto<IEnumerable<BonusDto>>>> FindAllBonusesAsync()
-        {
-            return Ok(await _BonusService.FindAllBonusesAsync());
-        }
-
-        [HttpPost]
-        [Route("find")]
-        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Bonus with filters ond sorting", Type = typeof(ResultDto<List<BonusDto>>))]
-        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<ResultDto<IEnumerable<BonusDto>>>> FindBonusesAsync([FromBody] BonusFilter bonusFilter)
+        public async Task<ActionResult<ResultDto<IEnumerable<BonusDto>>>> FindBonusesAsync([FromQuery] BonusFilter bonusFilter)
         {
             return Ok(await _BonusService.FindBonusesAsync(bonusFilter));
         }
@@ -65,7 +56,7 @@ namespace ExadelBonusPlus.WebApi
         [Route("{id}")]
         [SwaggerResponse((int)HttpStatusCode.OK, Description = "Bonus updated ", Type = typeof(ResultDto<BonusDto>))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<ResultDto<BonusDto>>> UpdateBonusAsync([FromRoute][Required] Guid id, [FromBody][Required] BonusDto Bonus)
+        public async Task<ActionResult<ResultDto<BonusDto>>> UpdateBonusAsync([FromRoute][Required] Guid id, [FromBody][Required] UpdateBonusDto Bonus)
         {
             return Ok(await _BonusService.UpdateBonusAsync(id, Bonus));
         }
@@ -101,10 +92,27 @@ namespace ExadelBonusPlus.WebApi
         [Route("tags")]
         [SwaggerResponse((int)HttpStatusCode.OK, Description = "Tags", Type = typeof(List<string>))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<ResultDto<List<String>>>> BonusTagsAync()
+        public async Task<ActionResult<ResultDto<List<String>>>> GetBonusTagsAync()
         {
             return Ok(await _BonusService.GetBonusTagsAsync());
         }
 
+        [HttpGet]
+        [Route("cities")]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Cities", Type = typeof(List<string>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<ResultDto<List<String>>>> GetCitiesAync()
+        {
+            return Ok(await _BonusService.GetCitiesAsync());
+        }
+
+        [HttpGet]
+        [Route("statistic")]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Bonus statistic with filters and sorting", Type = typeof(ResultDto<List<BonusStatisticDto>>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<ResultDto<IEnumerable<BonusDto>>>> GetBonusStatisticAsync([FromQuery] BonusFilter bonusFilter)
+        {
+            return Ok(await _BonusService.GetBonusStatisticAsync(bonusFilter));
+        }
     }
 }

@@ -68,7 +68,17 @@ namespace ExadelBonusPlus.Services.Properties {
                 return ResourceManager.GetString("DeleteError", resourceCulture);
             }
         }
-        
+        /// <summary>
+        /// Looks up a localized string similar to Validation model error
+        /// </summary>
+        internal static string ValidationError
+        {
+            get
+            {
+                return ResourceManager.GetString("ValidationError", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Model does not find by id.
         /// </summary>

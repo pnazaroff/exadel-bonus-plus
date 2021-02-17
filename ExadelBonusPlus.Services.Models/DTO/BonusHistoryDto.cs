@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ExadelBonusPlus.Services.Models.DTO
+namespace ExadelBonusPlus.Services.Models
 {
     public class BonusHistoryDto
     {

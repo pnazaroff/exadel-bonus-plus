@@ -1,6 +1,4 @@
-﻿using ExadelBonusPlus.Services.Models;
-using ExadelBonusPlus.Services.Models.DTO;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,6 +17,6 @@ namespace ExadelBonusPlus.Services.Models
 
         Task<VendorDto> DeleteVendorAsync(Guid id, CancellationToken cancellationToken=default);
 
-        Task<IEnumerable<Vendor>> SearchVendorByLocationAsync(string city, CancellationToken cancellationToken=default);
+        Task<List<VendorDto>> SearchVendorByNameAsync(string name, CancellationToken cancellationToken=default);
     }
 }

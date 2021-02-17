@@ -1,6 +1,5 @@
 ﻿using System;
 using AutoMapper;
-using ExadelBonusPlus.Services.Models.DTO;
 
 namespace ExadelBonusPlus.Services.Models
 {
@@ -8,9 +7,26 @@ namespace ExadelBonusPlus.Services.Models
     {
         public MapperProfile()
         {
-            CreateMap<BonusDto, Bonus>().ReverseMap();
+            CreateMap<Bonus, BonusDto>()
+                .ForMember(dest => dest.Company,
+                    opt =>
+                    {
+                        opt.MapFrom<BonusResolver>();
+                    })
+                .ReverseMap();
             CreateMap<AddBonusDto, Bonus>().AfterMap((src, dest) => dest.Id = Guid.NewGuid());
-           
+            CreateMap<UpdateBonusDto, Bonus>().ReverseMap();
+            CreateMap<UpdateBonusDto, BonusDto>().ReverseMap();
+            CreateMap<Bonus, BonusStatisticDto>().ForMember(dest => dest.CompanyName,
+                opt =>
+                {
+                    opt.MapFrom<BonusStatisticCompanyNameResolver>();
+                }).ForMember(dest => dest.Visits,
+                opt =>
+                {
+                    opt.MapFrom<BonusStatisticVisitsResolver>();
+                });
+
             //Only for tests
             CreateMap<BonusDto, AddBonusDto>();
             CreateMap<UserInfoDTO, ApplicationUser>();
@@ -40,6 +56,7 @@ namespace ExadelBonusPlus.Services.Models
             CreateMap<Location, LocationDto>().ReverseMap();
             CreateMap<AddVendorDto, Vendor>()
                 .AfterMap((src, dest) => dest.Id = Guid.NewGuid());
+
         }
     }
 }

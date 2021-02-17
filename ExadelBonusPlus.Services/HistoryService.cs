@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using ExadelBonusPlus.Services.Models;
-using ExadelBonusPlus.Services.Models.DTO;
 using ExadelBonusPlus.Services.Properties;
 
 namespace ExadelBonusPlus.Services
@@ -91,6 +90,11 @@ namespace ExadelBonusPlus.Services
             var history = await _historyRepository.GetBonusHistory(bonusId, cancellationToken);
             return !(history is null) ? _mapper.Map<List<BonusHistoryDto>>(history) : throw new ArgumentNullException("", Resources.FindError);
 
+        }
+
+        public async Task<int> GetCountHistoryByBonusIdAsync(Guid bonusId, CancellationToken cancellationToken = default)
+        {
+            return await _historyRepository.GetCountHistoryByBonusIdAsync(bonusId, cancellationToken);
         }
     }
 }
