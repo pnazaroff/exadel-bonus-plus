@@ -96,50 +96,6 @@ namespace ExadelBonusPlus.Services.Tests
             }
         }
 
-
-        //[Fact]
-        //public void AddVendorAsync_ShouldSaveVendorToDb()
-        //{
-        //    using (var mock = AutoMock
-        //        .GetLoose(cfg => cfg.RegisterInstance(_mapper).As<IMapper>()))
-        //    {
-        //        mock = AutoMock.GetLoose(cfg => cfg.RegisterInstance(_addVendorDtoValidator).As<IValidator<AddVendorDto>>());
-        //        Vendor vendorInstance = _mapper
-        //            .Map<Vendor>(_fakeVendorDtos.Result.First());
-
-        //        AddVendorDto addVendorDtoInstance = new AddVendorDto()
-        //        {
-        //            Name = vendorInstance.Name,
-        //            Email = vendorInstance.Email
-        //        };
-
-        //        VendorDto vendorDtoInstance = _mapper
-        //            .Map<VendorDto>(vendorInstance);
-
-        //        mock.Mock<IVendorRepository>()
-        //            .Setup(x => x.AddAsync(vendorInstance, default))
-        //            .Returns(Task.FromResult(vendorDtoInstance));
-
-
-        //        mock.Mock<IValidator<AddVendorDto>>()
-        //            .Setup(x => x.Validate(addVendorDtoInstance));
-
-        //        var serviceInstance = mock.Create<VendorService>();
-
-        //        var expected = vendorDtoInstance;
-        //        var actual = serviceInstance
-        //            .AddVendorAsync(addVendorDtoInstance, default).Result;
-
-
-        //        mock.Mock<IVendorRepository>()
-        //            .Verify(v => v.AddAsync(vendorInstance, default),
-        //                                Times.Exactly(1));
-        //        Xunit.Assert.NotNull(actual);
-        //        Xunit.Assert.Equal(expected.Name, actual.Name);
-        //    }
-        //}
-
-
         /// <summary>
         /// Generates realistic fake data
         /// </summary>
