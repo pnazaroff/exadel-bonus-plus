@@ -242,16 +242,16 @@ namespace ExadelBonusPlus.Services.Tests
 
         protected void ConfigureServices(IServiceCollection services)
         {
-            var myProfile = new MapperProfile();
-            var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-            var _mapper = new Mapper(configuration);
+            //var myProfile = new MapperProfile();
+            //var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
+            //var _mapper = new Mapper(configuration);
 
-            var _vendorRep = new Mock<IVendorRepository>();
-            _vendorRep.Setup(s => s.GetByIdAsync(It.IsAny<Guid>(), default(CancellationToken))).ReturnsAsync(_mapper.Map<Vendor>(new Vendor()));
-            var _mockVendorRep = _vendorRep.Object;
+            //var _vendorRep = new Mock<IVendorRepository>();
+            //_vendorRep.Setup(s => s.GetByIdAsync(It.IsAny<Guid>(), default(CancellationToken))).ReturnsAsync(_mapper.Map<Vendor>(new Vendor()));
+            //var _mockVendorRep = _vendorRep.Object;
 
-            var _vendorService = new VendorService(_mockVendorRep, _mapper);
-            services.AddSingleton<IVendorService>(_vendorService);
+            //var _vendorService = new VendorService(_mockVendorRep, _mapper);
+            //services.AddSingleton<IVendorService>(_vendorService);
         }
     }
 }

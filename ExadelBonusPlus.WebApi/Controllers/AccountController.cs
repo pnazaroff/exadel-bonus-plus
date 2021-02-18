@@ -5,7 +5,6 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using ExadelBonusPlus.Services;
 using ExadelBonusPlus.Services.Models;
-using ExadelBonusPlus.Services.Models.DTO;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
