@@ -32,9 +32,8 @@ namespace ExadelBonusPlus.Services.Models
         {
             try
             {
-                return _mapper.Map<UserInfoHistoryDto>(_userManager.FindByIdAsync(source.CreatorId.ToString()).GetAwaiter()
-                    .GetResult());
-            }
+                return _mapper.Map<UserInfoHistoryDto>(_userManager.FindByIdAsync(source.CreatorId.ToString())
+                                                                        .GetAwaiter().GetResult()); }
             catch
             {
                 return new UserInfoHistoryDto();
@@ -46,8 +45,8 @@ namespace ExadelBonusPlus.Services.Models
         {
             try
             {
-               return _mapper.Map<UserInfoHistoryDto>(_userManager.FindByIdAsync(source.CreatorId.ToString()).GetAwaiter()
-                    .GetResult());
+                return _mapper.Map<UserInfoHistoryDto>(_userManager.FindByIdAsync(source.CreatorId.ToString())
+                                                                        .GetAwaiter().GetResult());
             }
             catch
             {
