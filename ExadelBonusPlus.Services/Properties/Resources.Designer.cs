@@ -104,35 +104,22 @@ namespace ExadelBonusPlus.Services.Properties {
                 return ResourceManager.GetString("ModelIsNull", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Property of sorting does not exist.
         /// </summary>
-        internal static string PropertyDoesNotExist
-        {
-            get { return ResourceManager.GetString("PropertyDoesNotExist", resourceCulture); }
-        }
-
-        internal static string UserInRole
-        {
-            get
-            {
-                return ResourceManager.GetString("Current user in chosen role", resourceCulture);
+        internal static string PropertyDoesNotExist {
+            get {
+                return ResourceManager.GetString("PropertyDoesNotExist", resourceCulture);
             }
         }
-
-        internal static string CreateError
-        {
-            get
-            {
-                return ResourceManager.GetString("Create error", resourceCulture);
-            }
-        }
-        internal static string LoginFailed
-        {
-            get
-            {
-                return ResourceManager.GetString("Login failed", resourceCulture);
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vendor does not finded by ID.
+        /// </summary>
+        internal static string VendorFindbyIdError {
+            get {
+                return ResourceManager.GetString("VendorFindbyIdError", resourceCulture);
             }
         }
     }

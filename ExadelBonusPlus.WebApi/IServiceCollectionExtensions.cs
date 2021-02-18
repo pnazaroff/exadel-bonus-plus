@@ -23,7 +23,7 @@ namespace ExadelBonusPlus.WebApi
             
 
             services.AddTransient<IValidator<AddBonusDto>, AddBonusDtoValidator>();
-            services.AddTransient<IValidator<BonusDto>, BonusDtoValidator>();
+            services.AddTransient<IValidator<UpdateBonusDto>, UpdateBonusDtoValidator>();
 
 
 
