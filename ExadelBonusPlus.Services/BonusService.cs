@@ -88,7 +88,7 @@ namespace ExadelBonusPlus.Services
 
             await _bonusRepository.UpdateAsync(id, bonus, cancellationToken);
 
-            return _mapper.Map<BonusDto>(model); ;
+            return _mapper.Map<BonusDto>(bonus); ;
         }
 
         public async Task<BonusDto> DeleteBonusAsync(Guid id, CancellationToken cancellationToken)

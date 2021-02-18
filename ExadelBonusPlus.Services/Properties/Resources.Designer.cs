@@ -61,6 +61,15 @@ namespace ExadelBonusPlus.Services.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Create error.
+        /// </summary>
+        internal static string CreateError {
+            get {
+                return ResourceManager.GetString("CreateError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete model error.
         /// </summary>
         internal static string DeleteError {
@@ -68,17 +77,7 @@ namespace ExadelBonusPlus.Services.Properties {
                 return ResourceManager.GetString("DeleteError", resourceCulture);
             }
         }
-        /// <summary>
-        /// Looks up a localized string similar to Validation model error
-        /// </summary>
-        internal static string ValidationError
-        {
-            get
-            {
-                return ResourceManager.GetString("ValidationError", resourceCulture);
-            }
-        }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Model does not find by id.
         /// </summary>
@@ -107,6 +106,15 @@ namespace ExadelBonusPlus.Services.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Login failed.
+        /// </summary>
+        internal static string LoginFailed {
+            get {
+                return ResourceManager.GetString("LoginFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Model can&apos;t be null.
         /// </summary>
         internal static string ModelIsNull {
@@ -125,7 +133,25 @@ namespace ExadelBonusPlus.Services.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Vendor does not finded by ID.
+        ///   Looks up a localized string similar to Current user in chosen role.
+        /// </summary>
+        internal static string UserInRole {
+            get {
+                return ResourceManager.GetString("UserInRole", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Validation error.
+        /// </summary>
+        internal static string ValidationError {
+            get {
+                return ResourceManager.GetString("ValidationError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vendor not found by ID.
         /// </summary>
         internal static string VendorFindbyIdError {
             get {

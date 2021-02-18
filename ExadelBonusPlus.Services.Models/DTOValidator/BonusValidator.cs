@@ -23,7 +23,6 @@ namespace ExadelBonusPlus.Services.Models
         public UpdateBonusDtoValidator()
         {
             RuleFor(x => x).NotNull();
-            RuleFor(x => x.Id).NotEmpty();
             RuleFor(x => x.Title).Length(1, 9999);
             RuleFor(x => x.Description).NotEmpty();
             RuleFor(x => x.DateStart).NotNull();
