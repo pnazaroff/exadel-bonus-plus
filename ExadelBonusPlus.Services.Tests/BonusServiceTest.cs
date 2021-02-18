@@ -6,15 +6,11 @@ using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extras.Moq;
 using AutoMapper;
-using ExadelBonusPlus.DataAccess;
 using ExadelBonusPlus.Services.Models;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using SampleDataGenerator;
 using Xunit;
-using Xunit.Abstractions;
-using Xunit.DependencyInjection;
 using Assert = Xunit.Assert;
 
 namespace ExadelBonusPlus.Services.Tests
@@ -151,19 +147,6 @@ namespace ExadelBonusPlus.Services.Tests
 
         private void CreateDefaultBonusServiceInstance()
         {
-            var myProfile = new MapperProfile();
-            var serviceCollectionFake = new Mock<IServiceCollection>(MockBehavior.Loose);
-            serviceCollectionFake.Object.AddScoped<IVendorService, VendorService>();
-            serviceCollectionFake.Object.AddScoped<IVendorRepository, VendorRepository>();
-
-            var serviceProviderFake = new Mock<IServiceProvider>(MockBehavior.Loose);
-            serviceProviderFake.Object.GetService(typeof(IVendorService));
-
-
-            _mapper = new MapperConfiguration(cfg => cfg.AddProfile(myProfile)).CreateMapper(serviceCollectionFake.Object.BuildServiceProvider().GetService);
-            //var mapperConfiguration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-            //_mapper = new Mapper(mapperConfiguration);
-
             var bonusGenerator = Generator
                     .For<BonusDto>()
                     .For(x => x.Id)
@@ -187,6 +170,15 @@ namespace ExadelBonusPlus.Services.Tests
             var historyService = new Mock<IHistoryService>();
             historyService.Setup(x => x.GetCountHistoryByBonusIdAsync(It.IsAny<Guid>(), default(CancellationToken))).ReturnsAsync(It.IsAny<int>());
 
+            IServiceCollection services = new ServiceCollection();
+            services.AddTransient<IVendorService>(sp => vendorService.Object);
+            services.AddTransient<IHistoryService>(sp => historyService.Object);
+
+            services.AddAutoMapper(typeof(MapperProfile));
+
+            IServiceProvider serviceProvider = services.BuildServiceProvider();
+            _mapper = serviceProvider.GetService<IMapper>();
+
             var mock = AutoMock.GetLoose(cfg =>
             {
                 cfg.RegisterInstance(_mapper).As<IMapper>();
@@ -206,52 +198,8 @@ namespace ExadelBonusPlus.Services.Tests
             _fakeBonuseDtos[0].Rating = 3.00;
             _bonusRep.Setup(s => s.UpdateBonusRatingAsync(It.IsAny<Guid>(), It.IsAny<double>(), default(CancellationToken))).ReturnsAsync(_mapper.Map<Bonus>(_fakeBonuseDtos[0]));
             _bonusRep.Setup(s => s.GetBonusTagsAsync(default(CancellationToken))).ReturnsAsync(new List<string>(){"Pizza","Coffee"});
-
-            //_mockBonusRep = _bonusRep.Object;
-
-            mock.Mock<IVendorService>()
-                .Setup(x => x.GetVendorByIdAsync(It.IsAny<Guid>(), default(CancellationToken))).ReturnsAsync(new VendorDto());
-            mock.Mock<IHistoryService>()
-                .Setup(x => x.GetCountHistoryByBonusIdAsync(It.IsAny<Guid>(), default(CancellationToken))).ReturnsAsync(It.IsAny<int>());
             
             _bonusService = mock.Create<BonusService>();
-
-            
-            //_vendorRep.Setup(s => s.GetByIdAsync(It.IsAny<Guid>(), default(CancellationToken))).ReturnsAsync(_mapper.Map<Vendor>(new Vendor()));
-            //_mockVendorRep = _vendorRep.Object;
-            //_vendorService = new VendorService(_mockVendorRep, _mapper);
-
-            //var bonusResolver = new BonusResolver(_vendorService, _mapper);
-
-            //var services = new ServiceCollection();
-            //services.AddSingleton<BonusResolver>(bonusResolver);
-
-            //var startup = new TestingStartup(default);
-            //startup.ConfigureServices(services);
-            //var provider = services.BuildServiceProvider();
-        }
-    }
-
-    public partial class Startup
-    {
-        public Startup()
-        {
-            
-
-        }
-
-        protected void ConfigureServices(IServiceCollection services)
-        {
-            //var myProfile = new MapperProfile();
-            //var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-            //var _mapper = new Mapper(configuration);
-
-            //var _vendorRep = new Mock<IVendorRepository>();
-            //_vendorRep.Setup(s => s.GetByIdAsync(It.IsAny<Guid>(), default(CancellationToken))).ReturnsAsync(_mapper.Map<Vendor>(new Vendor()));
-            //var _mockVendorRep = _vendorRep.Object;
-
-            //var _vendorService = new VendorService(_mockVendorRep, _mapper);
-            //services.AddSingleton<IVendorService>(_vendorService);
         }
     }
 }

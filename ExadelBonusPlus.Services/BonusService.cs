@@ -29,22 +29,24 @@ namespace ExadelBonusPlus.Services
                 throw new ArgumentNullException("", Resources.ModelIsNull);
             }
 
-            VendorDto vendor = new VendorDto();
+            VendorDto vendorDto = null;
             try
             {
-                vendor = await _vendorService.GetVendorByIdAsync(model.CompanyId);
+                vendorDto = await _vendorService.GetVendorByIdAsync(model.CompanyId);
             }
             catch
+            {
+                throw new ArgumentException(Resources.VendorFindbyIdError);
+            }
+            if (vendorDto == null)
             {
                 throw new ArgumentException(Resources.VendorFindbyIdError);
             }
 
             var bonus = _mapper.Map<Bonus>(model);
             bonus.SetInitialValues();
-            if (vendor != null)
-            {
-                await _bonusRepository.AddAsync(bonus, cancellationToken);
-            }
+            
+            await _bonusRepository.AddAsync(bonus, cancellationToken);
             return _mapper.Map<BonusDto>(bonus);
         }
 

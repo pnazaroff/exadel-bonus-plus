@@ -148,6 +148,6 @@
     <value>Validation error</value>
   </data>
   <data name="VendorFindbyIdError" xml:space="preserve">
-    <value>Vendor not found by ID</value>
+    <value>Company not found by ID</value>
   </data>
 </root>

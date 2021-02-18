@@ -151,7 +151,7 @@ namespace ExadelBonusPlus.Services.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Vendor not found by ID.
+        ///   Looks up a localized string similar to Company not found by ID.
         /// </summary>
         internal static string VendorFindbyIdError {
             get {
