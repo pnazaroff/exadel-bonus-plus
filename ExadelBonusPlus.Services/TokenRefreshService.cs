@@ -40,12 +40,7 @@ namespace ExadelBonusPlus.Services
         {
             return await _tokenRefreshRepository.GetRefreshTokenByToken(token);
         }
-
-        public async Task<IEnumerable<TokenRefresh>> GetRefreshTokenByUserId(Guid id)
-        {
-            return await _tokenRefreshRepository.GetRefreshTokenByUserId(id);
-        }
-
+        
         public async Task<TokenRefresh> UpdateRefreshToken(string ipAddress, TokenRefresh oldTokenRefresh)
         {
             using (var rngCryptoServiceProvider = new RNGCryptoServiceProvider())

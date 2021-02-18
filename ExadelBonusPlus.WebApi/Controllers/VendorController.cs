@@ -21,10 +21,9 @@ namespace ExadelBonusPlus.WebApi.Controllers
         public VendorController(IVendorService vendorService, IMapper mapper)
         {
             _vendorService = vendorService;
-            _mapper = mapper;
         }
         [HttpGet]
-        [SwaggerResponse((int)HttpStatusCode.OK, Description = "All Vendors", Type = typeof(ResultDto<List<BonusDto>>))]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "All Vendors", Type = typeof(ResultDto<List<VendorDto>>))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<ResultDto<IEnumerable<VendorDto>>>> GetVendors(CancellationToken cancellationToken)
         {
@@ -65,21 +64,13 @@ namespace ExadelBonusPlus.WebApi.Controllers
             return Ok(await _vendorService.DeleteVendorAsync(id, cancellationToken));
         }
 
-        [HttpGet("{city}")]
-        public async Task<ActionResult<VendorDto>> GetVendorByCity(string city, CancellationToken cancellationToken)
+        [HttpGet]
+        [Route("{name}")]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Vendors Retrieved ", Type = typeof(ResultDto<IEnumerable<VendorDto>>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<ResultDto<IEnumerable<VendorDto>>>> GetVendorByName([FromRoute]string name, CancellationToken cancellationToken)
         {
-            var vendor = await _vendorService.SearchVendorByLocationAsync(city, cancellationToken);
-
-            if (vendor == null)
-            {
-                return NotFound();
-            }
-            var vendorDto = _mapper.Map<IEnumerable<Vendor>, IEnumerable<VendorDto>>(vendor);
-
-            return Ok(vendorDto);
+            return Ok(await _vendorService.SearchVendorByNameAsync(name, cancellationToken));
         }
-
-
-
     }
 }

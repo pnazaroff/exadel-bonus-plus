@@ -162,10 +162,6 @@ namespace ExadelBonusPlus.Services
             {
                 throw new ArgumentException("", Resources.FindbyIdError);
             }
-            if (!(await _userManager.IsInRoleAsync(user, roleName)))
-            {
-                throw new ArgumentException("", Resources.UserInRole);
-            }
             var result = await _userManager.RemoveFromRoleAsync(user, roleName);
             return result is null ? throw new ArgumentException("", Resources.DeleteError) : _mapper.Map<UserInfoDTO>(user);
         }
@@ -173,7 +169,7 @@ namespace ExadelBonusPlus.Services
         {
             var tokens = await _tokenRefreshService.GetRefreshTokenByToken(refreshToken);
 
-            var token = tokens.First(t => t.IsActive == true);
+            var token = tokens.Where(i=>i.CreatedByIp == ipAddress).FirstOrDefault(t => t.IsActive == true);
             if (!(token is null))
             {
                 var newRefreshToken = await _tokenRefreshService.UpdateRefreshToken(ipAddress, token);
