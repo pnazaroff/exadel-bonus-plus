@@ -165,6 +165,8 @@ namespace ExadelBonusPlus.Services.Tests
             _bonusRepo.Setup(x =>
                     x.UpdateBonusRatingAsync(It.IsAny<Guid>(), It.IsAny<double>(), default(CancellationToken)))
                 .ReturnsAsync(new Bonus());
+            _bonusRepo.Setup(x => x.GetByIdAsync(It.IsAny<Guid>(), default(CancellationToken)))
+                .ReturnsAsync(new Bonus());
 
 
 
@@ -174,25 +176,5 @@ namespace ExadelBonusPlus.Services.Tests
             _historyService = new HistoryService(_mockhistoryRepository, _mockBonusRepository, _mapper);
         }
     }
-    //public partial class Startup
-    //{
-    //    public Startup()
-    //    {
-    //        var a = 1;
-    //    }
-
-    //    protected void ConfigureServices(IServiceCollection services)
-    //    {
-    //        var myProfile = new MapperProfile();
-    //        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-    //        var _mapper = new Mapper(configuration);
-
-    //        var _vendorRep = new Mock<IVendorRepository>();
-    //        _vendorRep.Setup(s => s.GetByIdAsync(It.IsAny<Guid>(), default(CancellationToken))).ReturnsAsync(_mapper.Map<Vendor>(new Vendor()));
-    //        var _mockVendorRep = _vendorRep.Object;
-
-    //        var _vendorService = new VendorService(_mockVendorRep, _mapper);
-    //        services.AddSingleton<IVendorService>(_vendorService);
-    //    }
-    //}
+   
 }
