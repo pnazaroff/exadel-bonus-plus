@@ -148,14 +148,6 @@ namespace ExadelBonusPlus.Services.Properties {
                 return ResourceManager.GetString("Current user in chosen role", resourceCulture);
             }
         }
-
-        public static string CreateError
-        {
-            get
-            {
-                return ResourceManager.GetString("Create error", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   Looks up a localized string similar to Company not found by ID.

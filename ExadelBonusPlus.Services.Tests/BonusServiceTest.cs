@@ -169,10 +169,12 @@ namespace ExadelBonusPlus.Services.Tests
             vendorService.Setup(x => x.GetVendorByIdAsync(It.IsAny<Guid>(), default(CancellationToken))).ReturnsAsync(new VendorDto());
             var historyService = new Mock<IHistoryService>();
             historyService.Setup(x => x.GetCountHistoryByBonusIdAsync(It.IsAny<Guid>(), default(CancellationToken))).ReturnsAsync(It.IsAny<int>());
+            var bonusService = new Mock<IBonusService>();
 
             IServiceCollection services = new ServiceCollection();
             services.AddTransient<IVendorService>(sp => vendorService.Object);
             services.AddTransient<IHistoryService>(sp => historyService.Object);
+            services.AddTransient<IBonusService>(sp => bonusService.Object);
 
             services.AddAutoMapper(typeof(MapperProfile));
 
