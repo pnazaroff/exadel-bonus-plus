@@ -13,11 +13,13 @@ namespace ExadelBonusPlus.Services
     public class BonusService : IBonusService
     {
         private readonly IBonusRepository _bonusRepository;
+        private readonly IVendorService _vendorService;
         private readonly IMapper _mapper;
-        public BonusService(IBonusRepository bonusRepository, IMapper mapper)
+        public BonusService(IBonusRepository bonusRepository, IMapper mapper, IVendorService vendorService)
         {
             _bonusRepository = bonusRepository;
             _mapper = mapper;
+            _vendorService = vendorService;
         }
 
         public async Task<BonusDto> AddBonusAsync(AddBonusDto model, CancellationToken cancellationToken = default)
@@ -26,8 +28,24 @@ namespace ExadelBonusPlus.Services
             {
                 throw new ArgumentNullException("", Resources.ModelIsNull);
             }
+
+            VendorDto vendorDto = null;
+            try
+            {
+                vendorDto = await _vendorService.GetVendorByIdAsync(model.CompanyId);
+            }
+            catch
+            {
+                throw new ArgumentException(Resources.VendorFindbyIdError);
+            }
+            if (vendorDto == null)
+            {
+                throw new ArgumentException(Resources.VendorFindbyIdError);
+            }
+
             var bonus = _mapper.Map<Bonus>(model);
             bonus.SetInitialValues();
+            
             await _bonusRepository.AddAsync(bonus, cancellationToken);
             return _mapper.Map<BonusDto>(bonus);
         }
@@ -72,7 +90,7 @@ namespace ExadelBonusPlus.Services
 
             await _bonusRepository.UpdateAsync(id, bonus, cancellationToken);
 
-            return _mapper.Map<BonusDto>(model); ;
+            return _mapper.Map<BonusDto>(bonus); ;
         }
 
         public async Task<BonusDto> DeleteBonusAsync(Guid id, CancellationToken cancellationToken)

@@ -13,9 +13,6 @@ namespace ExadelBonusPlus.WebApi
 {
     [ApiController]
     [Route("api/[controller]/")]
-    [ValidationFilter]
-    [ExceptionFilter]
-    [HttpModelResultFilter]
     public class BonusController : ControllerBase
     {
         private readonly ILogger<BonusController> _logger;
@@ -90,7 +87,7 @@ namespace ExadelBonusPlus.WebApi
 
         [HttpGet]
         [Route("tags")]
-        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Tags", Type = typeof(List<string>))]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Tags", Type = typeof(ResultDto<List<string>>))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<ResultDto<List<String>>>> GetBonusTagsAync()
         {
@@ -99,7 +96,7 @@ namespace ExadelBonusPlus.WebApi
 
         [HttpGet]
         [Route("cities")]
-        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Cities", Type = typeof(List<string>))]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Cities", Type = typeof(ResultDto<List<string>>))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<ResultDto<List<String>>>> GetCitiesAync()
         {

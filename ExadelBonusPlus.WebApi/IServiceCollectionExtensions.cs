@@ -21,7 +21,10 @@ namespace ExadelBonusPlus.WebApi
             services.AddTransient<IBonusService, BonusService>();
 
             services.AddTransient<IValidator<AddBonusDto>, AddBonusDtoValidator>();
-            services.AddTransient<IValidator<BonusDto>, BonusDtoValidator>();
+            services.AddTransient<IValidator<UpdateBonusDto>, UpdateBonusDtoValidator>();
+
+
+
         }
 
         public static void AddHistoryTransient(this IServiceCollection services)

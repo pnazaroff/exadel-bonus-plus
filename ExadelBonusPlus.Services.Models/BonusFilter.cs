@@ -12,7 +12,9 @@ namespace ExadelBonusPlus.Services.Models
         public DateTime DateStart { get; set; }
         public DateTime DateEnd { get; set; }
         public string Title { get; set; }
+        public string Type { get; set; }
         public string City { get; set; }
+        public Guid CompanyId { get; set; }
         public int LastCount { get; set; }
         public string SortBy { get; set; }
     }

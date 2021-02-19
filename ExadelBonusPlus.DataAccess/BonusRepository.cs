@@ -24,34 +24,44 @@ namespace ExadelBonusPlus.DataAccess
 
             if(bonusFilter?.IsActive != null)
             {
-                filter = filter & Builders<Bonus>.Filter.Eq(new ExpressionFieldDefinition<Bonus, bool>(x => x.IsActive),
+                filter &= Builders<Bonus>.Filter.Eq(new ExpressionFieldDefinition<Bonus, bool>(x => x.IsActive),
                     (bool)bonusFilter?.IsActive);
             }
 
             if (!String.IsNullOrEmpty(bonusFilter?.Title))
             {
-                filter = filter & Builders<Bonus>.Filter.Regex(new ExpressionFieldDefinition<Bonus, string>(x => x.Title), new BsonRegularExpression(bonusFilter?.Title));
+                filter &= Builders<Bonus>.Filter.Regex(new ExpressionFieldDefinition<Bonus, string>(x => x.Title), new BsonRegularExpression(bonusFilter?.Title));
+            }
+
+            if (!String.IsNullOrEmpty(bonusFilter?.Type))
+            {
+                filter &= Builders<Bonus>.Filter.Eq(x => x.Type, bonusFilter.Type);
             }
 
             if (!String.IsNullOrEmpty(bonusFilter?.City))
             {
-                filter = filter & Builders<Bonus>.Filter.ElemMatch(x => x.Locations, y => y.City == bonusFilter.City);
+                filter &= Builders<Bonus>.Filter.ElemMatch(x => x.Locations, y => y.City == bonusFilter.City);
+            }
+
+            if (bonusFilter?.CompanyId != null & bonusFilter?.CompanyId != Guid.Empty)
+            {
+                filter &= Builders<Bonus>.Filter.Eq(x => x.CompanyId, bonusFilter.CompanyId);
             }
 
             if (bonusFilter?.Tags != null && bonusFilter?.Tags.Count > 0)
             {
-                filter = filter & Builders<Bonus>.Filter.AnyIn(b => b.Tags, bonusFilter?.Tags);
+                filter &= Builders<Bonus>.Filter.AnyIn(b => b.Tags, bonusFilter?.Tags);
             }
 
             if (bonusFilter?.DateStart != null && bonusFilter?.DateStart != DateTime.MinValue)
             {
-                filter = filter & Builders<Bonus>.Filter.Gte(x => x.DateStart, bonusFilter?.DateStart) |
+                filter &= Builders<Bonus>.Filter.Gte(x => x.DateStart, bonusFilter?.DateStart) |
                       Builders<Bonus>.Filter.Gte(x => x.DateEnd, bonusFilter?.DateStart);
             }
 
             if (bonusFilter?.DateEnd != null && bonusFilter?.DateEnd != DateTime.MinValue)
             {
-                filter = filter & Builders<Bonus>.Filter.Lte(x => x.DateStart, bonusFilter?.DateEnd) |
+                filter &= Builders<Bonus>.Filter.Lte(x => x.DateStart, bonusFilter?.DateEnd) |
                          Builders<Bonus>.Filter.Lte(x => x.DateEnd, bonusFilter?.DateEnd);
             }
 
@@ -87,7 +97,8 @@ namespace ExadelBonusPlus.DataAccess
 
         public async Task<IEnumerable<string>> GetBonusTagsAsync(CancellationToken cancellationToken)
         {
-            return await GetCollection().Distinct<string>("Tags", Builders<Bonus>.Filter.Eq(new ExpressionFieldDefinition<Bonus, bool>(x => x.IsDeleted), false)
+            FieldDefinition<Bonus, string> field = "Tags";
+            return await GetCollection().Distinct<string>(field, Builders<Bonus>.Filter.Eq(new ExpressionFieldDefinition<Bonus, bool>(x => x.IsDeleted), false)
                                                                   & Builders<Bonus>.Filter.Eq(new ExpressionFieldDefinition<Bonus, bool>(x => x.IsActive), true)).ToListAsync(cancellationToken);
         }
 
@@ -106,34 +117,44 @@ namespace ExadelBonusPlus.DataAccess
 
             if (bonusFilter?.IsActive != null)
             {
-                filter = filter & Builders<Bonus>.Filter.Eq(new ExpressionFieldDefinition<Bonus, bool>(x => x.IsActive),
+                filter &= Builders<Bonus>.Filter.Eq(new ExpressionFieldDefinition<Bonus, bool>(x => x.IsActive),
                     (bool)bonusFilter?.IsActive);
             }
 
             if (!String.IsNullOrEmpty(bonusFilter?.Title))
             {
-                filter = filter & Builders<Bonus>.Filter.Regex(new ExpressionFieldDefinition<Bonus, string>(x => x.Title), new BsonRegularExpression(bonusFilter?.Title));
+                filter &= Builders<Bonus>.Filter.Regex(new ExpressionFieldDefinition<Bonus, string>(x => x.Title), new BsonRegularExpression(bonusFilter?.Title));
+            }
+
+            if (!String.IsNullOrEmpty(bonusFilter?.Type))
+            {
+                filter &= Builders<Bonus>.Filter.Eq(x => x.Type, bonusFilter.Type);
+            }
+
+            if (bonusFilter?.CompanyId != null & bonusFilter?.CompanyId != Guid.Empty)
+            {
+                filter &= Builders<Bonus>.Filter.Eq(x => x.CompanyId, bonusFilter.CompanyId);
             }
 
             if (!String.IsNullOrEmpty(bonusFilter?.City))
             {
-                filter = filter & Builders<Bonus>.Filter.ElemMatch(x => x.Locations, y => y.City == bonusFilter.City);
+                filter &= Builders<Bonus>.Filter.ElemMatch(x => x.Locations, y => y.City == bonusFilter.City);
             }
 
             if (bonusFilter?.Tags != null && bonusFilter?.Tags.Count > 0)
             {
-                filter = filter & Builders<Bonus>.Filter.AnyIn(b => b.Tags, bonusFilter?.Tags);
+                filter &= Builders<Bonus>.Filter.AnyIn(b => b.Tags, bonusFilter?.Tags);
             }
 
             if (bonusFilter?.DateStart != null && bonusFilter?.DateStart != DateTime.MinValue)
             {
-                filter = filter & Builders<Bonus>.Filter.Gte(x => x.DateStart, bonusFilter?.DateStart) |
+                filter &= Builders<Bonus>.Filter.Gte(x => x.DateStart, bonusFilter?.DateStart) |
                       Builders<Bonus>.Filter.Gte(x => x.DateEnd, bonusFilter?.DateStart);
             }
 
             if (bonusFilter?.DateEnd != null && bonusFilter?.DateEnd != DateTime.MinValue)
             {
-                filter = filter & Builders<Bonus>.Filter.Lte(x => x.DateStart, bonusFilter?.DateEnd) |
+                filter &= Builders<Bonus>.Filter.Lte(x => x.DateStart, bonusFilter?.DateEnd) |
                          Builders<Bonus>.Filter.Lte(x => x.DateEnd, bonusFilter?.DateEnd);
             }
 

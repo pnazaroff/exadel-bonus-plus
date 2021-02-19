@@ -28,10 +28,16 @@ namespace ExadelBonusPlus.WebApi
             
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             
-            services.AddControllers()
+            services.AddControllers(options =>
+                {
+                    options.Filters.Add(typeof(ExceptionFilterAttribute));
+                    options.Filters.Add(typeof(ValidationFilterAttribute));
+                    options.Filters.Add(typeof(HttpModelResultFilterAttribute));
+                })
                 .ConfigureApiBehaviorOptions(options =>
                 {
                     options.SuppressModelStateInvalidFilter = true; //This string is needed for fluent validation in action filter
+                    
                 })
                 .AddFluentValidation();
 

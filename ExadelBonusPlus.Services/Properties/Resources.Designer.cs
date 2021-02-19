@@ -61,11 +61,30 @@ namespace ExadelBonusPlus.Services.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Create error.
+        /// </summary>
+        internal static string CreateError {
+            get {
+                return ResourceManager.GetString("CreateError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete model error.
         /// </summary>
         public static string DeleteError {
             get {
                 return ResourceManager.GetString("DeleteError", resourceCulture);
+            }
+        }
+        /// <summary>
+        /// Looks up a localized string similar to Validation model error
+        /// </summary>
+        internal static string ValidationError
+        {
+            get
+            {
+                return ResourceManager.GetString("ValidationError", resourceCulture);
             }
         }
 
@@ -97,6 +116,15 @@ namespace ExadelBonusPlus.Services.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Login failed.
+        /// </summary>
+        public static string LoginFailed {
+            get {
+                return ResourceManager.GetString("LoginFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Model can&apos;t be null.
         /// </summary>
         public static string ModelIsNull {
@@ -108,43 +136,25 @@ namespace ExadelBonusPlus.Services.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Property of sorting does not exist.
         /// </summary>
-        public static string PropertyDoesNotExist {
-            get {
-                return ResourceManager.GetString("PropertyDoesNotExist", resourceCulture);
-            }
-        }
-
-
-        public static string LoginFailed
+        public static string PropertyDoesNotExist
         {
-            get
-            {
-                return ResourceManager.GetString("LoginFailed", resourceCulture);
-            }
+            get { return ResourceManager.GetString("PropertyDoesNotExist", resourceCulture); }
         }
-
 
         public static string UserInRole
         {
             get
             {
-                return ResourceManager.GetString("UserInRole", resourceCulture);
+                return ResourceManager.GetString("Current user in chosen role", resourceCulture);
             }
         }
-
-        public static string CreateError
-        {
-            get
-            {
-                return ResourceManager.GetString("CreateError", resourceCulture);
-            }
-        }
-
-        public static string ValidationError
-        {
-            get
-            {
-                return ResourceManager.GetString("ValidationError", resourceCulture);
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Company not found by ID.
+        /// </summary>
+        public static string VendorFindbyIdError {
+            get {
+                return ResourceManager.GetString("VendorFindbyIdError", resourceCulture);
             }
         }
     }
