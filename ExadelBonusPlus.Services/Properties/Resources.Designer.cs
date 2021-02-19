@@ -22,21 +22,21 @@ namespace ExadelBonusPlus.Services.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resources() {
+        public Resources() {
         }
         
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ExadelBonusPlus.Services.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace ExadelBonusPlus.Services.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -59,7 +59,7 @@ namespace ExadelBonusPlus.Services.Properties {
                 resourceCulture = value;
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Create error.
         /// </summary>
@@ -72,43 +72,53 @@ namespace ExadelBonusPlus.Services.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Delete model error.
         /// </summary>
-        internal static string DeleteError {
+        public static string DeleteError {
             get {
                 return ResourceManager.GetString("DeleteError", resourceCulture);
             }
         }
-        
+        /// <summary>
+        /// Looks up a localized string similar to Validation model error
+        /// </summary>
+        internal static string ValidationError
+        {
+            get
+            {
+                return ResourceManager.GetString("ValidationError", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Model does not find by id.
         /// </summary>
-        internal static string FindbyIdError {
+        public static string FindbyIdError {
             get {
                 return ResourceManager.GetString("FindbyIdError", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Model(s) does not find.
         /// </summary>
-        internal static string FindError {
+        public static string FindError {
             get {
                 return ResourceManager.GetString("FindError", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to An attempt to get with a null identifier.
         /// </summary>
-        internal static string IdentifierIsNull {
+        public static string IdentifierIsNull {
             get {
                 return ResourceManager.GetString("IdentifierIsNull", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Login failed.
         /// </summary>
-        internal static string LoginFailed {
+        public static string LoginFailed {
             get {
                 return ResourceManager.GetString("LoginFailed", resourceCulture);
             }
@@ -117,7 +127,7 @@ namespace ExadelBonusPlus.Services.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Model can&apos;t be null.
         /// </summary>
-        internal static string ModelIsNull {
+        public static string ModelIsNull {
             get {
                 return ResourceManager.GetString("ModelIsNull", resourceCulture);
             }
@@ -126,34 +136,31 @@ namespace ExadelBonusPlus.Services.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Property of sorting does not exist.
         /// </summary>
-        internal static string PropertyDoesNotExist {
-            get {
-                return ResourceManager.GetString("PropertyDoesNotExist", resourceCulture);
+        public static string PropertyDoesNotExist
+        {
+            get { return ResourceManager.GetString("PropertyDoesNotExist", resourceCulture); }
+        }
+
+        public static string UserInRole
+        {
+            get
+            {
+                return ResourceManager.GetString("Current user in chosen role", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Current user in chosen role.
-        /// </summary>
-        internal static string UserInRole {
-            get {
-                return ResourceManager.GetString("UserInRole", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Validation error.
-        /// </summary>
-        internal static string ValidationError {
-            get {
-                return ResourceManager.GetString("ValidationError", resourceCulture);
+
+        public static string CreateError
+        {
+            get
+            {
+                return ResourceManager.GetString("Create error", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Company not found by ID.
         /// </summary>
-        internal static string VendorFindbyIdError {
+        public static string VendorFindbyIdError {
             get {
                 return ResourceManager.GetString("VendorFindbyIdError", resourceCulture);
             }
