@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using ExadelBonusPlus.Services.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -94,5 +95,16 @@ namespace ExadelBonusPlus.WebApi.Controllers
             var result = await _historyService.GetBonusHistoryByUsageDate(bonusId, start, end);
             return Ok(result);
         }
+
+        [HttpPut]
+        [Route(("estimate/{historyId:Guid}"))]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Estimate usage bonus", Type = typeof(ResultDto<UserHistoryDto>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<HistoryDto>> EstimateBonus([FromRoute] Guid historyId, int estimate)
+        {
+            var result = await _historyService.EstimateBonus(historyId, estimate, CancellationToken.None);
+            return Ok(result);
+        }
+
     }
 }

@@ -31,7 +31,7 @@ namespace ExadelBonusPlus.DataAccess
 
         public async Task<IEnumerable<History>> GetUserHistory(Guid userId, CancellationToken cancellationToken)
         {
-            return await GetCollection().Find(Builders<History>.Filter.Eq("UserId", userId)).ToListAsync(cancellationToken);
+            return await GetCollection().Find(Builders<History>.Filter.Eq("CreatorId", userId)).ToListAsync(cancellationToken);
         }
 
         public async Task<IEnumerable<History>> GetBonusHistoryByUsageDate(Guid bonusId, DateTime usageDate, DateTime usageDateEnd, CancellationToken cancellationToken = default)
