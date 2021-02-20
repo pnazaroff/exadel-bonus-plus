@@ -71,7 +71,7 @@ namespace ExadelBonusPlus.WebApi
                 });
             });
             services.AddBonusTransient();
-            services.AddHistoryTransient();
+            services.AddHistoryTransient(_configuration);
             services.AddApiIdentityConfiguration(configuration: _configuration);
             services.AddVendorTransient();
         }
