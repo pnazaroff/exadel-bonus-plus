@@ -1,4 +1,4 @@
-﻿using AspNetCore.Identity.MongoDbCore.Infrastructure;
+﻿using ExadelBonusPlus.Services.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
