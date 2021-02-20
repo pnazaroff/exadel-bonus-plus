@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using System.Threading.Tasks;
 using ExadelBonusPlus.Services.Models;
 using FluentValidation.AspNetCore;
+using ExadelBonusPlus.WebApi.Options;
 
 namespace ExadelBonusPlus.WebApi
 {
@@ -87,11 +88,19 @@ namespace ExadelBonusPlus.WebApi
             }
             app.UseStaticFiles();
 
-            app.UseSwagger();
+            var swaggerOptions = new SwaggerOptions();
+            _configuration.GetSection(nameof(SwaggerOptions)).Bind(swaggerOptions);
+
+            app.UseSwagger(options =>
+            {
+                options.RouteTemplate = swaggerOptions.JsonRoute;
+            });
 
             app.UseSwaggerUI(options =>
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Exadel Bonus Plus API v1")
-            );
+            {
+                options.SwaggerEndpoint
+                (swaggerOptions.UiEndpoint, swaggerOptions.Description);
+            });
 
             app.UseRouting();
 
