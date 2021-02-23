@@ -33,6 +33,7 @@ namespace ExadelBonusPlus.WebApi
                     options.Filters.Add(typeof(ExceptionFilterAttribute));
                     options.Filters.Add(typeof(ValidationFilterAttribute));
                     options.Filters.Add(typeof(HttpModelResultFilterAttribute));
+                    options.Filters.Add(typeof(LoggongFilterAttribute));
                 })
                 .ConfigureApiBehaviorOptions(options =>
                 {
@@ -70,6 +71,7 @@ namespace ExadelBonusPlus.WebApi
                     }
                 });
             });
+            services.AddLogging();
             services.AddBonusTransient();
             services.AddHistoryTransient(_configuration);
             services.AddApiIdentityConfiguration(configuration: _configuration);
