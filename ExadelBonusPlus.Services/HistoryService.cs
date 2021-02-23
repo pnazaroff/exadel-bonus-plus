@@ -32,9 +32,9 @@ namespace ExadelBonusPlus.Services
             {
                 throw new ArgumentNullException("", Resources.ModelIsNull);
             }
-            if (model.Rating == 0)
-                model.Rating = -1;
             var history = _mapper.Map<History>(model);
+            history.Rating = -1;
+            history.CreatedDate = DateTime.UtcNow;
              await _historyRepository.AddAsync(history, cancellationToken);
              _emailService.SendEmailAsync(history);
             return _mapper.Map<HistoryDto>(history);
