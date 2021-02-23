@@ -71,7 +71,7 @@ namespace ExadelBonusPlus.WebApi
                 });
             });
             services.AddBonusTransient();
-            services.AddHistoryTransient();
+            services.AddHistoryTransient(_configuration);
             services.AddApiIdentityConfiguration(configuration: _configuration);
             services.AddVendorTransient();
         }
@@ -98,9 +98,11 @@ namespace ExadelBonusPlus.WebApi
             
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseCors(builder => builder.AllowAnyOrigin()
-                                          .AllowAnyMethod()
-                                          .AllowAnyHeader());
+            app.UseCors(builder => builder
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .SetIsOriginAllowed(origin => true) // allow any origin
+                .AllowCredentials()); // allow credentials
 
 
             app.UseEndpoints(endpoints =>

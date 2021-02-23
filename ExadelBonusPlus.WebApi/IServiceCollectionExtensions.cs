@@ -4,6 +4,7 @@ using ExadelBonusPlus.DataAccess;
 using ExadelBonusPlus.Services;
 using ExadelBonusPlus.Services.Models;
 using ExadelBonusPlus.Services.Models.DTOValidator;
+using ExadelBonusPlus.Services.Models.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -27,10 +28,13 @@ namespace ExadelBonusPlus.WebApi
 
         }
 
-        public static void AddHistoryTransient(this IServiceCollection services)
+        public static void AddHistoryTransient(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddTransient<IHistoryRepository, HistoryRepository>();
             services.AddTransient<IHistoryService, HistoryService>();
+            services.Configure<EmailSettings>(configuration.GetSection(
+                nameof(EmailSettings)));
+            services.AddScoped<IEmailService, EmailServices>();
         }
 
         public static void AddVendorTransient(this IServiceCollection services)
