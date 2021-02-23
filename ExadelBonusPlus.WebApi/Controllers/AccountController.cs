@@ -92,7 +92,9 @@ namespace ExadelBonusPlus.WebApi.Controllers
             var cookieOptions = new CookieOptions
             {
                 HttpOnly = true,
-                Expires = DateTime.UtcNow.AddDays(2)
+                Expires = DateTime.UtcNow.AddDays(2),
+                SameSite =  SameSiteMode.None
+
             };
             Response.Cookies.Append("refreshToken", token, cookieOptions);
         }

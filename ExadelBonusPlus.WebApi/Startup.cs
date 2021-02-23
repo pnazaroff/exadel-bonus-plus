@@ -8,6 +8,8 @@ using Microsoft.OpenApi.Models;
 using System.Threading.Tasks;
 using ExadelBonusPlus.Services.Models;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 
 namespace ExadelBonusPlus.WebApi
 {
@@ -24,8 +26,17 @@ namespace ExadelBonusPlus.WebApi
             services.Configure<MongoDbSettings>(_configuration.GetSection(
                 nameof(MongoDbSettings)));
 
-            services.AddCors();
-            
+            services.AddCors(setup =>
+            {
+                setup.AddDefaultPolicy(policy =>
+                {
+                    policy.AllowAnyHeader();
+                    policy.AllowAnyMethod();
+                    policy.SetIsOriginAllowed(origin => true);
+                    policy.AllowCredentials();
+                });
+            });
+
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             
             services.AddControllers(options =>
@@ -87,12 +98,16 @@ namespace ExadelBonusPlus.WebApi
                 };
                 app.UseDeveloperExceptionPage(developerExceptionPageOptions);
             }
+            app.UseCors();
             app.UseStaticFiles();
 
             app.UseSwagger();
 
             app.UseSwaggerUI(options =>
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Exadel Bonus Plus API v1")
+                {
+                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "Exadel Bonus Plus API v1");
+
+                }
             );
 
             app.UseRouting();
@@ -100,11 +115,7 @@ namespace ExadelBonusPlus.WebApi
             
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseCors(builder => builder
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .SetIsOriginAllowed(origin => true) // allow any origin
-                .AllowCredentials()); // allow credentials
+            
 
 
             app.UseEndpoints(endpoints =>
@@ -114,9 +125,7 @@ namespace ExadelBonusPlus.WebApi
                     context.Response.Redirect("/swagger/");
                     return Task.CompletedTask;
                 });
-
                 endpoints.MapControllers();
-
             });
         }
     }
