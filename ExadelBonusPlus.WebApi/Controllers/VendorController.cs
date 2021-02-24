@@ -11,9 +11,6 @@ using System.Threading.Tasks;
 
 namespace ExadelBonusPlus.WebApi.Controllers
 {
-    [ValidationFilter]
-    [ExceptionFilter]
-    [HttpModelResultFilter]
     [ApiController]
     [Route("/api/[controller]")]
     public class VendorController : ControllerBase
