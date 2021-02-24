@@ -54,9 +54,11 @@ namespace ExadelBonusPlus.Services
 
         public async Task<IEnumerable<VendorDto>> GetAllVendorsAsync(CancellationToken cancellationToken)
         {
-            var result = await _vendorRepository.GetAllAsync(cancellationToken);
+            var vendors = await _vendorRepository.GetAllAsync(cancellationToken);
 
-            return _mapper.Map<IEnumerable<VendorDto>>(result);
+            var vendorDtos = _mapper.Map<IEnumerable<VendorDto>>(vendors);
+
+            return vendorDtos;
         }
 
         public async Task<VendorDto> GetVendorByIdAsync(Guid id, CancellationToken cancellationToken)
@@ -67,7 +69,6 @@ namespace ExadelBonusPlus.Services
             }
             var result = await _vendorRepository.GetByIdAsync(id, cancellationToken);
             return result is null ? throw new ArgumentException("", Resources.FindbyIdError) : _mapper.Map<VendorDto>(result);
-
         }
 
         public async Task<List<VendorDto>> SearchVendorByNameAsync(string name, CancellationToken cancellationToken)
