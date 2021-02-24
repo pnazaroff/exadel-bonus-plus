@@ -14,26 +14,15 @@ namespace ExadelBonusPlus.Services
     {
         private IVendorRepository _vendorRepository;
         private readonly IMapper _mapper;
-        private readonly IValidator<VendorDto> _vendorDtoValidator;
-        private readonly IValidator<AddVendorDto> _addVendorDtoValidator;
 
         public VendorService(IVendorRepository vendorRepository, 
-            IMapper mapper, 
-            IValidator<VendorDto> vendorDtoValidator, 
-            IValidator<AddVendorDto> addVendorDtoValidator)
+            IMapper mapper)
         {
             _vendorRepository = vendorRepository;
             _mapper = mapper;
-            _vendorDtoValidator = vendorDtoValidator;
-            _addVendorDtoValidator = addVendorDtoValidator;
         }
         public async Task<VendorDto> AddVendorAsync(AddVendorDto model, CancellationToken cancellationToken)
         {
-           var results = _addVendorDtoValidator.Validate(model);
-            if (!results.IsValid)
-            {
-                throw new ArgumentException("", Resources.ValidationError);
-            }
             var vendor = _mapper.Map<Vendor>(model);
             vendor.SetInitialValues();
             await _vendorRepository.AddAsync(vendor, cancellationToken);
@@ -79,11 +68,6 @@ namespace ExadelBonusPlus.Services
 
         public async Task<VendorDto> UpdateVendorAsync(Guid id, VendorDto model, CancellationToken cancellationToken)
         {
-            var validationResult = _vendorDtoValidator.Validate(model);
-            if (!validationResult.IsValid)
-            {
-                throw new ArgumentException("", Resources.ValidationError);
-            }
             if(id == Guid.Empty)
             {
                 throw new ArgumentNullException("", Resources.IdentifierIsNull);
