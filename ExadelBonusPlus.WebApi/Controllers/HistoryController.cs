@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using ExadelBonusPlus.Services.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -13,19 +13,19 @@ namespace ExadelBonusPlus.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [ExceptionFilter]
-    [ValidationFilter]
-    [HttpModelResultFilter]
     [Authorize]
     public class HistoryController : ControllerBase
     {
         private readonly IHistoryService _historyService;
-
+        private readonly IVendorService _vendorService;
         private readonly ILogger<HistoryController> _logger;
 
-        public HistoryController(ILogger<HistoryController> logger, IHistoryService historyService)
+        public HistoryController(ILogger<HistoryController> logger,
+                                IVendorService vendorService, 
+                                IHistoryService historyService)
         {
             _historyService = historyService;
+            _vendorService = vendorService;
             _logger = logger;
         }
 
@@ -94,5 +94,19 @@ namespace ExadelBonusPlus.WebApi.Controllers
             var result = await _historyService.GetBonusHistoryByUsageDate(bonusId, start, end);
             return Ok(result);
         }
+
+        [HttpPut]
+        [Route(("estimate/{historyId:Guid}"))]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Estimate usage bonus", Type = typeof(ResultDto<UserHistoryDto>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<HistoryDto>> EstimateBonus([FromRoute] Guid historyId, int estimate)
+        {
+            var result = await _historyService.EstimateBonus(historyId, estimate, CancellationToken.None);
+            return Ok(result);
+        }
+
+
+
+
     }
 }

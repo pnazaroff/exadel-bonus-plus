@@ -14,19 +14,21 @@ namespace ExadelBonusPlus.Services.Models
             RuleFor(x => x.Description).NotEmpty();
             RuleFor(x => x.DateStart).NotNull();
             RuleFor(x => x.DateEnd).NotNull();
+            RuleFor(x => x.CompanyId).NotNull().NotEmpty();
         }
 	}
 
-    public class BonusDtoValidator : AbstractValidator<BonusDto>
+    public class UpdateBonusDtoValidator : AbstractValidator<UpdateBonusDto>
     {
-        public BonusDtoValidator()
+        public UpdateBonusDtoValidator()
         {
             RuleFor(x => x).NotNull();
-            RuleFor(x => x.Id).NotEmpty();
             RuleFor(x => x.Title).Length(1, 9999);
             RuleFor(x => x.Description).NotEmpty();
             RuleFor(x => x.DateStart).NotNull();
             RuleFor(x => x.DateEnd).NotNull();
+            RuleFor(x => x.CompanyId).NotNull();
+            RuleFor(x => x.CompanyId).NotNull().NotEmpty();
         }
     }
 }

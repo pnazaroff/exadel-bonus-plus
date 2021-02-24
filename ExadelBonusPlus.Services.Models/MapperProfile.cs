@@ -36,20 +36,37 @@ namespace ExadelBonusPlus.Services.Models
                 .ForMember(dest => dest.Roles,
                     opt => opt.MapFrom<UserResolver>())
                 .ReverseMap();
-
+            CreateMap<ApplicationUser, UserInfoHistoryDto>()
+                .ReverseMap();
             CreateMap<ApplicationRole, RoleDTO>().ReverseMap();
 
             CreateMap<AddHistoryDTO, History>().AfterMap((src, dest) =>
             {
                 dest.BonusId = src.BonusId;
-                dest.CreatedDate = src.DateUse;
                 dest.CreatorId = src.UserId;
-                dest.Rating = src.Rating;
 
             }).ReverseMap();
-            CreateMap<History, HistoryDto>().ReverseMap();
-            CreateMap<History, BonusHistoryDto>().ReverseMap();
-            CreateMap<History, UserHistoryDto>().ReverseMap();
+            
+            CreateMap<History, HistoryDto>()
+                .ForMember(d => d.UsegeDate, opt =>
+                    opt.MapFrom(src => src.CreatedDate))
+                .ForMember(dest => dest.UserInfo,
+                    opt => opt.MapFrom<UserResolver>())
+                .ForMember(dest=>dest.Bonus, opt=>
+                    opt.MapFrom<BonusResolver>())
+                 .ReverseMap();
+          
+            CreateMap<History, BonusHistoryDto>()
+                .ForMember(d => d.UsageDate, opt =>
+                    opt.MapFrom(src=>src.CreatedDate))
+                .ForMember(dest => dest.UserInfo,
+                    opt => opt.MapFrom<UserResolver>())
+                .ReverseMap();
+            CreateMap<History, UserHistoryDto>()
+                .ForMember(d => d.UsageDate, opt => opt.MapFrom(src=>src.CreatedDate))
+                .ForMember(dest => dest.BonusDto, opt =>
+                    opt.MapFrom<BonusResolver>())
+                .ReverseMap();
 
             //From model to dto
             CreateMap<Vendor, VendorDto>().ReverseMap();
