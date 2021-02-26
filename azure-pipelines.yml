@@ -34,7 +34,7 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-# do this near the end of your pipeline in most cases
+
 - task: DotNetCoreCLI@2
   inputs:
     command: publish
