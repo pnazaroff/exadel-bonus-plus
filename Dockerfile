@@ -29,7 +29,7 @@ COPY /home/rglr/exadelBonusPlus /home/exadelBonusPlus
 RUN cd /home/exadelBonusPlus
 RUN dotnet publish --configuration Release
 
-#RUN cp /home/exadelBonusPlus /var/www/exadel-bonux-plus
+RUN cp /home/exadelBonusPlus /var/www/exadel-bonux-plus
 
 #RUN cp ./kestrel-test.service /etc/systemd/system/
 
