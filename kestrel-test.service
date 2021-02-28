@@ -1,0 +1,15 @@
+[Unit]
+Description=Example .NET Web API Application running on Ubuntu
+
+[Service]
+WorkingDirectory=/var/www/exadel-bonus-plus/ExadelBonusPlus.WebApi/bin/Release/netcoreapp3.1/
+ExecStart=/usr/bin/dotnet /var/www/exadel-bonus-plus/ExadelBonusPlus.WebApi/bin/Release/netcoreapp3.1/ExadelBonusPlus.WebApi.dll
+Restart=always
+RestartSec=10
+SyslogIdentifier=dotnet-example
+User=root 
+Environment=ASPNETCORE_ENVIRONMENT=Production
+
+[Install]
+WantedBy=multi-user.target
+
