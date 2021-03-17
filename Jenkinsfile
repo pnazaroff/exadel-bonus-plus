@@ -6,7 +6,7 @@ pipeline {
 
   }
   stages {
-    stage('download') {
+    stage('downloads') {
       steps {
         git(url: 'https://github.com/pnazaroff/exadel-bonus-plus', branch: 'master')
         sh 'sudo docker build -t backend .'
